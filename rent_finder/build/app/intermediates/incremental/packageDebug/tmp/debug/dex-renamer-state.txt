@@ -1,0 +1,4 @@
+#Fri May 21 18:58:08 ICT 2021
+base.0=E\:\\dev\\flutter\\rent-finder\\rent_finder\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
