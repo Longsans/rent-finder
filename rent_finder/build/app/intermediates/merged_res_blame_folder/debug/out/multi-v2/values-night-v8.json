@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\dev\\flutter\\rent-finder\\rent_finder\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
+            "outputFile": "G:\\rent-finder\\rent_finder\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
             "map": [
                 {
-                    "source": "E:\\dev\\flutter\\rent-finder\\rent_finder\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "G:\\rent-finder\\rent_finder\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
