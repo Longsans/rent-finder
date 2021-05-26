@@ -1,109 +1,105 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder/constants.dart';
-import 'package:rent_finder/presentation/widgets/bottom_nav_bar.dart';
+
 import 'package:rent_finder/presentation/widgets/search_bar.dart';
 
 class SearchResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(size: size),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  SearchBar(
-                    hintText: "Quận 3, TP.HCM",
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      margin: EdgeInsets.only(right: defaultPadding / 2),
-                      child: SvgPicture.asset('assets/icons/close.svg'),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: defaultPadding,
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      FilterHouseButton(
-                        title: "Bộ lọc",
-                        isActive: true,
-                      ),
-                      SizedBox(
-                        width: defaultPadding,
-                      ),
-                      FilterHouseButton(
-                        title: "Nhà",
-                      ),
-                      SizedBox(
-                        width: defaultPadding,
-                      ),
-                      FilterHouseButton(
-                        title: "Căn hộ",
-                      ),
-                      SizedBox(
-                        width: defaultPadding,
-                      ),
-                      FilterHouseButton(
-                        title: "Chung cư",
-                      ),
-                    ],
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                SearchBar(
+                  hintText: "Quận 3, TP.HCM",
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    margin: EdgeInsets.only(right: defaultPadding / 2),
+                    child: SvgPicture.asset('assets/icons/close.svg'),
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Nhà trọ',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  MaterialButton(
-                    onPressed: () {},
-                    shape: CircleBorder(),
-                    color: Colors.white,
-                    child: SvgPicture.asset(
-                      "assets/icons/ascending_sort.svg",
-                      height: 21,
-                      width: 21,
+              ],
+            ),
+            SizedBox(
+              height: defaultPadding,
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FilterHouseButton(
+                      title: "Bộ lọc",
+                      isActive: true,
                     ),
-                    height: 50,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: defaultPadding,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return HomeInfoBigCard(
-                      house: houses[index],
-                    );
-                  },
-                  itemCount: houses.length,
+                    SizedBox(
+                      width: defaultPadding,
+                    ),
+                    FilterHouseButton(
+                      title: "Nhà",
+                    ),
+                    SizedBox(
+                      width: defaultPadding,
+                    ),
+                    FilterHouseButton(
+                      title: "Căn hộ",
+                    ),
+                    SizedBox(
+                      width: defaultPadding,
+                    ),
+                    FilterHouseButton(
+                      title: "Chung cư",
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Nhà trọ',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                MaterialButton(
+                  onPressed: () {},
+                  shape: CircleBorder(),
+                  color: Colors.white,
+                  child: SvgPicture.asset(
+                    "assets/icons/ascending_sort.svg",
+                    height: 21,
+                    width: 21,
+                  ),
+                  height: 50,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: defaultPadding,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return HomeInfoBigCard(
+                    house: houses[index],
+                  );
+                },
+                itemCount: houses.length,
+              ),
+            )
+          ],
         ),
       ),
     );

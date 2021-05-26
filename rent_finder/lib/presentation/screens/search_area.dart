@@ -1,68 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rent_finder/constants.dart';
-import 'package:rent_finder/presentation/widgets/bottom_nav_bar.dart';
 import 'package:rent_finder/presentation/widgets/header_search_screen.dart';
 import 'package:rent_finder/presentation/widgets/search_bar.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavBar(
-        size: size,
-      ),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HeaderSearchScreen(size: size),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SearchBar(
-                      hintText: "Tìm theo khu vực hoặc địa chỉ",
-                    ),
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.all(defaultPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HeaderSearchScreen(size: size),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SearchBar(
+                    hintText: "Tìm theo khu vực hoặc địa chỉ",
                   ),
-                  MaterialButton(
-                    onPressed: () {},
-                    shape: CircleBorder(),
-                    color: Colors.white,
-                    child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: SvgPicture.asset(
-                        "assets/icons/ascending_sort.svg",
-                      ),
-                    ),
-                    height: 50,
-                  ),
-                ],
-              ),
-              SizedBox(height: defaultPadding),
-              Text(
-                'Đã xem gần đây',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: defaultPadding),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: recentHomes.length,
-                  itemBuilder: (context, index) {
-                    return RecentHomeListTile(
-                      size: size,
-                      recentHome: recentHomes[index],
-                    );
-                  },
                 ),
+                MaterialButton(
+                  onPressed: () {},
+                  shape: CircleBorder(),
+                  color: Colors.white,
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: SvgPicture.asset(
+                      "assets/icons/ascending_sort.svg",
+                    ),
+                  ),
+                  height: 50,
+                ),
+              ],
+            ),
+            SizedBox(height: defaultPadding),
+            Text(
+              'Đã xem gần đây',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: defaultPadding),
+            Expanded(
+              child: ListView.builder(
+                itemCount: recentHomes.length,
+                itemBuilder: (context, index) {
+                  return RecentHomeListTile(
+                    size: size,
+                    recentHome: recentHomes[index],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:rent_finder/presentation/screens/find_house_screen.dart';
-import 'package:rent_finder/presentation/screens/search_result_screen.dart';
-import 'package:rent_finder/presentation/screens/search_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'logic/bloc/navigation_bar_bloc.dart';
+import 'routes/app_router.dart';
 
 void main() {
-  runApp(MyApp());
+  AppRouter appRouter = new AppRouter();
+  runApp(
+    BlocProvider<NavigationBarBloc>(
+      create: (context) => NavigationBarBloc(),
+      child: MyApp(
+        appRouter: appRouter,
+      ),
+    ),
+  );
 }
+
 class MyApp extends StatelessWidget {
+  final AppRouter appRouter;
+
+  const MyApp({Key key, @required this.appRouter}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SearchScreen(),
+      onGenerateRoute: appRouter.onGenerateRoute,
     );
   }
 }
