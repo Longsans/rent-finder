@@ -12,7 +12,6 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-      margin: const EdgeInsets.symmetric(vertical: 30),
       child: TextField(
         decoration: InputDecoration(
           border: InputBorder.none,

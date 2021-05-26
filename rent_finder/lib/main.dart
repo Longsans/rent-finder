@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rent_finder/presentation/screens/home_screen.dart';
+import 'package:rent_finder/presentation/screens/find_house_screen.dart';
+import 'package:rent_finder/presentation/screens/search_result_screen.dart';
 import 'package:rent_finder/presentation/screens/search_screen.dart';
 
 void main() {
