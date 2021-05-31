@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">718577392809-o1l67erpo1h1d624porcb3k5elt7sk64.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">718577392809</string>
+    <string name="google_api_key" translatable="false">AIzaSyBoMP7bx8w9wFbp0lTz9L2rfCM06YL2d1Q</string>
+    <string name="google_app_id" translatable="false">1:718577392809:android:4c5f4c9b926f1abbacddb8</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBoMP7bx8w9wFbp0lTz9L2rfCM06YL2d1Q</string>
+    <string name="google_storage_bucket" translatable="false">rent-finder-93945.appspot.com</string>
+    <string name="project_id" translatable="false">rent-finder-93945</string>
+</resources>

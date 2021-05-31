@@ -22,9 +22,5 @@
     {
         "merged": "E:\\dev\\flutter\\rent-finder\\rent_finder\\build\\app\\intermediates\\res\\merged\\debug\\drawable-v21_launch_background.xml.flat",
         "source": "E:\\dev\\flutter\\rent-finder\\rent_finder\\android\\app\\src\\main\\res\\drawable-v21\\launch_background.xml"
-    },
-    {
-        "merged": "E:\\dev\\flutter\\rent-finder\\rent_finder\\build\\app\\intermediates\\res\\merged\\debug\\drawable_launch_background.xml.flat",
-        "source": "E:\\dev\\flutter\\rent-finder\\rent_finder\\android\\app\\src\\main\\res\\drawable\\launch_background.xml"
     }
 ]
