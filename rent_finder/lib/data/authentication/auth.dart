@@ -1,49 +1,24 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-Future<bool> register(String email, String password) async {
-  try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-
-    return true;
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'weak-password') {
-      print('The password provided is too weak.');
-    } else if (e.code == 'email-already-in-use') {
-      print('The account already exists for that email.');
-    }
-
-    return false;
-  } catch (e) {
-    print(e);
-
-    return false;
-  }
+Future<void> register(
+    {@required String email, @required String password}) async {
+  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: email,
+    password: password,
+  );
 }
 
-Future<bool> signInWithEmailAndPassword(String email, String password) async {
-  try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-
-    return true;
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      print('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      print('Wrong password provided for that user.');
-    }
-
-    return false;
-  } catch (e) {
-    print(e);
-
-    return false;
-  }
+Future<void> signInWithEmailAndPassword(
+    {@required String email, @required String password}) async {
+  await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: email,
+    password: password,
+  );
 }
 
 bool currentUserEmailIsVerified() {
@@ -66,4 +41,42 @@ Future<void> sendUserEmailVerification() async {
 
 Future<void> signOut() async {
   await FirebaseAuth.instance.signOut();
+}
+
+Future<UserCredential> signInWithGoogle() async {
+  final GoogleSignInAccount account = await GoogleSignIn().signIn();
+
+  if (account != null) {
+    try {
+      final GoogleSignInAuthentication authentication =
+          await account.authentication;
+
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+          idToken: authentication.idToken,
+          accessToken: authentication.accessToken);
+
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } on PlatformException {}
+  }
+  return null;
+}
+
+Future<void> sendPasswordResetEmail({@required String email}) async {
+  await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+}
+
+Future<void> confirmPasswordReset(
+    {@required String code, @required String newPassword}) async {
+  await FirebaseAuth.instance
+      .confirmPasswordReset(code: code, newPassword: newPassword);
+}
+
+Future<void> setLanguageVN() async {
+  FirebaseAuth.instance.setLanguageCode('vi');
+}
+
+StreamSubscription litenToAuthStateChanged(Function(Object) f) {
+  return FirebaseAuth.instance.authStateChanges().listen((event) {
+    f('User changed to ${event.email}');
+  });
 }
