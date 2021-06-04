@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/example/rent_finder/BuildConfig.java
+ com.example.rent_finder.BuildConfig
