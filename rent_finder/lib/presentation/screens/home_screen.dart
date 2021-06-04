@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder/logic/bloc/navigation_bar_bloc.dart';
 import 'package:rent_finder/presentation/screens/saved_area.dart';
 
+
 import '../../constants.dart';
 import 'search_area.dart';
 import 'user_area.dart';
