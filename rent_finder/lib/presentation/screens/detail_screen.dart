@@ -1,8 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rent_finder/logic/heart/heart_bloc.dart';
+import 'package:rent_finder/logic/like/like_bloc.dart';
+import 'package:rent_finder/presentation/widgets/yellow_heart_button.dart';
 
 import '../../constants.dart';
 
@@ -17,60 +22,50 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Stack(
-        children: [
-          CustomScrollView(slivers: [
-            _buildSliverHead(),
-            SliverToBoxAdapter(
-              child: _buildDetail(context),
-            )
-          ]),
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocProvider<HeartBloc>(
+        create: (context) => HeartBloc(house),
+        child: WillPopScope(
+          onWillPop: (){
+            Navigator.pushReplacementNamed(context,'/');
+          },
+          child: Scaffold(
+              body: SafeArea(
+            child: Stack(
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: defaultPadding,
-                ),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: IconButton(
-                    onPressed: () {
-                      print('cc');
-                    },
-                    icon: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: SvgPicture.asset(
-                        house.isLiked
-                            ? 'assets/icons/heart_filled.svg'
-                            : 'assets/icons/heart.svg',
-                        color: Colors.yellowAccent,
+                CustomScrollView(slivers: [
+                  _buildSliverHead(),
+                  SliverToBoxAdapter(
+                    child: _buildDetail(context),
+                  )
+                ]),
+                Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context,'/');
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        width: defaultPadding,
+                      ),
+                      YellowHeartButton(house: house, press: (){},),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    ));
+          )),
+        ));
   }
 
   Widget _buildDetail(BuildContext context) {
@@ -215,6 +210,8 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
+
+
 class ImageList extends StatelessWidget {
   const ImageList({
     Key key,
@@ -231,7 +228,8 @@ class ImageList extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/gallery', arguments: [house.imgList, index]);
+              Navigator.pushNamed(context, '/gallery',
+                  arguments: [house.imgList, index]);
             },
             child: Container(
               margin: EdgeInsets.only(right: defaultPadding),

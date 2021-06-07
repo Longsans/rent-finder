@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rent_finder/logic/bloc/navigation_bar_bloc.dart';
+import 'package:rent_finder/logic/navigation_bar/navigation_bar_bloc.dart';
 import 'package:rent_finder/presentation/screens/saved_area.dart';
-
 
 import '../../constants.dart';
 import 'search_area.dart';
 import 'user_area.dart';
 
 class HomeScreen extends StatelessWidget {
+
+  const HomeScreen({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

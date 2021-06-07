@@ -13,18 +13,21 @@ class GalleryPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
         ),
-        body: PhotoViewGallery.builder(
-          itemCount: imgList.length,
-          builder: (context, index) {
-            return PhotoViewGalleryPageOptions(
-              imageProvider: AssetImage(imgList[index]),
-              minScale: PhotoViewComputedScale.contained * 0.8,
-              maxScale: PhotoViewComputedScale.covered * 2,
-            );
-          },
-          scrollPhysics: BouncingScrollPhysics(),
-          backgroundDecoration: BoxDecoration(
-            color: Colors.black,
+        body: SafeArea(
+          child: PhotoViewGallery.builder(
+            pageController: PageController(initialPage: index),
+            itemCount: imgList.length,
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: AssetImage(imgList[index]),
+                minScale: PhotoViewComputedScale.contained * 0.8,
+                maxScale: PhotoViewComputedScale.covered * 2,
+              );
+            },
+            scrollPhysics: BouncingScrollPhysics(),
+            backgroundDecoration: BoxDecoration(
+              color: Colors.black,
+            ),
           ),
         ));
   }

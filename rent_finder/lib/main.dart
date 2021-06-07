@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent_finder/logic/like/like_bloc.dart';
 
-import 'logic/bloc/navigation_bar_bloc.dart';
+import 'constants.dart';
+import 'logic/navigation_bar/navigation_bar_bloc.dart';
 import 'routes/app_router.dart';
 
 void main() {
   AppRouter appRouter = new AppRouter();
   runApp(
-    BlocProvider<NavigationBarBloc>(
-      create: (context) => NavigationBarBloc(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<NavigationBarBloc>(
+          create: (context) => NavigationBarBloc(),
+        ),
+        BlocProvider<LikeBloc>(
+          create: (context) => LikeBloc(LikedHouses),
+        ),
+      ],
       child: MyApp(
         appRouter: appRouter,
       ),
