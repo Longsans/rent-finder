@@ -1,22 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rent_finder/presentation/screens/home_screen.dart';
-import 'package:rent_finder/presentation/screens/login_form.dart';
-import 'package:rent_finder/presentation/screens/login_screen.dart';
-import 'package:rent_finder/presentation/widgets/custom_list_tile.dart';
-import 'package:rent_finder/presentation/widgets/small_button.dart';
 import 'package:rent_finder/data/repos/user_repository.dart';
-
-
-
-class UserArea extends StatelessWidget {
+import 'package:rent_finder/presentation/screens/home_screen.dart';
+import 'package:rent_finder/presentation/screens/login_screen.dart';
+import 'package:rent_finder/presentation/screens/screens.dart';
+import 'package:rent_finder/presentation/widgets/small_button.dart';
+import 'package:rent_finder/presentation/widgets/custom_list_tile.dart';
+class ProfilePage extends StatefulWidget {
   final UserRepository _userRepository;
   final User _user;
-  UserArea({@required UserRepository userRepository,User user})
+  ProfilePage({@required UserRepository userRepository,User user})
       : assert(1==1),
-        _user=user,
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        _user=user;
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  bool turnOnNotification = false;
+  bool turnOnLocation = false;
+  User get _user => widget._user;
+  UserRepository get _userRepository => widget._userRepository;
+
+
   @override
   Widget build(BuildContext context) {
     if(_user==null){
@@ -25,7 +32,7 @@ class UserArea extends StatelessWidget {
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -73,6 +80,13 @@ class UserArea extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.0,
                             ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(
+                            "",
+                            style: TextStyle(color: Colors.grey),
                           ),
                           SizedBox(
                             height: 20.0,
@@ -166,6 +180,15 @@ class UserArea extends StatelessWidget {
                                   fontSize: 16.0,
                                 ),
                               ),
+                              Switch(
+                                value: turnOnNotification,
+                                onChanged: (bool value) {
+                                  // print("The value: $value");
+                                  setState(() {
+                                    turnOnNotification = value;
+                                  });
+                                },
+                              ),
                             ],
                           ),
                           Divider(
@@ -180,6 +203,15 @@ class UserArea extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16.0,
                                 ),
+                              ),
+                              Switch(
+                                value: turnOnLocation,
+                                onChanged: (bool value) {
+                                  // print("The value: $value");
+                                  setState(() {
+                                    turnOnLocation = value;
+                                  });
+                                },
                               ),
                             ],
                           ),
@@ -230,20 +262,17 @@ class UserArea extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Center(
-                    child: RaisedButton(
-                      padding: EdgeInsets.fromLTRB(100, 0, 100, 0),
-                      child: Text("Đăng nhập"),
-                      onPressed: (){
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return LoginScreen();
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                  RaisedButton(
+                    child: Text("Đăng nhập"),
+                    onPressed: (){
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return LoginScreen();
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -258,7 +287,7 @@ class UserArea extends StatelessWidget {
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -301,14 +330,19 @@ class UserArea extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-
                           Text(
                             "Email: ${_user.email}",
                             style: TextStyle(
                               fontSize: 16.0,
                             ),
                           ),
-
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(
+                            "",
+                            style: TextStyle(color: Colors.grey),
+                          ),
                           SizedBox(
                             height: 20.0,
                           ),
@@ -403,7 +437,15 @@ class UserArea extends StatelessWidget {
                                   fontSize: 16.0,
                                 ),
                               ),
-
+                              Switch(
+                                value: turnOnNotification,
+                                onChanged: (bool value) {
+                                  // print("The value: $value");
+                                  setState(() {
+                                    turnOnNotification = value;
+                                  });
+                                },
+                              ),
                             ],
                           ),
                           Divider(
@@ -418,6 +460,15 @@ class UserArea extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16.0,
                                 ),
+                              ),
+                              Switch(
+                                value: turnOnLocation,
+                                onChanged: (bool value) {
+                                  // print("The value: $value");
+                                  setState(() {
+                                    turnOnLocation = value;
+                                  });
+                                },
                               ),
                             ],
                           ),
@@ -468,22 +519,19 @@ class UserArea extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Center(
-                    child: RaisedButton(
-                      padding: EdgeInsets.fromLTRB(100, 0, 100, 0),
-                      child: Text("Đăng xuất"),
-                      onPressed: (){
-                        _userRepository.signOut();
+                  RaisedButton(
+                    child: Text("Đăng xuất"),
+                    onPressed: (){
+                      _userRepository.signOut();
 
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return HomeScreen();
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ProfilePage(userRepository: _userRepository);
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -492,5 +540,6 @@ class UserArea extends StatelessWidget {
         ),
       );
     }
+
   }
 }
