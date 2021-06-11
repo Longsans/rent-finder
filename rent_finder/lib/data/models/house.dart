@@ -4,6 +4,21 @@ import 'models.dart';
 
 /// Model class for all houses
 class House extends SerializableObject {
+  House(
+      {this.diaChi,
+      this.dienTich,
+      this.urlHinhAnh,
+      this.loaiChoThue,
+      this.soPhongNgu,
+      this.soPhongTam,
+      this.tienThueThang,
+      this.tinhTrang,
+      this.ngayVaoO,
+      this.coSoVatChat,
+      this.moTa,
+      this.daGo,
+      this.chuNha});
+
   House.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('quan')) {
       diaChi = DiaChiQuan.fromJson(json);
@@ -38,6 +53,9 @@ class House extends SerializableObject {
     coSoVatChat.noiThat = json.containsValue('NoiThat');
     coSoVatChat.nuoiThuCung = json.containsValue('NuoiThuCung');
     coSoVatChat.sanThuong = json.containsValue('SanThuong');
+
+    moTa = json['moTa'] as String;
+    daGo = json['daGo'] as bool;
   }
 
   @override
@@ -67,6 +85,8 @@ class House extends SerializableObject {
       'nuoiThuCung': coSoVatChat.nuoiThuCung,
       'sanThuong': coSoVatChat.sanThuong,
     };
+    jsonMap['moTa'] = moTa;
+    jsonMap['daGo'] = daGo;
 
     return jsonMap;
   }
@@ -82,6 +102,7 @@ class House extends SerializableObject {
   TinhTrangChoThue tinhTrang;
   DateTime ngayVaoO;
   CoSoVatChat coSoVatChat;
+  String moTa;
 
   bool daGo; // true nếu bài đăng nhà đã bị gỡ
   User chuNha;
