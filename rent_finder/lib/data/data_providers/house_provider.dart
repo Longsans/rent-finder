@@ -40,6 +40,14 @@ class HouseFireStoreApi extends BaseApi {
     await _collection.doc(updatedHouse.uid).update(updatedHouse.toJson());
   }
 
+  Future<void> setHouseRemoved(String uid) async {
+    await _collection.doc(uid).update({'daGo': true});
+  }
+
+  Future<void> setHouseUnremoved(String uid) async {
+    await _collection.doc(uid).update({'daGo': false});
+  }
+
   final CollectionReference _collection =
       FirebaseFirestore.instance.collection('houses');
 }
