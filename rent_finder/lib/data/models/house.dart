@@ -21,7 +21,7 @@ class House extends SerializableObject {
       this.coSoVatChat,
       this.moTa});
 
-  //
+  // Map json to members
   House.fromJson(Map<String, dynamic> json) {
     soNha = json['soNha'] as String;
     tenDuong = json['tenDuong'] as String;
@@ -59,7 +59,21 @@ class House extends SerializableObject {
     _uid = json['uid'] as String;
   }
 
-  //
+  House.fromSubcollectionJson(Map<String, dynamic> map) {
+    soNha = map['soNha'] as String;
+    tenDuong = map['tenDuong'] as String;
+    phuongXa = map['phuongXa'] as String;
+    quanHuyen = map['quanHuyen'] as String;
+    dienTich = map['dienTich'] as double;
+    loaiChoThue = LoaiChoThue.values.firstWhere(
+        (element) => describeEnum(element) == map['loaiChoThue'] as String);
+    tienThueThang = map['tienThueThang'] as double;
+    soPhongNgu = map['soPhongNgu'] as int;
+    soPhongTam = map['soPhongTam'] as int;
+    urlHinhAnh = map['urlHinhAnh'] as List<String>;
+  }
+
+  // Serialize
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> jsonMap = Map<String, dynamic>();
@@ -94,6 +108,21 @@ class House extends SerializableObject {
     jsonMap['idChuNha'] = _chuNha.uid;
 
     return jsonMap;
+  }
+
+  Map<String, dynamic> toSubcollectionJson() {
+    return {
+      'soNha': soNha,
+      'tenDuong': tenDuong,
+      'phuongXa': phuongXa,
+      'quanHuyen': quanHuyen,
+      'dienTich': dienTich,
+      'loaiChoThue': describeEnum(loaiChoThue),
+      'tienThueThang': tienThueThang,
+      'soPhongNgu': soPhongNgu,
+      'soPhongTam': soPhongTam,
+      'urlHinhAnh': urlHinhAnh,
+    };
   }
 
   /// Set sensitive info including: *daGo*, *chuNha*

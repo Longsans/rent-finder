@@ -41,4 +41,7 @@ class User extends SerializableObject {
   String urlHinhDaiDien;
   String moTa;
   bool banned;
+
+  List<House> nhaDaLuu;
+  List<House> nhaDaXemGanDay;
 }
