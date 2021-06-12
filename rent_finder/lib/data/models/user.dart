@@ -22,6 +22,18 @@ class User extends SerializableObject {
     banned = json['banned'] as bool;
   }
 
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'hoTen': this.hoTen,
+      'sdt': this.sdt,
+      'email': this.email,
+      'urlHinhDaiDien': this.urlHinhDaiDien,
+      'moTa': this.moTa,
+      'banned': this.banned
+    };
+  }
+
   String uid;
   String hoTen;
   String sdt;
@@ -29,28 +41,4 @@ class User extends SerializableObject {
   String urlHinhDaiDien;
   String moTa;
   bool banned;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'uid': this.uid,
-      'hoTen': this.hoTen,
-      'sdt': this.sdt,
-      'email': this.email,
-      'urlHinhDaiDien': this.urlHinhDaiDien,
-      'moTa': this.moTa,
-      'banned': this.banned
-    };
-  }
-
-  Map<String, dynamic> toJsonWithoutUID() {
-    return {
-      'hoTen': this.hoTen,
-      'sdt': this.sdt,
-      'email': this.email,
-      'urlHinhDaiDien': this.urlHinhDaiDien,
-      'moTa': this.moTa,
-      'banned': this.banned
-    };
-  }
 }

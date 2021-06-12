@@ -1,11 +1,15 @@
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'models.dart';
 
 /// Model class for all houses
 class House extends SerializableObject {
   House(
-      {this.diaChi,
+      {this.soNha,
+      this.tenDuong,
+      this.phuongXa,
+      this.quanHuyen,
       this.dienTich,
       this.urlHinhAnh,
       this.loaiChoThue,
@@ -15,19 +19,14 @@ class House extends SerializableObject {
       this.tinhTrang,
       this.ngayVaoO,
       this.coSoVatChat,
-      this.moTa,
-      this.daGo,
-      this.chuNha});
+      this.moTa});
 
+  //
   House.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('quan')) {
-      diaChi = DiaChiQuan.fromJson(json);
-    } else if (json.containsKey('huyen')) {
-      diaChi = DiaChiHuyen.fromJson(json);
-    } else {
-      throw Exception('Incompatible map type');
-    }
-
+    soNha = json['soNha'] as String;
+    tenDuong = json['tenDuong'] as String;
+    phuongXa = json['phuongXa'] as String;
+    quanHuyen = json['quanHuyen'] as String;
     dienTich = json['dienTich'] as double;
     urlHinhAnh = json['urlHinhAnh'] as List<String>;
     loaiChoThue = LoaiChoThue.values.firstWhere(
@@ -37,13 +36,13 @@ class House extends SerializableObject {
     tienThueThang = json['tienThueThang'] as double;
     tinhTrang = TinhTrangChoThue.values.firstWhere(
         (element) => describeEnum(element) == json['tinhTrang'].toString());
-    ngayVaoO = json['ngayVaoO'] as DateTime;
+    ngayVaoO = (json['ngayVaoO'] as Timestamp).toDate();
 
     coSoVatChat = CoSoVatChat();
-    coSoVatChat.mayGiat = CSVCMayGiat.values.firstWhere(
-        (element) => describeEnum(element) == json['mayGiat'].toString());
-    coSoVatChat.choDauXe = CSVCChoDauXe.values.firstWhere(
-        (element) => describeEnum(element) == json['choDauXe'].toString());
+    coSoVatChat.mayGiat = CSVCMayGiat.values.firstWhere((element) =>
+        describeEnum(element) == json['coSoVatChat']['mayGiat'].toString());
+    coSoVatChat.choDauXe = CSVCChoDauXe.values.firstWhere((element) =>
+        describeEnum(element) == json['coSoVatChat']['choDauXe'].toString());
     coSoVatChat.banCong = json.containsValue('BanCong');
     coSoVatChat.baoVe = json.containsValue('BaoVe');
     coSoVatChat.cctv = json.containsValue('CCTV');
@@ -55,15 +54,20 @@ class House extends SerializableObject {
     coSoVatChat.sanThuong = json.containsValue('SanThuong');
 
     moTa = json['moTa'] as String;
-    daGo = json['daGo'] as bool;
+    _daGo = json['daGo'] as bool;
+    _chuNha = User(uid: json['idChuNha'] as String);
+    _uid = json['uid'] as String;
   }
 
+  //
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> jsonMap = Map<String, dynamic>();
-    final diaChiMap = diaChi.toJson();
 
-    jsonMap['diaChi'] = diaChiMap;
+    jsonMap['soNha'] = soNha;
+    jsonMap['tenDuong'] = tenDuong;
+    jsonMap['phuongXa'] = phuongXa;
+    jsonMap['quanHuyen'] = quanHuyen;
     jsonMap['dienTich'] = dienTich;
     jsonMap['urlHinhAnh'] = urlHinhAnh;
     jsonMap['loaiChoThue'] = describeEnum(loaiChoThue);
@@ -86,13 +90,23 @@ class House extends SerializableObject {
       'sanThuong': coSoVatChat.sanThuong,
     };
     jsonMap['moTa'] = moTa;
-    jsonMap['daGo'] = daGo;
+    jsonMap['daGo'] = _daGo;
+    jsonMap['idChuNha'] = _chuNha.uid;
 
     return jsonMap;
   }
 
+  /// Set sensitive info including: *daGo*, *chuNha*
+  void setSensitiveInfo(bool daGo, User chuNha) {
+    this._daGo = daGo;
+    this._chuNha = chuNha;
+  }
+
   // House info
-  IDiaChi diaChi;
+  String soNha;
+  String tenDuong;
+  String phuongXa;
+  String quanHuyen;
   double dienTich;
   List<String> urlHinhAnh;
   LoaiChoThue loaiChoThue;
@@ -104,68 +118,13 @@ class House extends SerializableObject {
   CoSoVatChat coSoVatChat;
   String moTa;
 
-  bool daGo; // true nếu bài đăng nhà đã bị gỡ
-  User chuNha;
-}
+  bool _daGo = false; // true nếu bài đăng nhà đã bị gỡ
+  User _chuNha;
+  String _uid;
 
-/// Interface for different types of house addresses in TP.HCM
-abstract class IDiaChi extends SerializableObject {
-  String soNha;
-  String tenDuong;
-}
-
-/// "Quận" address type
-class DiaChiQuan implements IDiaChi {
-  DiaChiQuan.fromJson(Map<String, dynamic> json) {
-    soNha = json['soNha'] as String;
-    tenDuong = json['tenDuong'] as String;
-    phuong = json['phuong'] as String;
-    quan = json['quan'] as String;
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'soNha': soNha,
-      'tenDuong': tenDuong,
-      'phuong': phuong,
-      'quan': quan,
-    };
-  }
-
-  @override
-  String soNha;
-  @override
-  String tenDuong;
-  String phuong;
-  String quan;
-}
-
-/// "Huyện" address type
-class DiaChiHuyen implements IDiaChi {
-  DiaChiHuyen.fromJson(Map<String, dynamic> json) {
-    soNha = json['soNha'] as String;
-    tenDuong = json['tenDuong'] as String;
-    xa = json['xa'] as String;
-    huyen = json['huyen'] as String;
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'soNha': soNha,
-      'tenDuong': tenDuong,
-      'xa': xa,
-      'huyen': huyen,
-    };
-  }
-
-  @override
-  String soNha;
-  @override
-  String tenDuong;
-  String xa;
-  String huyen;
+  bool get daGO => _daGo;
+  User get chuNha => _chuNha;
+  String get uid => _uid;
 }
 
 /// Enum for renting type
@@ -180,6 +139,19 @@ enum CSVCMayGiat { TrongNha, TrongKhuChungCu, KhongCo }
 enum CSVCChoDauXe { Garage, TrongKhuChungCu, TrongNha }
 
 class CoSoVatChat {
+  CoSoVatChat(
+      {this.mayGiat,
+      this.choDauXe,
+      this.dieuHoa,
+      this.banCong,
+      this.noiThat,
+      this.gacLung,
+      this.baoVe,
+      this.hoBoi,
+      this.sanThuong,
+      this.cctv,
+      this.nuoiThuCung});
+
   CSVCMayGiat mayGiat;
   CSVCChoDauXe choDauXe;
   bool dieuHoa;

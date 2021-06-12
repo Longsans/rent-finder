@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rent_finder/data/authentication/auth.dart';
+import 'package:rent_finder/data/data_providers/data_providers.dart';
+import 'package:rent_finder/data/models/models.dart' as models;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,8 +65,19 @@ class MyApp extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   try {
-                    await Auth.instance.signInAnonymously();
-                    print('Sign in successful.');
+                    final houseApi = HouseFireStoreApi();
+                    final house =
+                        await houseApi.getHouseByUID('aAngvoWd65IdkjcnlBPu');
+
+                    print(
+                        'House address : ${house.soNha} ${house.tenDuong}; Owner ID: ${house.chuNha.uid}');
+
+                    house.dienTich = 100.5;
+                    house.soPhongNgu = 3;
+                    house.soPhongTam = 4;
+                    await houseApi.updateHouse(updatedHouse: house);
+
+                    print('House updated.');
                   } on FirebaseAuthException catch (e) {
                     switch (e.code) {
                       case 'invalid-email':
@@ -82,7 +95,7 @@ class MyApp extends StatelessWidget {
                   }
                 },
                 child: Text(
-                  "Sign in",
+                  "Update house info",
                   style: TextStyle(
                     color: Colors.white,
                   ),

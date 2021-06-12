@@ -80,7 +80,7 @@ class Auth {
         .confirmPasswordReset(code: code, newPassword: newPassword);
   }
 
-  Future<void> changeEmail(String email) async {
+  Future<void> updateEmail(String email) async {
     await FirebaseAuth.instance.currentUser?.updateEmail(email);
   }
 
