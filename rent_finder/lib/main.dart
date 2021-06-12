@@ -2,15 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:rent_finder/data/authentication/auth.dart' as auth;
+import 'package:rent_finder/data/authentication/auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  auth.litenToAuthStateChanged(print);
-
-  auth.setLanguageVN();
-  print(auth.currentUserEmailIsVerified());
+  Auth.instance.litenToAuthStateChanged((e) {
+    print('User changed to $e');
+  });
 
   runApp(MaterialApp(
     home: MyApp(),
@@ -64,9 +63,7 @@ class MyApp extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   try {
-                    await auth.signInWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text);
+                    await Auth.instance.signInAnonymously();
                     print('Sign in successful.');
                   } on FirebaseAuthException catch (e) {
                     switch (e.code) {
@@ -112,7 +109,7 @@ class MyApp extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   try {
-                    await auth.register(
+                    await Auth.instance.register(
                         email: emailController.text,
                         password: passwordController.text);
 
@@ -148,7 +145,7 @@ class MyApp extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  await auth.signInWithGoogle();
+                  await Auth.instance.signInWithGoogle();
                 },
                 child: Text(
                   "Sign in with Google",
@@ -173,7 +170,7 @@ class MyApp extends StatelessWidget {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
                             try {
-                              await auth.sendPasswordResetEmail(
+                              await Auth.instance.sendPasswordResetEmail(
                                   email: emailController.text);
                               Navigator.push(
                                   context,
@@ -202,7 +199,7 @@ class MyApp extends StatelessWidget {
                         style: TextStyle(fontSize: 20, color: Colors.black),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
-                            await auth.sendUserEmailVerification();
+                            await Auth.instance.sendUserEmailVerification();
                           },
                       ),
                     ),
@@ -261,7 +258,7 @@ class PasswordReset extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   try {
-                    await auth.confirmPasswordReset(
+                    await Auth.instance.confirmPasswordReset(
                         code: codeController.text,
                         newPassword: newPasswordController.text);
                     Navigator.pop(context);

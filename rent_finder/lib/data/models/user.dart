@@ -4,7 +4,7 @@ import 'models.dart';
 class User extends SerializableObject {
   User(
       {this.hoTen,
-      this.soDienThoai,
+      this.sdt,
       this.email,
       this.urlHinhDaiDien,
       this.moTa,
@@ -13,40 +13,44 @@ class User extends SerializableObject {
 
   @override
   User.fromJson(Map<String, dynamic> json) {
+    uid = json['uid'] as String;
     hoTen = json['hoTen'] as String;
-    soDienThoai = json['soDienThoai'] as String;
+    sdt = json['sdt'] as String;
     email = json['email'] as String;
     urlHinhDaiDien = json['urlHinhDaiDien'] as String;
     moTa = json['moTa'] as String;
     banned = json['banned'] as bool;
-
-    if (json.containsKey('uid')) {
-      uid = json['uid'] as String;
-    }
   }
 
+  String uid;
   String hoTen;
-  String soDienThoai;
+  String sdt;
   String email;
   String urlHinhDaiDien;
   String moTa;
   bool banned;
-  String uid;
 
   @override
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> jsonMap = {
+    return {
+      'uid': this.uid,
       'hoTen': this.hoTen,
-      'soDienThoai': this.soDienThoai,
+      'sdt': this.sdt,
       'email': this.email,
       'urlHinhDaiDien': this.urlHinhDaiDien,
       'moTa': this.moTa,
       'banned': this.banned
     };
-    if (uid != null) {
-      jsonMap['uid'] = this.uid;
-    }
+  }
 
-    return jsonMap;
+  Map<String, dynamic> toJsonWithoutUID() {
+    return {
+      'hoTen': this.hoTen,
+      'sdt': this.sdt,
+      'email': this.email,
+      'urlHinhDaiDien': this.urlHinhDaiDien,
+      'moTa': this.moTa,
+      'banned': this.banned
+    };
   }
 }
