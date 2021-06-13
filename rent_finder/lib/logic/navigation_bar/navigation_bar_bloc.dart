@@ -8,7 +8,7 @@ part 'navigation_bar_event.dart';
 part 'navigation_bar_state.dart';
 
 class NavigationBarBloc extends Bloc<NavigationBarEvent, NavigationBarState> {
-  NavigationBarBloc() : super(NavigationBarHome(0));
+  NavigationBarBloc() : super(NavigationBarState(index: 0));
 
   @override
   Stream<NavigationBarState> mapEventToState(
@@ -21,20 +21,7 @@ class NavigationBarBloc extends Bloc<NavigationBarEvent, NavigationBarState> {
   Stream<NavigationBarState> mapNavigationBarSelectedToState(
     NavigationBarItemSelected event,
   ) async* {
-    switch (event.index) {
-      case 0:
-        yield NavigationBarHome(event.index);
-        break;
-      case 1:
-        yield NavigationBarSearch(event.index);
-        break;
-      case 2:
-        yield NavigationBarSaved(event.index);
-        break;
-      case 3:
-        yield NavigationBarUser(event.index);
-        break;
-      default:
-    }
+        yield NavigationBarState(index: event.index);
+
   }
 }
