@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:rent_finder/constants.dart';
 import 'package:rent_finder/logic/heart/heart_bloc.dart';
-import 'package:rent_finder/logic/like/like_bloc.dart';
 
+import 'category_card.dart';
 import 'yellow_heart_button.dart';
 
 class HouseInfoBigCard extends StatelessWidget {
@@ -55,21 +55,7 @@ class HouseInfoBigCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: defaultPadding / 4,
-                              horizontal: defaultPadding,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: textColor,
-                            ),
-                            child: Text(house.category,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                )),
-                          ),
+                          CategoryCard(category: house.category),
                           SizedBox(
                             height: defaultPadding / 4,
                           ),
@@ -172,3 +158,4 @@ class HouseInfoBigCard extends StatelessWidget {
     );
   }
 }
+

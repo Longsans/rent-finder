@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder/constants.dart';
+import 'package:rent_finder/logic/category/category_bloc.dart';
 import 'package:rent_finder/logic/heart/heart_bloc.dart';
 import 'package:rent_finder/logic/like/like_bloc.dart';
+import 'package:rent_finder/presentation/widgets/filter_basic_dialog.dart';
 import 'package:rent_finder/presentation/widgets/header_search_screen.dart';
 import 'package:rent_finder/presentation/widgets/search_bar.dart';
 
@@ -27,20 +29,11 @@ class SearchArea extends StatelessWidget {
                   Expanded(
                     child: SearchBar(
                       hintText: "Tìm theo khu vực hoặc địa chỉ",
+                      press: () {
+                        BlocProvider.of<CategoryBloc>(context)..queries = [];
+                         Navigator.pushNamed(context, '/result');
+                      },
                     ),
-                  ),
-                  MaterialButton(
-                    onPressed: () {},
-                    shape: CircleBorder(),
-                    color: Colors.white,
-                    child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: SvgPicture.asset(
-                        "assets/icons/ascending_sort.svg",
-                      ),
-                    ),
-                    height: 50,
                   ),
                 ],
               ),
@@ -87,7 +80,8 @@ class RecentHomeListTile extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/detail', arguments: [house]);
+              Navigator.pushReplacementNamed(context, '/detail',
+                  arguments: [house]);
             },
             child: Container(
               margin: EdgeInsets.only(bottom: defaultPadding / 2),
@@ -204,12 +198,11 @@ class RecentHomeListTile extends StatelessWidget {
             builder: (context, state) {
               return BlocBuilder<LikeBloc, LikeState>(
                 builder: (context, state1) {
-                  BlocProvider.of<HeartBloc>(context)
-                          .add(HeartStarted(houses: BlocProvider.of<LikeBloc>(context).houses));
+                  BlocProvider.of<HeartBloc>(context).add(HeartStarted(
+                      houses: BlocProvider.of<LikeBloc>(context).houses));
                   return GestureDetector(
                     onTap: () {
-                      BlocProvider.of<HeartBloc>(context)
-                          .add(HeartPressed());
+                      BlocProvider.of<HeartBloc>(context).add(HeartPressed());
                       print(state);
                       if (state is HeartOutline)
                         BlocProvider.of<LikeBloc>(context)
@@ -246,3 +239,4 @@ class RecentHomeListTile extends StatelessWidget {
     );
   }
 }
+

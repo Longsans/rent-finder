@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rent_finder/presentation/screens/detail_screen.dart';
+import 'package:rent_finder/presentation/screens/filter_enhance_screen.dart';
 import 'package:rent_finder/presentation/screens/gallery_page.dart';
 import '../presentation/screens/screens.dart';
 
@@ -17,16 +18,22 @@ class AppRouter {
           );
         });
         break;
-        case '/gallery':
+      case '/gallery':
         return MaterialPageRoute(builder: (_) {
           return GalleryPage(
-            index:  args[1],
+            index: args[1],
             imgList: args[0],
           );
         });
         break;
       case '/search':
         return MaterialPageRoute(builder: (_) => SearchArea());
+        break;
+      case '/filter_enhance':
+        return MaterialPageRoute(builder: (_) => FilterEnhanceScreen());
+        break;
+        case '/result':
+        return MaterialPageRoute(builder: (_) => SearchResultScreen());
         break;
       default:
         return null;

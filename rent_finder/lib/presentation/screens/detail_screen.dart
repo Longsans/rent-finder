@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rent_finder/logic/heart/heart_bloc.dart';
-import 'package:rent_finder/logic/like/like_bloc.dart';
 import 'package:rent_finder/presentation/widgets/yellow_heart_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
 
@@ -25,8 +23,8 @@ class DetailScreen extends StatelessWidget {
     return BlocProvider<HeartBloc>(
         create: (context) => HeartBloc(house),
         child: WillPopScope(
-          onWillPop: (){
-            Navigator.pushReplacementNamed(context,'/');
+          onWillPop: () {
+            Navigator.pushReplacementNamed(context, '/');
           },
           child: Scaffold(
               body: SafeArea(
@@ -47,7 +45,7 @@ class DetailScreen extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context,'/');
+                            Navigator.pushReplacementNamed(context, '/');
                           },
                           icon: Icon(
                             Icons.arrow_back,
@@ -58,7 +56,10 @@ class DetailScreen extends StatelessWidget {
                       SizedBox(
                         width: defaultPadding,
                       ),
-                      YellowHeartButton(house: house, press: (){},),
+                      YellowHeartButton(
+                        house: house,
+                        press: () {},
+                      ),
                     ],
                   ),
                 ),
@@ -210,8 +211,6 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
-
-
 class ImageList extends StatelessWidget {
   const ImageList({
     Key key,
@@ -285,7 +284,26 @@ class InfoOwner extends StatelessWidget {
           backgroundColor: Color(0xffEEEEEE),
           child: IconButton(
             onPressed: () {
-              print('cc');
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Gọi điện'),
+                      content: Text("Bạn có muốn gọi đến số 0353398596 không?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              _makeCall('tel:0353398596');
+                            },
+                            child: Text('Có')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Không')),
+                      ],
+                    );
+                  });
             },
             icon: Icon(
               Icons.phone,
@@ -300,7 +318,26 @@ class InfoOwner extends StatelessWidget {
           backgroundColor: Color(0xffEEEEEE),
           child: IconButton(
             onPressed: () {
-              print('cc');
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Nhắn tin'),
+                      content: Text("Bạn có muốn nhắn tin đến số 0353398596 không?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              _makeSms('0353398596');
+                            },
+                            child: Text('Có')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Không')),
+                      ],
+                    );
+                  });
             },
             icon: Icon(
               Icons.mail,
@@ -310,6 +347,22 @@ class InfoOwner extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _makeCall(String number) async {
+    if (await canLaunch('tel:$number')) {
+      await launch('tel:$number');
+    } else {
+      throw 'Không thể gọi $number';
+    }
+  }
+
+  void _makeSms(String number) async {
+    if (await canLaunch('sms:$number')) {
+      await launch('sms:$number');
+    } else {
+      throw 'Không thể nhắn tin cho số $number';
+    }
   }
 }
 

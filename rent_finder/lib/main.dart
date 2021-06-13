@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent_finder/logic/like/like_bloc.dart';
 
 import 'constants.dart';
+import 'logic/category/category_bloc.dart';
 import 'logic/navigation_bar/navigation_bar_bloc.dart';
 import 'routes/app_router.dart';
 
@@ -16,6 +17,9 @@ void main() {
         ),
         BlocProvider<LikeBloc>(
           create: (context) => LikeBloc(LikedHouses),
+        ),
+        BlocProvider<CategoryBloc>(
+          create: (context) => CategoryBloc()..add(CategoryStarted()),
         ),
       ],
       child: MyApp(

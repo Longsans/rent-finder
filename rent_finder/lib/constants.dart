@@ -177,12 +177,6 @@ List<House> houses = [
       latLocation: LatLng(10.772815969366393, 106.70123569717161)),
 ];
 
-class UserProvider {
-  List<House> getLikedHouses() {
-    return [houses[0], houses[1]];
-  }
-}
-
 List<House> LikedHouses = [];
 
 class User {
@@ -191,3 +185,31 @@ class User {
 
   User({this.id, this.name, this.email, this.likedHouses});
 }
+
+List<String> Province = ["Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
+List<String> District = [
+  "Quận 1",
+  "Quận 2",
+  "Quận 3",
+  'Quận 4',
+  "Quận 5",
+  "Quận 6",
+  "Quận 7",
+  'Quận 8',
+  "Quận 9",
+  "Quận 10",
+  "Quận 11",
+  'Quận 12',
+  'Quận Bình Tân',
+  'Quận Bình Thạnh',
+  'Quận Gò Vấp',
+  'Quận Phú Nhuận',
+  'Quận Tân Bình',
+  'Quận Tân Phú',
+  'Quận Thủ Đức',
+  'Huyện Bình Chánh',
+  'Huyện Cần Giờ',
+  'Huyện Củ Chi',
+  'Huyện Hóc Môn',
+  'Huyện Nhà Bè'
+];

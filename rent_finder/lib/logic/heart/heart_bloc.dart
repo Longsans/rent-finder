@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rent_finder/constants.dart';
-import 'package:rent_finder/logic/like/like_bloc.dart';
 
 part 'heart_event.dart';
 part 'heart_state.dart';

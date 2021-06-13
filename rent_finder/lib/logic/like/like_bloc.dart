@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder/constants.dart';
 
 part 'like_event.dart';
@@ -10,7 +9,7 @@ part 'like_state.dart';
 
 class LikeBloc extends Bloc<LikeEvent, LikeState> {
   LikeBloc(this.houses) : super(LikeState(houses));
-  UserProvider userProvider;
+
   List<House> houses;
   @override
   Stream<LikeState> mapEventToState(
