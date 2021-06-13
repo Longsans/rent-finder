@@ -179,12 +179,7 @@ List<House> houses = [
 
 List<House> LikedHouses = [];
 
-class User {
-  final String id, name, email;
-  final List<House> likedHouses;
 
-  User({this.id, this.name, this.email, this.likedHouses});
-}
 
 List<String> Province = ["Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
 List<String> District = [

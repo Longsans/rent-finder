@@ -1,7 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder/logic/navigation_bar/navigation_bar_bloc.dart';
+
+import 'package:rent_finder/data/repos/user_repository.dart';
 import 'package:rent_finder/presentation/screens/saved_area.dart';
 
 import '../../constants.dart';
@@ -9,8 +12,10 @@ import 'search_area.dart';
 import 'user_area.dart';
 
 class HomeScreen extends StatelessWidget {
-
-  const HomeScreen({Key key}) : super(key: key);
+  final UserRepository _userRepository;
+  HomeScreen({@required UserRepository userRepository})
+      : assert(1 == 1),
+        _userRepository = userRepository;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,11 +74,13 @@ class HomeScreen extends StatelessWidget {
           return IndexedStack(
             children: [
               Center(
-                child: Text('Home Screen'),
+                child: Text('Nothing'),
               ),
               SearchArea(),
               SavedArea(),
-              UserArea()
+              UserArea(
+                userRepository: _userRepository,
+              ),
             ],
             index: state.index,
           );
