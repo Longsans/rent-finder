@@ -1,6 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
-import 'package:flutter/cupertino.dart';
+part of'login_bloc.dart';
+
 
 abstract class LoginEvent extends Equatable {
   @override

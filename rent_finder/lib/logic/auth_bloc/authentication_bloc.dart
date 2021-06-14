@@ -1,15 +1,14 @@
 import 'package:rent_finder/data/repos/user_repository.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'authentication_event.dart';
-import 'authentication_state.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent_finder/data/models/models.dart' as model;
+part 'authentication_event.dart';
+part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository _userRepository;
-  //constructor
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
@@ -21,18 +20,17 @@ class AuthenticationBloc
     if (authenticationEvent is AuthenticationEventStarted) {
       final isSignedIn = await _userRepository.isSignedIn();
       if (isSignedIn) {
-        final firebaseUser = await _userRepository.getUser();
-        yield AuthenticationStateSuccess(firebaseUser: firebaseUser);
+        final user = await _userRepository.getCurrentUser();
+        yield AuthenticationStateSuccess(user: user);
       } else {
         yield AuthenticationStateFailure();
       }
     } else if (authenticationEvent is AuthenticationEventLoggedIn) {
       yield AuthenticationStateSuccess(
-          firebaseUser: await _userRepository.getUser());
+          user: await _userRepository.getCurrentUser());
     } else if (authenticationEvent is AuthenticationEventLoggedOut) {
       _userRepository.signOut();
       yield AuthenticationStateFailure();
-    
     }
   }
 }

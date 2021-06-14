@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rent_finder/logic/heart/heart_bloc.dart';
-import 'package:rent_finder/presentation/widgets/yellow_heart_button.dart';
+import 'package:rent_finder/logic/bloc.dart';
+import 'package:rent_finder/presentation/widgets/widgets.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
@@ -25,6 +26,7 @@ class DetailScreen extends StatelessWidget {
         child: WillPopScope(
           onWillPop: () {
             Navigator.pushReplacementNamed(context, '/');
+            return null;
           },
           child: Scaffold(
               body: SafeArea(

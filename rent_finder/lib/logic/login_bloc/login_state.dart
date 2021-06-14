@@ -1,5 +1,5 @@
 
-
+part of'login_bloc.dart';
 class LoginState {
   final bool isEmailValid;
   final bool isPasswordValid;

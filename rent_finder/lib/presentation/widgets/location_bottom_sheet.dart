@@ -62,7 +62,7 @@ class LocationBottomSheet extends StatelessWidget {
                           BlocProvider.of<ProvinceCubit>(context)
                               .selectedChange(newValue);
                         },
-                        items: Province.map((e) =>
+                        items: province.map((e) =>
                                 DropdownMenuItem(value: e, child: Text(e)))
                             .toList(),
                         hint: Text('Chọn tỉnh/ thành phố'),
@@ -78,7 +78,7 @@ class LocationBottomSheet extends StatelessWidget {
                           BlocProvider.of<DistrictCubit>(context)
                               .selectedChange(newValue);
                         },
-                        items: District.map((e) =>
+                        items: district.map((e) =>
                                 DropdownMenuItem(value: e, child: Text(e)))
                             .toList(),
                         hint: Text('Chọn quận/huyện'),

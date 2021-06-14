@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "718577392809-ccqcku5asqoffgr2gbb1c7je3nfmdeaq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rent_finder",
+            "certificate_hash": "0a51e1cc5dbdc39d7951827989cc051f49947e5a"
+          }
+        },
+        {
           "client_id": "718577392809-o1l67erpo1h1d624porcb3k5elt7sk64.apps.googleusercontent.com",
           "client_type": 3
         }

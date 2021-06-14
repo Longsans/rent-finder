@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder/constants.dart';
-import 'package:rent_finder/logic/category/category_bloc.dart';
-import 'package:rent_finder/logic/filter_house/filter_house_cubit.dart';
-import 'package:rent_finder/presentation/widgets/filter_basic_dialog.dart';
-import 'package:rent_finder/presentation/widgets/house_info_big_card.dart';
-import 'package:rent_finder/presentation/widgets/location_bottom_sheet.dart';
+import 'package:rent_finder/logic/bloc.dart';
+import 'package:rent_finder/presentation/widgets/widgets.dart';
 
-import 'package:rent_finder/presentation/widgets/search_bar.dart';
 
 class SearchResultScreen extends StatelessWidget {
   @override
@@ -114,9 +110,9 @@ class SearchResultScreen extends StatelessWidget {
               ),
               BlocBuilder<CategoryBloc, CategoryState>(
                   builder: (context, state) {
-                if (state is CategoryInitial)
+                if (state is CategoryInitial) {
                   BlocProvider.of<CategoryBloc>(context).add(CategoryStarted());
-                else if (state is CategoryLoading) {
+                } else if (state is CategoryLoading) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -131,11 +127,10 @@ class SearchResultScreen extends StatelessWidget {
                       itemCount: state.houses.length,
                     ),
                   );
-                } else {
-                  return Center(
-                    child: Text('Đã có lỗi xảy ra'),
-                  );
                 }
+                return Center(
+                  child: Text('Đã có lỗi xảy ra'),
+                );
               })
             ],
           ),
@@ -144,8 +139,6 @@ class SearchResultScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 class FilterHouseButton extends StatelessWidget {
   const FilterHouseButton({

@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rent_finder/data/repos/user_repository.dart';
-import 'package:rent_finder/logic/login_bloc/login_event.dart';
-
 import 'package:rent_finder/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:rxdart/rxdart.dart';
-
-import 'login_state.dart';
+import 'package:equatable/equatable.dart';
+part 'login_state.dart';
+part 'login_event.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository _userRepository;
@@ -25,7 +22,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapLoginWithCredentialsPressedToState(
           email: event.email, password: event.password);
     } else if (event is LoginWithGooglePressed) {
-      yield* _mapLoginWithGooglePressedToState(event, state);
+      yield* _mapLoginWithGooglePressedToState();
     }
   }
 
@@ -48,14 +45,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<LoginState> _mapLoginWithGooglePressedToState(
-      LoginWithGooglePressed event, LoginState state) async* {
+  Stream<LoginState> _mapLoginWithGooglePressedToState() async* {
     try {
       yield LoginState.loading();
       await _userRepository.signInWithGoogle();
       yield LoginState.success();
     } catch (_) {
-      print('cc nè');
+      print('ko đăng nhập đc ');
       yield LoginState.failure();
     }
   }

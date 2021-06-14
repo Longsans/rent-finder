@@ -3,21 +3,11 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent_finder/data/repos/user_repository.dart';
-import 'package:rent_finder/logic/auth_bloc/authentication_bloc.dart';
-import 'package:rent_finder/logic/auth_bloc/authentication_event.dart';
-import 'package:rent_finder/logic/register_bloc/register_bloc.dart';
-import 'package:rent_finder/logic/register_bloc/register_event.dart';
-import 'package:rent_finder/logic/register_bloc/register_state.dart';
+import 'package:rent_finder/logic/bloc.dart';
 
-import 'package:rent_finder/presentation/screens/login_screen.dart';
 
 class RegisterForm extends StatefulWidget {
-  final UserRepository _userRepository;
-
-  RegisterForm({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
+  RegisterForm();
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -59,13 +49,13 @@ class _RegisterFormState extends State<RegisterForm> {
     return BlocListener<RegisterBloc, RegisterState>(
       listener: (BuildContext context, RegisterState state) {
         if (state.isFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..showSnackBar(
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Sign Up Failed"),
+                    Text("Đăng ký thất bại"),
                     Icon(Icons.error),
                   ],
                 ),
@@ -74,13 +64,13 @@ class _RegisterFormState extends State<RegisterForm> {
         }
         if (state.isSubmitting) {
           print("isSubmitting");
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..showSnackBar(
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Signing up..."),
+                    Text("Đang đăng ký..."),
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -122,26 +112,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.person),
-                            hintText: 'Tên',
-                            border: UnderlineInputBorder()),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.phone),
-                            hintText: 'Số điện thoại',
-                            border: UnderlineInputBorder()),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         decoration: InputDecoration(
                             suffixIcon: Icon(Icons.mail),
@@ -149,7 +119,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             border: UnderlineInputBorder()),
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        autovalidate: true,
+                        autovalidateMode: AutovalidateMode.always,
                         validator: (_) {
                           return !state.isEmailValid ? "Invalid Email" : null;
                         },
@@ -166,7 +136,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
                         obscureText: true,
-                        autovalidate: true,
+                        autovalidateMode: AutovalidateMode.always,
                         validator: (_) {
                           return !state.isPasswordValid
                               ? "Invalid Password"
@@ -174,41 +144,26 @@ class _RegisterFormState extends State<RegisterForm> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.code),
-                            hintText: 'Referral Code',
-                            border: UnderlineInputBorder()),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
                     SizedBox(
                       height: 15,
                     ),
-                    RaisedButton(
-                        padding: EdgeInsets.fromLTRB(120.0, 0, 120.0, 0),
-                        color: Colors.red,
-                        disabledColor: Colors.blue,
-                        disabledTextColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                    GestureDetector(
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(120.0, 0, 120.0, 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            color: Colors.red,
+                          ),
+                          child: Center(
+                            child: Text("Đăng ký",
+                                style: new TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                          ),
                         ),
-                        child: Text("Đăng ký",
-                            style: new TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                        onPressed: () {
-                          /* Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => HomeScreen()),
-                                        );*/
-                          /* isButtonEnabled(state)
-                                            ? _onFormSubmitted
-                                            : null;*/
+                        onTap: () {
                           if (isSignUpButtonEnabled(state)) {
                             log("${_emailController.text.toString()}+0111111111111000000000000");
                             _onFormSubmitted();
@@ -227,13 +182,8 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return LoginScreen();
-                                },
-                              ),
-                            );
+                            Navigator.of(context)
+                                .pushReplacementNamed('/login');
                           },
                           child: Text(
                             '  Đăng nhập',
@@ -266,10 +216,6 @@ class _RegisterFormState extends State<RegisterForm> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          // Text(
-                          //   '&',
-                          //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                          // ),
                         ],
                       ),
                     ),

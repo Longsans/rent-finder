@@ -1,9 +1,9 @@
 import 'package:rent_finder/data/repos/user_repository.dart';
 import 'package:rent_finder/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'register_event.dart';
-import 'register_state.dart';
+import 'package:equatable/equatable.dart';
+part 'register_event.dart';
+part 'register_state.dart';
 // import 'package:rxdart/rxdart.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
@@ -29,7 +29,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     yield state.update(isEmailValid: Validators.isValidEmail(email));
   }
 
-  Stream<RegisterState> _mapRegisterPasswordChangeToState(String password) async* {
+  Stream<RegisterState> _mapRegisterPasswordChangeToState(
+      String password) async* {
     yield state.update(isPasswordValid: Validators.isValidPassword(password));
   }
 
@@ -38,6 +39,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     yield RegisterState.loading();
     try {
       await _userRepository.signUp(email, password);
+      await _userRepository.createUser();
       yield RegisterState.success();
     } catch (error) {
       print(error);

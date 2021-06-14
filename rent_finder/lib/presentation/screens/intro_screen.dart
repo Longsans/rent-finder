@@ -1,10 +1,8 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:rent_finder/presentation/screens/login_screen.dart';
 
 class IntroPage extends StatefulWidget {
-  // final UserRepository userRepository;
   const IntroPage({Key key}) : super(key: key);
   //    : super(key: key);
 
@@ -13,7 +11,6 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-
   void afterIntroComplete() {
     Navigator.of(context).pop();
   }
@@ -38,7 +35,12 @@ class _IntroPageState extends State<IntroPage> {
         ],
       ),
       body: "Tìm kiếm trọ một cách dễ dàng hơn, nhanh hơn, tiện lợi hơn.",
-      image: Center(child: SvgPicture.asset("assets/icons/gift.svg")),
+      image: Center(
+        child: SizedBox(
+          width: 150,
+          child: SvgPicture.asset("assets/icons/gift.svg"),
+        ),
+      ),
       decoration: const PageDecoration(
           pageColor: Colors.white,
           bodyTextStyle: TextStyle(
@@ -74,7 +76,7 @@ class _IntroPageState extends State<IntroPage> {
           "Quy mô rộng lớn, bao phủ khắp nơi. Dễ dàng xác định được các trọ ở xung quanh bạn.",
       image: Center(
           child: SizedBox(
-        width: 450.0,
+        width: 150.0,
         child: SvgPicture.asset("assets/icons/payment.svg"),
       )),
       decoration: const PageDecoration(
@@ -108,7 +110,7 @@ class _IntroPageState extends State<IntroPage> {
           "Chúng tôi luôn có mặt để hỗ trợ những thắc mặc của bạn, hotline 24/24, facebook, gmaill",
       image: Center(
           child: SizedBox(
-        width: 450.0,
+        width: 150.0,
         child: SvgPicture.asset("assets/icons/call.svg"),
       )),
       decoration: const PageDecoration(
@@ -144,8 +146,8 @@ class _IntroPageState extends State<IntroPage> {
             activeColor: Colors.blue,
             color: Colors.black12,
             spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-            activeShape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))),
+            activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0))),
       ),
     );
   }

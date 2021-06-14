@@ -1,4 +1,4 @@
-
+part of 'register_bloc.dart';
 
 class RegisterState {
   final bool isEmailValid;
@@ -11,10 +11,10 @@ class RegisterState {
 
   RegisterState(
       {this.isEmailValid,
-        this.isPasswordValid,
-        this.isSubmitting,
-        this.isSuccess,
-        this.isFailure});
+      this.isPasswordValid,
+      this.isSubmitting,
+      this.isSuccess,
+      this.isFailure});
 
   factory RegisterState.initial() {
     return RegisterState(

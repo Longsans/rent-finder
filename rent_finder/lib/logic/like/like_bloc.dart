@@ -25,13 +25,13 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
 
   Stream<LikeState> _mapLikeAddPressedToState(
       LikeAddPressed event, LikeState state) async* {
-    LikedHouses.add(event.house);
-    yield LikeState(LikedHouses);
+    likedHouses.add(event.house);
+    yield LikeState(likedHouses);
   }
 
   Stream<LikeState> _mapLikeRemovePressedToState(
       LikeRemovePressed event, LikeState state) async* {
-        LikedHouses.remove(event.house);
-    yield LikeState(LikedHouses);
+        likedHouses.remove(event.house);
+    yield LikeState(likedHouses);
   }
 }

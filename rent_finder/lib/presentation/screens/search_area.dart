@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder/constants.dart';
-import 'package:rent_finder/logic/category/category_bloc.dart';
-import 'package:rent_finder/logic/heart/heart_bloc.dart';
-import 'package:rent_finder/logic/like/like_bloc.dart';
-import 'package:rent_finder/presentation/widgets/header_search_screen.dart';
-import 'package:rent_finder/presentation/widgets/search_bar.dart';
+import 'package:rent_finder/logic/bloc.dart';
+import 'package:rent_finder/presentation/widgets/widgets.dart';
+
 
 class SearchArea extends StatelessWidget {
   @override

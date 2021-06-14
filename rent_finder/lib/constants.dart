@@ -177,12 +177,12 @@ List<House> houses = [
       latLocation: LatLng(10.772815969366393, 106.70123569717161)),
 ];
 
-List<House> LikedHouses = [];
+List<House> likedHouses = [];
 
 
 
-List<String> Province = ["Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
-List<String> District = [
+List<String> province = ["Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
+List<String> district = [
   "Quận 1",
   "Quận 2",
   "Quận 3",

@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rent_finder/data/repos/user_repository.dart';
-import 'package:rent_finder/presentation/screens/detail_screen.dart';
-import 'package:rent_finder/presentation/screens/filter_enhance_screen.dart';
-import 'package:rent_finder/presentation/screens/gallery_page.dart';
-
-import 'package:rent_finder/presentation/screens/intro_screen.dart';
-import 'package:rent_finder/presentation/screens/login_screen.dart';
-import 'package:rent_finder/presentation/screens/register_screen.dart';
 import 'package:rent_finder/presentation/screens/screens.dart';
-import 'package:rent_finder/presentation/screens/search_area.dart';
-import 'package:rent_finder/presentation/screens/search_result_screen.dart';
+
 
 class AppRouter {
-  final UserRepository userRepository;
 
-  AppRouter({@required this.userRepository});
+
+
   Route onGenerateRoute(RouteSettings routeSettings) {
     List<dynamic> args = routeSettings.arguments;
     switch (routeSettings.name) {
@@ -28,11 +19,11 @@ class AppRouter {
         break;
       case '/':
         return MaterialPageRoute(
-            builder: (_) => HomeScreen(userRepository: userRepository));
+            builder: (_) => HomeScreen());
         break;
         case '/register':
         return MaterialPageRoute(
-            builder: (_) => RegisterScreen(userRepository: userRepository));
+            builder: (_) => RegisterScreen());
         break;
       case '/detail':
         return MaterialPageRoute(builder: (_) {
@@ -57,6 +48,9 @@ class AppRouter {
         break;
       case '/result':
         return MaterialPageRoute(builder: (_) => SearchResultScreen());
+        break;
+        case '/profile':
+        return MaterialPageRoute(builder: (_) => ProfileScreen());
         break;
       default:
         return null;
