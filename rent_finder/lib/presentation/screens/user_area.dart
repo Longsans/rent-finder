@@ -43,7 +43,7 @@ class UserArea extends StatelessWidget {
                                 'Quản lý các thông tin cá nhân dễ dàng hơn',
                             title: 'Cá nhân',
                             icon: Icon(
-                              Icons.manage_accounts,
+                              Icons.account_circle_rounded,
                               color: Colors.white,
                             ),
                           )

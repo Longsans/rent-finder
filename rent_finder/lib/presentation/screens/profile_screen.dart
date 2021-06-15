@@ -235,12 +235,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 class ImageButton extends StatelessWidget {
   ImageButton({Key key, this.user}) : super(key: key);
-  String pathDaiDien;
   final model.User user;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        String pathHinhDaiDien;
         ImagePicker imagePicker = ImagePicker();
         PickedFile pickedFile = await imagePicker
             .getImage(source: ImageSource.gallery)
@@ -248,10 +248,10 @@ class ImageButton extends StatelessWidget {
           Fluttertoast.showToast(msg: err.toString());
         });
         if (pickedFile != null) {
-          pathDaiDien = pickedFile.path;
-          if (pathDaiDien != null) {
+          pathHinhDaiDien = pickedFile.path;
+          if (pathHinhDaiDien != null) {
             BlocProvider.of<PickImageCubit>(context)
-                .pickImage(pathDaiDien, user);
+                .pickImage(pathHinhDaiDien, user);
           }
         }
       },

@@ -10,9 +10,9 @@ class PickImageCubit extends Cubit<model.User> {
     emit(user);
   }
 
-  void pickImage(String pathDaiDien, model.User user) async {
-    state.urlHinhDaiDien = await userRepository.getDownURL(
-        pathHinhDaiDien: pathDaiDien, user: user);
+  void pickImage(String pathHinhDaiDien, model.User user) async {
+    state.urlHinhDaiDien = await userRepository.updateHinhDaiDienUser(
+        pathHinhDaiDien: pathHinhDaiDien, user: user);
     emit(state);
   }
 }

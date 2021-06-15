@@ -295,7 +295,7 @@ class InfoOwner extends StatelessWidget {
                       actions: [
                         TextButton(
                             onPressed: () {
-                              _makeCall('tel:0353398596');
+                              _makeCall('0353398596');
                             },
                             child: Text('Có')),
                         TextButton(
@@ -353,19 +353,23 @@ class InfoOwner extends StatelessWidget {
   }
 
   void _makeCall(String number) async {
-    if (await canLaunch('tel:$number')) {
-      await launch('tel:$number');
-    } else {
-      throw 'Không thể gọi $number';
-    }
+    // if (await canLaunch('tel:$number')) {
+
+    // } else {
+    //   throw 'Không thể gọi $number';
+    // }
+    //TODO: Assess call launch
+    await launch('tel:$number');
   }
 
   void _makeSms(String number) async {
-    if (await canLaunch('sms:$number')) {
-      await launch('sms:$number');
-    } else {
-      throw 'Không thể nhắn tin cho số $number';
-    }
+    // if (await canLaunch('sms:$number')) {
+
+    // } else {
+    //   throw 'Không thể nhắn tin cho số $number';
+    // }
+    //TODO: Assess SMS launch
+    await launch('sms:$number');
   }
 }
 

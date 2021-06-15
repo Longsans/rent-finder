@@ -71,8 +71,9 @@ class UserRepository {
     await _userProvider.createUser(user);
   }
 
-  Future<String> getDownURL({String pathHinhDaiDien, model.User user}) async {
-    return await _userProvider.getDownURL(
+  Future<String> updateHinhDaiDienUser(
+      {String pathHinhDaiDien, model.User user}) async {
+    return await _userProvider.updateHinhDaiDienUser(
         user: user, pathHinhDaiDien: pathHinhDaiDien);
   }
 

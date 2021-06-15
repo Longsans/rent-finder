@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rent_finder/data/models/models.dart';
 import 'package:flutter/foundation.dart';
-
-import 'data_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HouseFireStoreApi extends BaseApi {
+class HouseFireStoreApi {
   Future<List<House>> getAllHousesOwnedByUser(String userUid) async {
     final queryResult =
         await _collection.where('idChuNha', isEqualTo: userUid).get();
