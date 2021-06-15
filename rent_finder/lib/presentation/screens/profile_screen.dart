@@ -1,182 +1,263 @@
 import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder/constants.dart';
 import 'package:rent_finder/logic/bloc.dart';
 import 'package:rent_finder/presentation/widgets/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:rent_finder/data/models/models.dart' as model;
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key key}) : super(key: key);
-
+  const ProfileScreen({Key key, this.user}) : super(key: key);
+  final model.User user;
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState(user: user);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final model.User user;
+
+  _ProfileScreenState({this.user});
+  TextEditingController _phoneController;
+  TextEditingController _nameController;
+
+  @override
+  void initState() {
+    _nameController = TextEditingController(text: user.hoTen ?? "");
+    _phoneController = TextEditingController(text: user.sdt ?? "");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+    return BlocProvider<PickImageCubit>(
+      create: (context) => PickImageCubit(
+          userRepository:
+              BlocProvider.of<UpdateProfileBloc>(context).userRepository)
+        ..start(user),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
           ),
+          title: Text(
+            'Thông tin cá nhân',
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
         ),
-        title: Text(
-          'Thông tin cá nhân',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(defaultPadding),
-            child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-              builder: (context, state) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    if (state is AuthenticationStateSuccess)
+        body: BlocListener<UpdateProfileBloc, UpdateProfileState>(
+          listener: (context, state) {
+            if (state.isSuccess) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("Cập nhật thành công"),
+                      Icon(Icons.verified),
+                    ],
+                  ),
+                ));
+              BlocProvider.of<AuthenticationBloc>(context)
+                  .add(AuthenticationEventStarted());
+              Navigator.of(context).pop();
+            } else if (state.isFailure) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("Cập nhật thất bại"),
+                      Icon(Icons.error),
+                    ],
+                  ),
+                ));
+            } else if (state.isSubmitting) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(" Đang cập nhật..."),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ));
+            }
+          },
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Container(
+                  padding: EdgeInsets.all(defaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
                       Align(
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: (state.user != null)
-                                  ? state.user.urlHinhDaiDien ?? ""
-                                  : "",
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                height: 90,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
+                            BlocBuilder<PickImageCubit, model.User>(
+                              builder: (context, state) {
+                                print(state);
+                                return CachedNetworkImage(
+                                  imageUrl: state.urlHinhDaiDien ?? '',
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    height: 90,
+                                    width: 90,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.account_circle_outlined,
-                                size: 90,
-                                color: Color(0xFF0D4880),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                print('cc nè');
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.account_circle_outlined,
+                                    size: 90,
+                                    color: Color(0xFF0D4880),
+                                  ),
+                                );
                               },
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.blueGrey,
-                              ),
                             ),
+                            ImageButton(user: user),
                           ],
                         ),
                       ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Họ và tên',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    SizedBox(
-                      height: defaultPadding / 2,
-                    ),
-                    TextFieldProfile(
-                      controller: _nameController,
-                      inputType: TextInputType.name,
-                    ),
-                    SizedBox(
-                      height: defaultPadding,
-                    ),
-                    Text(
-                      'Số điện thoại',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    SizedBox(
-                      height: defaultPadding / 2,
-                    ),
-                    TextFieldProfile(
-                      controller: _phoneController,
-                      inputType: TextInputType.phone,
-                    ),
-                    SizedBox(
-                      height: defaultPadding,
-                    ),
-                    Text(
-                      'Email',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    SizedBox(
-                      height: defaultPadding / 2,
-                    ),
-                    TextFieldProfile(
-                      controller: _emailController,
-                      inputType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(
-                      height: 120,
-                    ),
-                    CustomButton(
-                      title: 'Lưu',
-                      press: () {},
-                      icon: Icon(
-                        Icons.save,
-                        color: Colors.white,
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                  ],
-                );
-              },
+                      buildNameInput(),
+                      SizedBox(
+                        height: defaultPadding,
+                      ),
+                      buildPhoneInput(),
+                      SizedBox(
+                        height: 120,
+                      ),
+                      buildSaveButton(),
+                    ],
+                  )),
             ),
           ),
         ),
       ),
     );
   }
+
+  BlocBuilder<UpdateProfileBloc, UpdateProfileState> buildSaveButton() {
+    return BlocBuilder<UpdateProfileBloc, UpdateProfileState>(
+      builder: (context, state) {
+        return BlocBuilder<PickImageCubit, model.User>(
+          builder: (context, stateImage) {
+            return CustomButton(
+              title: 'Lưu',
+              press: state.isFormValid
+                  ? () {
+                      BlocProvider.of<UpdateProfileBloc>(context)
+                          .add(FormSubmitted(
+                        phone: _phoneController.text,
+                        name: _nameController.text,
+                        url: stateImage.urlHinhDaiDien,
+                      ));
+                    }
+                  : null,
+              icon: Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  BlocBuilder<UpdateProfileBloc, UpdateProfileState> buildPhoneInput() {
+    return BlocBuilder<UpdateProfileBloc, UpdateProfileState>(
+      builder: (context, state) {
+        return TextFormField(
+          controller: _phoneController,
+          keyboardType: TextInputType.phone,
+          decoration: InputDecoration(
+            labelText: 'Số điện thoại',
+            hintText: '0353398596',
+            errorText:
+                !state.isPhoneValid ? 'Số điện thoại không hợp lệ' : null,
+          ),
+          onChanged: (value) {
+            BlocProvider.of<UpdateProfileBloc>(context)
+                .add(PhoneChanged(phone: value));
+          },
+        );
+      },
+    );
+  }
+
+  BlocBuilder<UpdateProfileBloc, UpdateProfileState> buildNameInput() {
+    return BlocBuilder<UpdateProfileBloc, UpdateProfileState>(
+      builder: (context, state) {
+        return TextFormField(
+          controller: _nameController,
+          keyboardType: TextInputType.name,
+          decoration: InputDecoration(
+            labelText: 'Tên',
+            hintText: 'James',
+            errorText: !state.isNameValid ? 'Không được để trống ô này' : null,
+          ),
+          onChanged: (value) {
+            BlocProvider.of<UpdateProfileBloc>(context)
+                .add(NameChanged(name: value));
+          },
+        );
+      },
+    );
+  }
 }
 
-class TextFieldProfile extends StatelessWidget {
-  const TextFieldProfile({
-    Key key,
-    @required TextEditingController controller,
-    this.inputType,
-  })  : _controller = controller,
-        super(key: key);
-
-  final TextEditingController _controller;
-  final TextInputType inputType;
+class ImageButton extends StatelessWidget {
+  ImageButton({Key key, this.user}) : super(key: key);
+  String pathDaiDien;
+  final model.User user;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black54, width: 0.5),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextFormField(
-        
-        keyboardType: inputType,
-        controller: _controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-        ),
+    return GestureDetector(
+      onTap: () async {
+        ImagePicker imagePicker = ImagePicker();
+        PickedFile pickedFile = await imagePicker
+            .getImage(source: ImageSource.gallery)
+            .catchError((err) {
+          Fluttertoast.showToast(msg: err.toString());
+        });
+        if (pickedFile != null) {
+          pathDaiDien = pickedFile.path;
+          if (pathDaiDien != null) {
+            BlocProvider.of<PickImageCubit>(context)
+                .pickImage(pathDaiDien, user);
+          }
+        }
+      },
+      child: Icon(
+        Icons.camera_alt,
+        color: Colors.blueGrey,
       ),
     );
   }

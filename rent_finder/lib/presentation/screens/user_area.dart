@@ -161,8 +161,7 @@ class UserArea extends StatelessWidget {
       child: Column(
         children: [
           CachedNetworkImage(
-            imageUrl:
-                (state.user != null) ? state.user.urlHinhDaiDien ?? "" : "",
+            imageUrl: state.user.urlHinhDaiDien ?? "",
             imageBuilder: (context, imageProvider) => Container(
               height: 200,
               width: 200,
@@ -183,19 +182,20 @@ class UserArea extends StatelessWidget {
           ),
           Text(
             (state.user != null)
-                ? state.user.urlHinhDaiDien ?? "Chưa đặt tên"
+                ? state.user.hoTen ?? "Chưa đặt tên"
                 : "Chưa đặt tên",
             style: Theme.of(context).textTheme.headline5,
           ),
           TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/profile');
-              },
-              child: Text(
-                'Chỉnh sửa thông tin',
-                style:
-                    Theme.of(context).textTheme.caption.copyWith(fontSize: 14),
-              )),
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed('/profile', arguments: [state.user]);
+            },
+            child: Text(
+              'Chỉnh sửa thông tin',
+              style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14),
+            ),
+          ),
         ],
       ),
     );

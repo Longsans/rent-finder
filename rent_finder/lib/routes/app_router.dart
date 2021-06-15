@@ -50,7 +50,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => SearchResultScreen());
         break;
         case '/profile':
-        return MaterialPageRoute(builder: (_) => ProfileScreen());
+        return MaterialPageRoute(builder: (_) => ProfileScreen(user: args[0],));
         break;
       default:
         return null;

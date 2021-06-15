@@ -40,7 +40,13 @@ void main() async {
           create: (context) => RegisterBloc(
             userRepository: userRepository,
           ),
-        )
+        ),
+        BlocProvider<UpdateProfileBloc>(
+          create: (context) => UpdateProfileBloc(
+            userRepository: userRepository,
+          ),
+          
+        ),
       ],
       child: MyApp(
         appRouter: appRouter,

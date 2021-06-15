@@ -10,3 +10,5 @@ export 'place/district/district_cubit.dart';
 export 'place/province/province_cubit.dart';
 export 'register_bloc/register_bloc.dart';
 export 'simple_observer_bloc.dart';
+export 'update_profile/update_profile_bloc.dart';
+export 'pick_image/pick_image_cubit.dart';

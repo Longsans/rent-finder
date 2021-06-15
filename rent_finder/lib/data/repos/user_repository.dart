@@ -70,4 +70,18 @@ class UserRepository {
     user.banned = false;
     await _userProvider.createUser(user);
   }
+
+  Future<String> getDownURL({String pathHinhDaiDien, model.User user}) async {
+    return await _userProvider.getDownURL(
+        user: user, pathHinhDaiDien: pathHinhDaiDien);
+  }
+
+  Future<void> updateUser(String phone, String name, String url) async {
+    model.User user = await getCurrentUser();
+    user.sdt = phone ?? "";
+    user.hoTen = name ?? "";
+    user.urlHinhDaiDien = url ?? "";
+
+    await _userProvider.updateAllUserInfo(updatedUser: user);
+  }
 }

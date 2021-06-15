@@ -67,7 +67,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             );
         }
-
+        
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context)
               .add(AuthenticationEventLoggedIn());
@@ -207,7 +207,7 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       autocorrect: false,
                       obscureText: true,
-                      autovalidateMode: AutovalidateMode.always,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (_) {
                         return !state.isPasswordValid
                             ? 'Invalid Password'

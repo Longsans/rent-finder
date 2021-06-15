@@ -13,4 +13,9 @@ class Validators {
   static isValidPassword(String password) {
     return _passwordRegExp.hasMatch(password);
   }
+
+  static isValidPhone(String phone) {
+    return phone.length == 10;
+  }
+
 }
