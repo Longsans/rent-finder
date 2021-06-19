@@ -8,6 +8,7 @@ class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   UserFireStoreApi _userProvider = UserFireStoreApi();
+  HouseFireStoreApi _houseFireStoreApi = HouseFireStoreApi();
   UserRepository({FirebaseAuth firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
@@ -25,7 +26,6 @@ class UserRepository {
   }
 
   Future<User> signInWithGoogle() async {
-    print('cái đcm mày');
     final GoogleSignInAccount googleSignInAccount =
         await _googleSignIn.signIn().catchError((err) {
       print(err.toString());
@@ -60,6 +60,9 @@ class UserRepository {
     String uid = currentUser.uid;
     return await _userProvider.getUserByUID(uid);
   }
+  Future<model.User> getUserByUID(String uid) async {
+    return await _userProvider.getUserByUID(uid);
+  }
 
   Future<void> createUser() async {
     model.User user = model.User();
@@ -70,18 +73,13 @@ class UserRepository {
     user.banned = false;
     await _userProvider.createUser(user);
   }
-
-  Future<String> getDownURL({String pathHinhDaiDien, model.User user}) async {
-    return await _userProvider.getDownURL(
-        user: user, pathHinhDaiDien: pathHinhDaiDien);
-  }
-
   Future<void> updateUser(String phone, String name, String url) async {
     model.User user = await getCurrentUser();
     user.sdt = phone ?? "";
     user.hoTen = name ?? "";
-    user.urlHinhDaiDien = url ?? "";
-
     await _userProvider.updateAllUserInfo(updatedUser: user);
+    if (url != null)
+      await _userProvider.updateHinhDaiDienUser(
+          user: user, pathHinhDaiDien: url);
   }
 }

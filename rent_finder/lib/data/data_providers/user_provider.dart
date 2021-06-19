@@ -42,26 +42,21 @@ class UserFireStoreApi extends BaseApi {
   Future<void> updateMoTaUser({@required model.User updatedUser}) async {
     await _collection.doc(updatedUser.uid).update({'moTa': updatedUser.moTa});
   }
- Future<String> getDownURL (
-      {@required model.User user, @required String pathHinhDaiDien}) async {
-    final file = File(pathHinhDaiDien);
-    final newPfpRef = _storageRoot.child('user_pfp').child(user.uid);
-    await newPfpRef.putFile(file);
-    
-    return await newPfpRef.getDownloadURL();
-  }
+ 
   /// Updates the **current** user with the new profile picture, identified by [pathHinhDaiDien];
   /// then set the new urlHinhDaiDien to [user]
   Future<void> updateHinhDaiDienUser(
-      {@required model.User user, @required String url}) async {
+      {@required model.User user, @required String pathHinhDaiDien}) async {
     // Delete the old pfp from Cloud Storage
     // if (_storageRoot.child('user_pfp') != null)
-    //await _storageRoot.child('user_pfp').child(user.uid).delete();
+    // await _storageRoot.child('user_pfp').child(user.uid).delete();
 
     // Create new File from pathHinhDaiDien and upload it to Storage with file name as user's uid
-    // final file = File(pathHinhDaiDien);
-    // final newPfpRef = _storageRoot.child('user_pfp').child(user.uid);
-    // await newPfpRef.putFile(file);
+    final file = File(pathHinhDaiDien);
+    final newPfpRef = _storageRoot.child('user_pfp').child(user.uid);
+    var uploadTask = newPfpRef.putFile(file);
+    firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+    String url = await taskSnapshot.ref.getDownloadURL();
 
     // And update the new download URL for user's new pfp
     // (pending changes since i think the download URL doesn't depend on the file that's put there)

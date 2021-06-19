@@ -14,3 +14,4 @@ export 'search_area.dart';
 export 'search_result_screen.dart';
 export 'user_area.dart';
 export 'profile_screen.dart';
+export 'post_house_screen.dart';

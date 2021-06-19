@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent_finder/data/repos/user_repository.dart';
 
-import 'constants.dart';
+import 'data/repos/repos.dart';
 import 'logic/bloc.dart';
 import 'routes/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +12,7 @@ void main() async {
   await Firebase.initializeApp();
   UserRepository userRepository =
       UserRepository(firebaseAuth: FirebaseAuth.instance);
+  HouseRepository houseRepository = HouseRepository();
   AppRouter appRouter = new AppRouter();
   runApp(
     MultiBlocProvider(
@@ -20,11 +20,11 @@ void main() async {
         BlocProvider<NavigationBarBloc>(
           create: (context) => NavigationBarBloc(),
         ),
-        BlocProvider<LikeBloc>(
-          create: (context) => LikeBloc(likedHouses),
+        BlocProvider(
+          create: (context) => SavedHouseBloc()..add(LoadSavedHouses()),
         ),
-        BlocProvider<CategoryBloc>(
-          create: (context) => CategoryBloc()..add(CategoryStarted()),
+        BlocProvider(
+          create: (context) => RecentViewBloc()..add(LoadViewedHouses()),
         ),
         BlocProvider<AuthenticationBloc>(
           create: (context) =>
@@ -45,7 +45,9 @@ void main() async {
           create: (context) => UpdateProfileBloc(
             userRepository: userRepository,
           ),
-          
+        ),
+        BlocProvider<HouseBloc>(
+          create: (context) => HouseBloc(houseRepository: houseRepository),
         ),
       ],
       child: MyApp(
@@ -64,7 +66,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: appRouter.onGenerateRoute,
-      initialRoute: '/intro',
+      initialRoute: '/',
     );
   }
 }

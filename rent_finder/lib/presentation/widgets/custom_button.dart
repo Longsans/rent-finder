@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon,
+            icon ??  Container(),
             SizedBox(
               width: defaultPadding / 2,
             ),

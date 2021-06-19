@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rent_finder/logic/bloc.dart';
-import 'package:rent_finder/presentation/widgets/widgets.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+
+import 'package:rent_finder/data/models/models.dart' as model;
+import 'package:rent_finder/presentation/widgets/save_button.dart';
+import 'package:rent_finder/utils/format.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
@@ -17,69 +21,56 @@ class DetailScreen extends StatelessWidget {
   }) : super(key: key);
   final double expandedHeight = 300;
   final double roundedContainerHeight = 30;
-  final House house;
+  final model.House house;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HeartBloc>(
-        create: (context) => HeartBloc(house),
-        child: WillPopScope(
-          onWillPop: () {
-            Navigator.pushReplacementNamed(context, '/');
-            return null;
-          },
-          child: Scaffold(
-              body: SafeArea(
-            child: Stack(
+    return Scaffold(
+        body: SafeArea(
+      child: Stack(
+        children: [
+          CustomScrollView(slivers: [
+            _buildSliverHead(),
+            SliverToBoxAdapter(
+              child: _buildDetail(context),
+            )
+          ]),
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomScrollView(slivers: [
-                  _buildSliverHead(),
-                  SliverToBoxAdapter(
-                    child: _buildDetail(context),
-                  )
-                ]),
-                Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: defaultPadding,
-                      ),
-                      YellowHeartButton(
-                        house: house,
-                        press: () {},
-                      ),
-                    ],
+                CircleAvatar(
+                  backgroundColor: Colors.black12,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
+                SaveButton(house: house),
               ],
             ),
-          )),
-        ));
+          ),
+        ],
+      ),
+    ));
   }
 
   Widget _buildDetail(BuildContext context) {
     Completer<GoogleMapController> _controller = Completer();
     Set<Marker> markers = {};
     var homeMarker = Marker(
-      markerId: MarkerId(house.location),
-      position: house.latLocation,
+      markerId: MarkerId(house.diaChi),
+      position: house.toaDo,
       infoWindow: InfoWindow(
-        title: house.location,
-        snippet: house.price,
+        title: house.diaChi,
+        snippet: Format.toMoney(house.tienThueThang),
       ),
     );
     markers.add(homeMarker);
@@ -99,18 +90,14 @@ class DetailScreen extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.greenAccent,
-                size: 30,
-              ),
+              Icon(Icons.location_on, color: Color(0xFF0D4880), size: 30),
               SizedBox(
                 width: defaultPadding,
               ),
               Expanded(
                 flex: 6,
                 child: Text(
-                  house.location,
+                  house.diaChi,
                   style: Theme.of(context)
                       .textTheme
                       .button
@@ -125,16 +112,12 @@ class DetailScreen extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(
-                Icons.ac_unit,
-                color: Colors.purple[100],
-                size: 30,
-              ),
+              Icon(Icons.attach_money, color: Color(0xFF0D4880), size: 30),
               SizedBox(
                 width: defaultPadding,
               ),
               Text(
-                house.price,
+                Format.toMoney(house.tienThueThang),
                 style: Theme.of(context)
                     .textTheme
                     .button
@@ -152,7 +135,7 @@ class DetailScreen extends StatelessWidget {
             child: GoogleMap(
               markers: markers,
               initialCameraPosition:
-                  CameraPosition(target: house.latLocation, zoom: 15),
+                  CameraPosition(target: house.toaDo, zoom: 15),
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
@@ -169,8 +152,23 @@ class DetailScreen extends StatelessWidget {
             height: defaultPadding / 2,
           ),
           Text(
-            house.description,
+            house.moTa,
             style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+          ),
+          SizedBox(
+            height: defaultPadding * 1.5,
+          ),
+          
+          Text(
+            "Cơ sở vật chất & tiện nghi",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
+          GridView.count(
+            crossAxisCount: 3,
+            physics: NeverScrollableScrollPhysics(),
+            children: _buildUtilitiesList,
+            childAspectRatio: 1,
+            shrinkWrap: true,
           ),
           SizedBox(
             height: defaultPadding * 1.5,
@@ -190,20 +188,59 @@ class DetailScreen extends StatelessWidget {
           SizedBox(
             height: defaultPadding * 1.5,
           ),
-          Text(
-            "Cơ sở vật chất & tiện nghi",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: defaultPadding * 1.5,
-          ),
-          Text(
-            "Địa điểm xung quanh",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
         ],
       ),
     );
+  }
+
+  List<Widget> get _buildUtilitiesList {
+    return [
+      if (house.coSoVatChat.dieuHoa)
+        UtilityCard(
+          svgSrc: 'assets/icons/air_conditioner.svg',
+          title: 'Điều hòa',
+        ),
+      if (house.coSoVatChat.banCong)
+        UtilityCard(
+          svgSrc: 'assets/icons/balcony.svg',
+          title: 'Ban công',
+        ),
+      if (house.coSoVatChat.noiThat)
+        UtilityCard(
+          svgSrc: 'assets/icons/interior.svg',
+          title: 'Nội thất',
+        ),
+      if (house.coSoVatChat.gacLung)
+        UtilityCard(
+          svgSrc: 'assets/icons/mezzanine.svg',
+          title: 'Gác lửng',
+        ),
+      if (house.coSoVatChat.baoVe)
+        UtilityCard(
+          svgSrc: 'assets/icons/guard.svg',
+          title: 'Bảo vệ',
+        ),
+      if (house.coSoVatChat.hoBoi)
+        UtilityCard(
+          svgSrc: 'assets/icons/pool.svg',
+          title: 'Hồ bơi',
+        ),
+      if (house.coSoVatChat.cctv)
+        UtilityCard(
+          svgSrc: 'assets/icons/cctv.svg',
+          title: 'CCTV',
+        ),
+     if (house.coSoVatChat.nuoiThuCung)
+        UtilityCard(
+          svgSrc: 'assets/icons/pet.svg',
+          title: 'Thú cưng',
+        ),
+     if (house.coSoVatChat.sanThuong)
+        UtilityCard(
+          svgSrc: 'assets/icons/roof.svg',
+          title: 'Sân thượng',
+        ),
+    ];
   }
 
   Widget _buildSliverHead() {
@@ -213,33 +250,74 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
+class UtilityCard extends StatelessWidget {
+  const UtilityCard({
+    Key key,
+    this.title,
+    this.svgSrc,
+  }) : super(key: key);
+
+  final String title;
+  final String svgSrc;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(defaultPadding / 2),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 35,
+            width: 35,
+            child: SvgPicture.asset(
+              svgSrc,
+              color: Color(0xFF0D4880),
+            ),
+          ),
+          SizedBox(
+            height: defaultPadding,),
+          Text(
+            title,
+            style: TextStyle(color: Color(0xFF0D4880)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ImageList extends StatelessWidget {
   const ImageList({
     Key key,
     @required this.house,
   }) : super(key: key);
 
-  final House house;
+  final model.House house;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: house.imgList.length,
+        itemCount: house.urlHinhAnh.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/gallery',
-                  arguments: [house.imgList, index]);
+                  arguments: [house.urlHinhAnh, index]);
             },
-            child: Container(
+            child:
+             Container(
               margin: EdgeInsets.only(right: defaultPadding),
               height: 150,
               width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                    image: AssetImage(house.imgList[index]), fit: BoxFit.cover),
+                    image: NetworkImage(house.urlHinhAnh[index]),
+                    fit: BoxFit.cover),
               ),
             ),
           );
@@ -252,14 +330,30 @@ class InfoOwner extends StatelessWidget {
     Key key,
     this.house,
   }) : super(key: key);
-  final House house;
+  final model.House house;
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          backgroundImage: AssetImage(house.avatar),
-          radius: 30,
+        CachedNetworkImage(
+          imageUrl: house.chuNha.urlHinhDaiDien ?? '',
+          imageBuilder: (context, imageProvider) => Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(
+            Icons.account_circle_outlined,
+            size: 60,
+            color: Color(0xFF0D4880),
+          ),
         ),
         SizedBox(
           width: defaultPadding,
@@ -268,7 +362,7 @@ class InfoOwner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              house.owner,
+              house.chuNha.hoTen ?? '',
               style: Theme.of(context).textTheme.subtitle1,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -291,11 +385,12 @@ class InfoOwner extends StatelessWidget {
                   builder: (context) {
                     return AlertDialog(
                       title: Text('Gọi điện'),
-                      content: Text("Bạn có muốn gọi đến số 0353398596 không?"),
+                      content: Text(
+                          "Bạn có muốn gọi đến số ${house.chuNha.sdt} không?"),
                       actions: [
                         TextButton(
                             onPressed: () {
-                              _makeCall('tel:0353398596');
+                              _makeCall('tel:${house.chuNha.sdt}');
                             },
                             child: Text('Có')),
                         TextButton(
@@ -309,7 +404,7 @@ class InfoOwner extends StatelessWidget {
             },
             icon: Icon(
               Icons.phone,
-              color: Colors.yellow,
+              color: Color(0xFF0D4880),
             ),
           ),
         ),
@@ -325,12 +420,12 @@ class InfoOwner extends StatelessWidget {
                   builder: (context) {
                     return AlertDialog(
                       title: Text('Nhắn tin'),
-                      content:
-                          Text("Bạn có muốn nhắn tin đến số 0353398596 không?"),
+                      content: Text(
+                          "Bạn có muốn nhắn tin đến số ${house.chuNha.sdt} không?"),
                       actions: [
                         TextButton(
                             onPressed: () {
-                              _makeSms('0353398596');
+                              _makeSms('${house.chuNha.sdt}');
                             },
                             child: Text('Có')),
                         TextButton(
@@ -344,7 +439,7 @@ class InfoOwner extends StatelessWidget {
             },
             icon: Icon(
               Icons.mail,
-              color: Colors.yellow,
+              color: Color(0xFF0D4880),
             ),
           ),
         ),
@@ -371,7 +466,7 @@ class InfoOwner extends StatelessWidget {
 
 class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  final House house;
+  final model.House house;
   final double roundedContainerHeight;
   DetailSliverDelegate(
       this.expandedHeight, this.house, this.roundedContainerHeight);
@@ -381,11 +476,23 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       children: [
-        Image.asset(
-          house.imgSrc,
-          width: MediaQuery.of(context).size.width,
-          height: expandedHeight,
-          fit: BoxFit.cover,
+        CachedNetworkImage(
+          imageUrl: house.urlHinhAnh[0] ?? '',
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          placeholder: (context, url) =>
+              Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) => Icon(
+            Icons.account_circle_outlined,
+            size: 30,
+            color: Color(0xFF0D4880),
+          ),
         ),
         Positioned(
           top: expandedHeight - roundedContainerHeight - shrinkOffset,

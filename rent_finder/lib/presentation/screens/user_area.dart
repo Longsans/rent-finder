@@ -166,7 +166,7 @@ class UserArea extends StatelessWidget {
               height: 200,
               width: 200,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
+                shape: BoxShape.circle,
                 image: DecorationImage(
                   image: imageProvider,
                   fit: BoxFit.cover,
@@ -180,21 +180,23 @@ class UserArea extends StatelessWidget {
               color: Color(0xFF0D4880),
             ),
           ),
+          SizedBox(height: defaultPadding / 2,),
           Text(
             (state.user != null)
                 ? state.user.hoTen ?? "Chưa đặt tên"
                 : "Chưa đặt tên",
             style: Theme.of(context).textTheme.headline5,
           ),
-          TextButton(
+          TextButton.icon(
             onPressed: () {
               Navigator.of(context)
                   .pushNamed('/profile', arguments: [state.user]);
             },
-            child: Text(
+            label: Text(
               'Chỉnh sửa thông tin',
               style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14),
             ),
+            icon: Icon(Icons.edit, color: Colors.black),
           ),
         ],
       ),
@@ -274,29 +276,4 @@ class TitleCard extends StatelessWidget {
   }
 }
 
-class HeaderUserFailure extends StatelessWidget {
-  const HeaderUserFailure({
-    Key key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 250,
-          child: SvgPicture.asset('assets/images/login.svg'),
-        ),
-        Text(
-          'Đăng nhập để có trải nghiệm tốt nhất & đồng bộ hóa tài khoản của bạn trên mọi thiết bị',
-          maxLines: 3,
-          style: Theme.of(context)
-              .textTheme
-              .headline5
-              .copyWith(fontWeight: FontWeight.w500, fontSize: 20),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-}

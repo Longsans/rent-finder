@@ -1,29 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:rent_finder/presentation/screens/screens.dart';
 
-
 class AppRouter {
-
-
-
   Route onGenerateRoute(RouteSettings routeSettings) {
     List<dynamic> args = routeSettings.arguments;
     switch (routeSettings.name) {
       case '/intro':
-       return MaterialPageRoute(
-            builder: (_) => IntroPage());
+        return MaterialPageRoute(builder: (_) => IntroPage());
         break;
-        case '/login':
-       return MaterialPageRoute(
-            builder: (_) => LoginScreen());
+      case '/login':
+        return MaterialPageRoute(builder: (_) => LoginScreen());
         break;
       case '/':
-        return MaterialPageRoute(
-            builder: (_) => HomeScreen());
+        return MaterialPageRoute(builder: (_) => HomeScreen());
         break;
-        case '/register':
-        return MaterialPageRoute(
-            builder: (_) => RegisterScreen());
+      case '/register':
+        return MaterialPageRoute(builder: (_) => RegisterScreen());
         break;
       case '/detail':
         return MaterialPageRoute(builder: (_) {
@@ -49,9 +41,14 @@ class AppRouter {
       case '/result':
         return MaterialPageRoute(builder: (_) => SearchResultScreen());
         break;
-        case '/profile':
-        return MaterialPageRoute(builder: (_) => ProfileScreen(user: args[0],));
+      case '/profile':
+        return MaterialPageRoute(
+          builder: (_) => ProfileScreen(
+            user: args[0],
+          ),
+        );
         break;
+     
       default:
         return null;
     }

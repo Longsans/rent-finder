@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
@@ -35,8 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocProvider<PickImageCubit>(
       create: (context) => PickImageCubit(
           userRepository:
-              BlocProvider.of<UpdateProfileBloc>(context).userRepository)
-        ..start(user),
+              BlocProvider.of<UpdateProfileBloc>(context).userRepository),
       child: Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
@@ -111,31 +112,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            BlocBuilder<PickImageCubit, model.User>(
+                            BlocBuilder<PickImageCubit, String>(
                               builder: (context, state) {
-                                print(state);
-                                return CachedNetworkImage(
-                                  imageUrl: state.urlHinhDaiDien ?? '',
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    height: 90,
-                                    width: 90,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
+                                if (state == null)
+                                  return CachedNetworkImage(
+                                    imageUrl: user.urlHinhDaiDien ?? '',
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      height: 90,
+                                      width: 90,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(
-                                    Icons.account_circle_outlined,
-                                    size: 90,
-                                    color: Color(0xFF0D4880),
-                                  ),
-                                );
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.account_circle_outlined,
+                                      size: 90,
+                                      color: Color(0xFF0D4880),
+                                    ),
+                                  );
+                                else {
+                                  return Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Center(
+                                        child: Container(
+                                          height: 90,
+                                          width: 90,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: FileImage(File(state)),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              BlocProvider.of<PickImageCubit>(
+                                                      context)
+                                                  .removeImage();
+                                            },
+                                            child: CircleAvatar(backgroundColor: Colors.black12, child: Icon(Icons.close, color: Colors.white))),
+                                      )
+                                    ],
+                                  );
+                                }
                               },
                             ),
                             ImageButton(user: user),
@@ -166,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   BlocBuilder<UpdateProfileBloc, UpdateProfileState> buildSaveButton() {
     return BlocBuilder<UpdateProfileBloc, UpdateProfileState>(
       builder: (context, state) {
-        return BlocBuilder<PickImageCubit, model.User>(
+        return BlocBuilder<PickImageCubit, String>(
           builder: (context, stateImage) {
             return CustomButton(
               title: 'Lưu',
@@ -176,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           .add(FormSubmitted(
                         phone: _phoneController.text,
                         name: _nameController.text,
-                        url: stateImage.urlHinhDaiDien,
+                        url: stateImage,
                       ));
                     }
                   : null,
@@ -245,14 +275,11 @@ class ImageButton extends StatelessWidget {
         PickedFile pickedFile = await imagePicker
             .getImage(source: ImageSource.gallery)
             .catchError((err) {
-          Fluttertoast.showToast(msg: err.toString());
+          Fluttertoast.showToast(msg: 'Đã có lỗi xảy ra');
         });
         if (pickedFile != null) {
           pathDaiDien = pickedFile.path;
-          if (pathDaiDien != null) {
-            BlocProvider.of<PickImageCubit>(context)
-                .pickImage(pathDaiDien, user);
-          }
+          BlocProvider.of<PickImageCubit>(context).pickImage(pathDaiDien);
         }
       },
       child: Icon(

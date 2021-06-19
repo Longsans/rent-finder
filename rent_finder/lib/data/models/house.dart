@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'models.dart';
 
@@ -28,7 +29,7 @@ class House extends SerializableObject {
     phuongXa = json['phuongXa'] as String;
     quanHuyen = json['quanHuyen'] as String;
     dienTich = json['dienTich'] as double;
-    urlHinhAnh = json['urlHinhAnh'] as List<String>;
+    urlHinhAnh = json['urlHinhAnh'].cast<String>();
     loaiChoThue = LoaiChoThue.values.firstWhere(
         (element) => describeEnum(element) == json['loaiChoThue'] as String);
     soPhongNgu = json['soPhongNgu'] as int;
@@ -43,19 +44,23 @@ class House extends SerializableObject {
         describeEnum(element) == json['coSoVatChat']['mayGiat'].toString());
     coSoVatChat.choDauXe = CSVCChoDauXe.values.firstWhere((element) =>
         describeEnum(element) == json['coSoVatChat']['choDauXe'].toString());
-    coSoVatChat.banCong = json.containsValue('BanCong');
-    coSoVatChat.baoVe = json.containsValue('BaoVe');
-    coSoVatChat.cctv = json.containsValue('CCTV');
-    coSoVatChat.dieuHoa = json.containsValue('ChoDauXe');
-    coSoVatChat.gacLung = json.containsValue('GacLung');
-    coSoVatChat.hoBoi = json.containsValue('HoBoi');
-    coSoVatChat.noiThat = json.containsValue('NoiThat');
-    coSoVatChat.nuoiThuCung = json.containsValue('NuoiThuCung');
-    coSoVatChat.sanThuong = json.containsValue('SanThuong');
+    coSoVatChat.banCong = json['coSoVatChat']['banCong'] as bool;
+    coSoVatChat.baoVe = json['coSoVatChat']['baoVe'] as bool;
+    coSoVatChat.cctv = json['coSoVatChat']['cctv'] as bool;
+    coSoVatChat.dieuHoa = json['coSoVatChat']['dieuHoa'] as bool;
+    coSoVatChat.gacLung = json['coSoVatChat']['gacLung'] as bool;
+    coSoVatChat.hoBoi = json['coSoVatChat']['hoBoi'] as bool;
+    coSoVatChat.noiThat = json['coSoVatChat']['noiThat'] as bool;
+    coSoVatChat.nuoiThuCung = json['coSoVatChat']['nuoiThuCung'] as bool;
+    coSoVatChat.sanThuong = json['coSoVatChat']['sanThuong'] as bool;
 
     moTa = json['moTa'] as String;
     _daGo = json['daGo'] as bool;
-    _chuNha = User(uid: json['idChuNha'] as String);
+    _chuNha = User(
+        uid: json['idChuNha'] as String,
+        sdt: json['sdtChuNha'] as String,
+        urlHinhDaiDien: json['avatarChuNha'] as String,
+        hoTen: json['tenChuNha'] as String);
     _uid = json['uid'] as String;
   }
 
@@ -106,7 +111,7 @@ class House extends SerializableObject {
     jsonMap['moTa'] = moTa;
     jsonMap['daGo'] = _daGo;
     jsonMap['idChuNha'] = _chuNha.uid;
-
+    jsonMap['uid'] = _uid;
     return jsonMap;
   }
 
@@ -122,6 +127,7 @@ class House extends SerializableObject {
       'soPhongNgu': soPhongNgu,
       'soPhongTam': soPhongTam,
       'urlHinhAnh': urlHinhAnh,
+      'idChuNha': _chuNha.uid,
     };
   }
 
@@ -129,6 +135,10 @@ class House extends SerializableObject {
   void setSensitiveInfo(bool daGo, User chuNha) {
     this._daGo = daGo;
     this._chuNha = chuNha;
+  }
+
+  void setUid(String uid) {
+    this._uid = uid;
   }
 
   // House info
@@ -154,6 +164,18 @@ class House extends SerializableObject {
   bool get daGO => _daGo;
   User get chuNha => _chuNha;
   String get uid => _uid;
+  String get diaChi =>
+      soNha +
+      " " +
+      tenDuong +
+      ", " +
+      phuongXa +
+      ", " +
+      quanHuyen +
+      ", Thành phố Hồ Chí Minh";
+  LatLng get toaDo {
+    return LatLng(10.764281398809217, 106.68965913340197);
+  }
 }
 
 /// Enum for renting type

@@ -19,7 +19,7 @@ class GalleryPage extends StatelessWidget {
             itemCount: imgList.length,
             builder: (context, index) {
               return PhotoViewGalleryPageOptions(
-                imageProvider: AssetImage(imgList[index]),
+                imageProvider: NetworkImage(imgList[index]),
                 minScale: PhotoViewComputedScale.contained * 0.8,
                 maxScale: PhotoViewComputedScale.covered * 2,
               );
