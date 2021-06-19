@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder/constants.dart';
 import 'package:rent_finder/logic/bloc.dart';
 import 'package:rent_finder/presentation/widgets/widgets.dart';
@@ -43,7 +42,7 @@ class UserArea extends StatelessWidget {
                                 'Quản lý các thông tin cá nhân dễ dàng hơn',
                             title: 'Cá nhân',
                             icon: Icon(
-                              Icons.manage_accounts,
+                              Icons.account_circle_rounded,
                               color: Colors.white,
                             ),
                           )

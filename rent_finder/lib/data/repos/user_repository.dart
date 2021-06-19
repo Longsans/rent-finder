@@ -8,7 +8,6 @@ class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   UserFireStoreApi _userProvider = UserFireStoreApi();
-  HouseFireStoreApi _houseFireStoreApi = HouseFireStoreApi();
   UserRepository({FirebaseAuth firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 

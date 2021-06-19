@@ -265,12 +265,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 class ImageButton extends StatelessWidget {
   ImageButton({Key key, this.user}) : super(key: key);
-  String pathDaiDien;
   final model.User user;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        String pathDaiDien;
         ImagePicker imagePicker = ImagePicker();
         PickedFile pickedFile = await imagePicker
             .getImage(source: ImageSource.gallery)
