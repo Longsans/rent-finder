@@ -49,6 +49,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       yield LoginState.loading();
       await _userRepository.signInWithGoogle();
+
+      if ((await _userRepository.getCurrentUser()) == null) {
+        await _userRepository.createUser();
+      }
       yield LoginState.success();
     } catch (_) {
       print('ko đăng nhập đc ');

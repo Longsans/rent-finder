@@ -59,6 +59,7 @@ class UserRepository {
     String uid = currentUser.uid;
     return await _userProvider.getUserByUID(uid);
   }
+
   Future<model.User> getUserByUID(String uid) async {
     return await _userProvider.getUserByUID(uid);
   }
@@ -72,6 +73,7 @@ class UserRepository {
     user.banned = false;
     await _userProvider.createUser(user);
   }
+
   Future<void> updateUser(String phone, String name, String url) async {
     model.User user = await getCurrentUser();
     user.sdt = phone ?? "";

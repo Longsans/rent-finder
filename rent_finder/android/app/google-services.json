@@ -1,182 +1,49 @@
 {
   "project_info": {
-    "project_number": "709175202694",
-    "project_id": "test-37d95",
-    "storage_bucket": "test-37d95.appspot.com"
+    "project_number": "718577392809",
+    "project_id": "rent-finder-93945",
+    "storage_bucket": "rent-finder-93945.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:709175202694:android:0b021f76a51b2b7b741207",
-        "android_client_info": {
-          "package_name": "com.example.call_api"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "709175202694-jj4cumdah08ddf7hp9dqogbfrtlme913.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.call_api",
-            "certificate_hash": "a60b64a473716fe7dea6aed87540d127798d7eca"
-          }
-        },
-        {
-          "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCM0SxgBu4WJ20AcDEB3XCStPtTCJgC8T0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:709175202694:android:6d6b7d531659fc08741207",
-        "android_client_info": {
-          "package_name": "com.example.firebase_auth"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "709175202694-u138v5k4gunb7ivhuev5enml8b1nb7fv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.firebase_auth",
-            "certificate_hash": "a60b64a473716fe7dea6aed87540d127798d7eca"
-          }
-        },
-        {
-          "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCM0SxgBu4WJ20AcDEB3XCStPtTCJgC8T0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:709175202694:android:270382dbfa2514c4741207",
-        "android_client_info": {
-          "package_name": "com.example.google_auth"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "709175202694-cqitl0j7kat9fo8qtetg1bmisjigk3nu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.google_auth",
-            "certificate_hash": "a60b64a473716fe7dea6aed87540d127798d7eca"
-          }
-        },
-        {
-          "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCM0SxgBu4WJ20AcDEB3XCStPtTCJgC8T0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:709175202694:android:977a01b3a58c43d0741207",
-        "android_client_info": {
-          "package_name": "com.example.push_notification"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "709175202694-pkau22i9639jp96dvq43rndb5u55aoan.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.push_notification",
-            "certificate_hash": "a60b64a473716fe7dea6aed87540d127798d7eca"
-          }
-        },
-        {
-          "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCM0SxgBu4WJ20AcDEB3XCStPtTCJgC8T0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:709175202694:android:156d15753ff1e9d8741207",
+        "mobilesdk_app_id": "1:718577392809:android:4c5f4c9b926f1abbacddb8",
         "android_client_info": {
           "package_name": "com.example.rent_finder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
+          "client_id": "718577392809-1a3isvebte0hmkmp2cvc5n5g9fgjcddn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rent_finder",
+            "certificate_hash": "0a51e1cc5dbdc39d7951827989cc051f49947e5a"
+          }
+        },
+        {
+          "client_id": "718577392809-o1l67erpo1h1d624porcb3k5elt7sk64.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCM0SxgBu4WJ20AcDEB3XCStPtTCJgC8T0"
+          "current_key": "AIzaSyBoMP7bx8w9wFbp0lTz9L2rfCM06YL2d1Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "709175202694-c4q54r13n1g9bbdk68jj767btjdckaij.apps.googleusercontent.com",
+              "client_id": "718577392809-o1l67erpo1h1d624porcb3k5elt7sk64.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "718577392809-s932569ihq52i4jgf66k3mehvsvti6j0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rentFinder"
+              }
             }
           ]
         }

@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -22,7 +20,7 @@ class UserFireStoreApi extends BaseApi {
 
   /// Create a user in Firestore database with uid as uid of the **signed in** user
   ///
-  /// **NOTE:** When creating a new user, call *Auth.instance.signIn* first and pass the UID of the signed in user to this function
+  /// **NOTE:** When creating a new user, call *Auth.instance.signIn* first and after that pass the UID of the signed in user to this function
   Future<void> createUser(model.User user) async {
     await _collection.doc(user.uid).set(user.toJson());
   }
@@ -42,7 +40,7 @@ class UserFireStoreApi extends BaseApi {
   Future<void> updateMoTaUser({@required model.User updatedUser}) async {
     await _collection.doc(updatedUser.uid).update({'moTa': updatedUser.moTa});
   }
- 
+
   /// Updates the **current** user with the new profile picture, identified by [pathHinhDaiDien];
   /// then set the new urlHinhDaiDien to [user]
   Future<void> updateHinhDaiDienUser(
