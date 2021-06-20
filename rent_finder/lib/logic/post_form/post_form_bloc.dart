@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rent_finder/data/models/models.dart' as model;
-import 'package:rent_finder/data/repos/house_repository.dart';
+import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/repos/house_repository.dart';
 
 part 'post_form_event.dart';
 part 'post_form_state.dart';

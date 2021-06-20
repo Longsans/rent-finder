@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rent_finder/constants.dart';
+import 'package:rent_finder_hi/constants.dart';
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({

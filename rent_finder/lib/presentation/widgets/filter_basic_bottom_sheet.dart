@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent_finder/data/models/filter.dart';
-import 'package:rent_finder/logic/bloc.dart';
-import 'package:rent_finder/presentation/widgets/custom_button.dart';
+import 'package:rent_finder_hi/data/models/filter.dart';
+import 'package:rent_finder_hi/logic/bloc.dart';
+import 'package:rent_finder_hi/presentation/widgets/custom_button.dart';
 
 import '../../constants.dart';
 

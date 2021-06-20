@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rent_finder/constants.dart';
-import 'package:rent_finder/presentation/widgets/widgets.dart';
+import 'package:rent_finder_hi/constants.dart';
+import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 class FindHouseScreen extends StatelessWidget {
   @override

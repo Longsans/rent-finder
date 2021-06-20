@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:rent_finder/data/data_providers/data_providers.dart';
-import 'package:rent_finder/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/data_providers/data_providers.dart';
+import 'package:rent_finder_hi/data/models/models.dart' as model;
 
 class HouseRepository {
   final HouseFireStoreApi houseFireStoreApi = HouseFireStoreApi();

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rent_finder/data/repos/user_repository.dart';
-import 'package:rent_finder/utils/validators.dart';
+import 'package:rent_finder_hi/data/repos/user_repository.dart';
+import 'package:rent_finder_hi/utils/validators.dart';
 part 'update_profile_event.dart';
 part 'update_profile_state.dart';
 

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:rent_finder/data/models/models.dart' as model;
-import 'package:rent_finder/logic/bloc.dart';
+import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/logic/bloc.dart';
 
 part 'filtered_houses_event.dart';
 part 'filtered_houses_state.dart';

@@ -1,8 +1,8 @@
-import 'package:rent_finder/data/repos/user_repository.dart';
+import 'package:rent_finder_hi/data/repos/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent_finder/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/models/models.dart' as model;
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 

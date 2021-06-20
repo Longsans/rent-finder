@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:rent_finder/data/models/models.dart';
+import 'package:rent_finder_hi/data/models/models.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rent_finder/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'data_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;

@@ -1,5 +1,5 @@
-import 'package:rent_finder/data/repos/user_repository.dart';
-import 'package:rent_finder/utils/validators.dart';
+import 'package:rent_finder_hi/data/repos/user_repository.dart';
+import 'package:rent_finder_hi/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 part 'login_state.dart';

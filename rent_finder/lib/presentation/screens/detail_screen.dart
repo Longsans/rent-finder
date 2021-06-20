@@ -7,9 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
-import 'package:rent_finder/data/models/models.dart' as model;
-import 'package:rent_finder/presentation/widgets/save_button.dart';
-import 'package:rent_finder/utils/format.dart';
+import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/presentation/widgets/save_button.dart';
+import 'package:rent_finder_hi/utils/format.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rent_finder/logic/bloc.dart';
+import 'package:rent_finder_hi/logic/bloc.dart';
 import 'screens.dart';
 
 class HomeArea extends StatelessWidget {

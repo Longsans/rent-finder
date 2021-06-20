@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent_finder/data/models/filter.dart';
-import 'package:rent_finder/logic/place/commune/commune_cubit.dart';
-import 'package:rent_finder/logic/place/district/district_cubit.dart';
-import 'package:rent_finder/presentation/widgets/widgets.dart';
+import 'package:rent_finder_hi/data/models/filter.dart';
+import 'package:rent_finder_hi/logic/place/commune/commune_cubit.dart';
+import 'package:rent_finder_hi/logic/place/district/district_cubit.dart';
+import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 import '../../constants.dart';
 

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rent_finder/data/data_providers/data_providers.dart';
-import 'package:rent_finder/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/data_providers/data_providers.dart';
+import 'package:rent_finder_hi/data/models/models.dart' as model;
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;

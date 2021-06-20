@@ -1,4 +1,4 @@
-import 'package:rent_finder/data/models/models.dart';
+import 'package:rent_finder_hi/data/models/models.dart';
 
 class Filter {
   final int soPhongNgu, soPhongTam;

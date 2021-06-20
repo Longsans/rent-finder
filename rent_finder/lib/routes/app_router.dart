@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rent_finder/presentation/screens/screens.dart';
+import 'package:rent_finder_hi/presentation/screens/screens.dart';
 
 class AppRouter {
   Route onGenerateRoute(RouteSettings routeSettings) {
