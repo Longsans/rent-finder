@@ -32,15 +32,15 @@ class SavedHouseBloc extends Bloc<SavedHouseEvent, SavedHouseState> {
   ) async* {
     if (housesSubscription != null) housesSubscription.cancel();
     housesSubscription =
-        houseRepository.savedHouses(event.userUid).listen((housesUid) {
-      add(SavedHousesUpdate(housesUid: housesUid));
+        houseRepository.savedHouses(event.userUid).listen((houses) {
+      add(SavedHousesUpdate(houses: houses));
     });
   }
 
   Stream<SavedHouseState> _mapAddToSavedToState(
     AddToSaved event,
   ) async* {
-    print(event.user.uid + event.house.uid);
+    // print(event.user.uid + event.house.uid);
     await houseRepository.addHouseToUserSavedHouses(
         event.user.uid, event.house);
   }
@@ -55,15 +55,7 @@ class SavedHouseBloc extends Bloc<SavedHouseEvent, SavedHouseState> {
   Stream<SavedHouseState> _mapSavedHousesUpdateToState(
     SavedHousesUpdate event,
   ) async* {
-    List<model.House> houses = [];
-    for (int i = 0; i < event.housesUid.length; i++) {
-      model.House house =
-          await houseRepository.getHouseByUid(event.housesUid[i]);
-      if (house != null) {
-        houses.add(house);
-      }
-    }
-    yield SavedHouseLoaded(houses: houses);
+    yield SavedHouseLoaded(houses: event.houses);
   }
 
   @override

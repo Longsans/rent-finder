@@ -31,10 +31,9 @@ class RemoveSavedHouse extends SavedHouseEvent {
 }
 
 class SavedHousesUpdate extends SavedHouseEvent {
-  final List<String> housesUid;
+  final List<model.House> houses;
 
-  SavedHousesUpdate({this.housesUid});
+  SavedHousesUpdate({this.houses});
   @override
-
-  List<Object> get props => [housesUid];
+  List<Object> get props => [houses];
 }

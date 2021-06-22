@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/repos/repos.dart' as repos;
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
@@ -27,7 +28,7 @@ class HouseInfoBigCard extends StatelessWidget {
             return BlocBuilder<RecentViewBloc, RecentViewState>(
               builder: (context, state) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (state is RecentViewLoaded &&
                         authState is AuthenticationStateSuccess) {
                       if (state.houses
@@ -41,7 +42,9 @@ class HouseInfoBigCard extends StatelessWidget {
                       BlocProvider.of<RecentViewBloc>(context)
                           .add(AddToViewed(user: authState.user, house: house));
                     }
-                    Navigator.pushNamed(context, '/detail', arguments: [house]);
+                    Navigator.pushNamed(context, '/detail', arguments: [
+                      await repos.HouseRepository().getHouseByUid(house.uid)
+                    ]);
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: defaultPadding),

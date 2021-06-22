@@ -34,7 +34,7 @@ class RecentViewBloc extends Bloc<RecentViewEvent, RecentViewState> {
     if (housesSubscription != null) housesSubscription.cancel();
     housesSubscription =
         houseRepository.viewedHouses(event.userUid).listen((houses) {
-      add(ViewedHousesUpdate(housesUid: houses));
+      add(ViewedHousesUpdate(houses: houses));
     });
   }
 
@@ -55,13 +55,7 @@ class RecentViewBloc extends Bloc<RecentViewEvent, RecentViewState> {
   Stream<RecentViewState> _mapViewedHousesUpdateToState(
     ViewedHousesUpdate event,
   ) async* {
-    List<model.House> houses = [];
-    for (int i = 0; i < event.housesUid.length; i++) {
-      model.House house =
-          await houseRepository.getHouseByUid(event.housesUid[i]);
-      if (house != null) houses.add(house);
-    }
-    yield RecentViewLoaded(houses: houses);
+    yield RecentViewLoaded(houses: event.houses);
   }
 
   @override

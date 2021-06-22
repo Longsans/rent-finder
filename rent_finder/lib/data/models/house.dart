@@ -20,7 +20,8 @@ class House extends SerializableObject {
       this.tinhTrang,
       this.ngayVaoO,
       this.coSoVatChat,
-      this.moTa});
+      this.moTa,
+      this.toaDo});
 
   // Map json to members
   House.fromJson(Map<String, dynamic> json) {
@@ -55,6 +56,9 @@ class House extends SerializableObject {
     coSoVatChat.sanThuong = json['coSoVatChat']['sanThuong'] as bool;
 
     moTa = json['moTa'] as String;
+    GeoPoint location = json['toaDo'];
+    toaDo = LatLng(location.latitude, location.longitude);
+
     _daGo = json['daGo'] as bool;
     _chuNha = User(
         uid: json['idChuNha'] as String,
@@ -64,7 +68,8 @@ class House extends SerializableObject {
     _uid = json['uid'] as String;
   }
 
-  House.fromSubcollectionJson(Map<String, dynamic> map) {
+  House.fromSnippetJson(Map<String, dynamic> map) {
+    _uid = map['houseUid'] as String;
     soNha = map['soNha'] as String;
     tenDuong = map['tenDuong'] as String;
     phuongXa = map['phuongXa'] as String;
@@ -75,7 +80,7 @@ class House extends SerializableObject {
     tienThueThang = map['tienThueThang'] as double;
     soPhongNgu = map['soPhongNgu'] as int;
     soPhongTam = map['soPhongTam'] as int;
-    urlHinhAnh = map['urlHinhAnh'] as List<String>;
+    urlHinhAnh = List<String>.from(map['urlHinhAnh']);
   }
 
   // Serialize
@@ -111,12 +116,14 @@ class House extends SerializableObject {
     jsonMap['moTa'] = moTa;
     jsonMap['daGo'] = _daGo;
     jsonMap['idChuNha'] = _chuNha.uid;
-    jsonMap['uid'] = _uid;
+    jsonMap['toaDo'] = GeoPoint(toaDo.latitude, toaDo.longitude);
+
     return jsonMap;
   }
 
-  Map<String, dynamic> toSubcollectionJson() {
+  Map<String, dynamic> toSnippetJson() {
     return {
+      'houseUid': _uid,
       'soNha': soNha,
       'tenDuong': tenDuong,
       'phuongXa': phuongXa,
@@ -127,7 +134,6 @@ class House extends SerializableObject {
       'soPhongNgu': soPhongNgu,
       'soPhongTam': soPhongTam,
       'urlHinhAnh': urlHinhAnh,
-      'idChuNha': _chuNha.uid,
     };
   }
 
@@ -156,6 +162,7 @@ class House extends SerializableObject {
   DateTime ngayVaoO;
   CoSoVatChat coSoVatChat;
   String moTa;
+  LatLng toaDo;
 
   bool _daGo = false; // true nếu bài đăng nhà đã bị gỡ
   User _chuNha;
@@ -173,9 +180,6 @@ class House extends SerializableObject {
       ", " +
       quanHuyen +
       ", Thành phố Hồ Chí Minh";
-  LatLng get toaDo {
-    return LatLng(10.764281398809217, 106.68965913340197);
-  }
 }
 
 /// Enum for renting type
@@ -215,15 +219,3 @@ class CoSoVatChat {
   bool cctv;
   bool nuoiThuCung;
 }
-
-// enum CSVCKhac {
-//   DieuHoa,
-//   BanCong,
-//   NoiThat,
-//   GacLung,
-//   BaoVe,
-//   HoBoi,
-//   SanThuong,
-//   CCTV,
-//   NuoiThuCung
-// }
