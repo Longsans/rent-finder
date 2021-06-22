@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rent_finder/logic/bloc/navigation_bar_bloc.dart';
-import 'package:rent_finder/presentation/screens/saved_area.dart';
-
+import 'package:rent_finder_hi/logic/bloc.dart';
+import 'package:rent_finder_hi/presentation/screens/home_area.dart';
 import '../../constants.dart';
-import 'search_area.dart';
-import 'user_area.dart';
+import 'screens.dart';
 
 class HomeScreen extends StatelessWidget {
+  HomeScreen();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +25,16 @@ class HomeScreen extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/home.svg',
+                state.index != 0 ? 'assets/icons/home.svg' : 'assets/icons/home_filled.svg',
                 width: 21,
                 height: 21,
-                color: state.index != 0 ? Colors.black87 : textColor,
+                color: state.index != 0 ? Colors.black87 :textColor,
               ),
               label: 'Trang Chính',
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/search.svg',
+                state.index != 1 ? 'assets/icons/search.svg' : 'assets/icons/search_filled.svg',
                 width: 21,
                 height: 21,
                 color: state.index != 1 ? Colors.black87 : textColor,
@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/heart.svg',
+                state.index != 2 ? 'assets/icons/heart.svg' : 'assets/icons/heart_filled.svg',
                 width: 21,
                 height: 21,
                 color: state.index != 2 ? Colors.black87 : textColor,
@@ -52,7 +52,7 @@ class HomeScreen extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/user.svg',
+                state.index != 3 ? 'assets/icons/user.svg' : 'assets/icons/user_filled.svg',
                 width: 21,
                 height: 21,
                 color: state.index != 3 ? Colors.black87 : textColor,
@@ -66,12 +66,10 @@ class HomeScreen extends StatelessWidget {
         builder: (context, state) {
           return IndexedStack(
             children: [
-              Center(
-                child: Text('Home Screen'),
-              ),
+              HomeArea(),
               SearchArea(),
               SavedArea(),
-              UserArea()
+              UserArea(),
             ],
             index: state.index,
           );
