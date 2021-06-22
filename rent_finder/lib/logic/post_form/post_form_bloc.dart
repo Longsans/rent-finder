@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'package:rent_finder_hi/data/repos/house_repository.dart';
 
@@ -71,6 +72,9 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
     try {
       house.urlHinhAnh = await houseRepository.getDownURLs(house, files);
       house.setUid(house.ngayVaoO.millisecondsSinceEpoch.toString());
+
+      //TODO: implement geolocation validation on address
+      house.toaDo = LatLng(10.7853985, 106.7066477);
       await houseRepository.createHouse(house);
       yield PostFormState.success();
     } catch (err) {

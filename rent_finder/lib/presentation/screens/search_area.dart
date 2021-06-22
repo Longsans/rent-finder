@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/repos/repos.dart' as repos;
 
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/screens/screens.dart';
@@ -51,7 +52,7 @@ class SearchArea extends StatelessWidget {
               //   'Đã xem gần đây',
               //   style: TextStyle(fontSize: 16),
               // ),
-              
+
               SizedBox(height: defaultPadding),
               Expanded(
                 child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -62,8 +63,8 @@ class SearchArea extends StatelessWidget {
                     return BlocBuilder<RecentViewBloc, RecentViewState>(
                       builder: (context, state) {
                         if (authState is AuthenticationStateSuccess) {
-                          if (state is RecentViewLoaded)
-                          if (state.houses.length > 0)
+                          if (state
+                              is RecentViewLoaded) if (state.houses.length > 0)
                             return ListView.builder(
                               itemCount: state.houses.length,
                               itemBuilder: (context, index) {
@@ -73,12 +74,21 @@ class SearchArea extends StatelessWidget {
                                 );
                               },
                             );
-                            else return  Center(child: SvgPicture.asset('assets/images/search.svg', width: MediaQuery.of(context).size.width,));
+                          else
+                            return Center(
+                                child: SvgPicture.asset(
+                              'assets/images/search.svg',
+                              width: MediaQuery.of(context).size.width,
+                            ));
                           else {
                             return Center(child: CircularProgressIndicator());
                           }
                         } else {
-                          return Center(child: SvgPicture.asset('assets/images/search.svg', width: MediaQuery.of(context).size.width,));
+                          return Center(
+                              child: SvgPicture.asset(
+                            'assets/images/search.svg',
+                            width: MediaQuery.of(context).size.width,
+                          ));
                         }
                       },
                     );
@@ -112,7 +122,7 @@ class RecentHomeListTile extends StatelessWidget {
             return BlocBuilder<RecentViewBloc, RecentViewState>(
               builder: (context, state) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (state is RecentViewLoaded &&
                         authState is AuthenticationStateSuccess) {
                       if (state.houses
@@ -126,7 +136,9 @@ class RecentHomeListTile extends StatelessWidget {
                       BlocProvider.of<RecentViewBloc>(context)
                           .add(AddToViewed(user: authState.user, house: house));
                     }
-                    Navigator.pushNamed(context, '/detail', arguments: [house]);
+                    Navigator.pushNamed(context, '/detail', arguments: [
+                      await repos.HouseRepository().getHouseByUid(house.uid)
+                    ]);
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: defaultPadding / 2),

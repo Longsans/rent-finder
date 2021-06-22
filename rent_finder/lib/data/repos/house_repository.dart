@@ -11,14 +11,14 @@ class HouseRepository {
   }
 
   Future<List<model.House>> getListHouseByOwner(model.User user) async {
-    return await houseFireStoreApi.getAllHousesOwnedByUser(user.uid);
+    return await houseFireStoreApi.housesOwnedByUser(user.uid);
   }
 
   Future<List<String>> getDownURLs(model.House house, List<File> files) async {
     List<String> urlHinhAnh = [];
     for (int i = 0; i < files.length; i++) {
       String url =
-          await houseFireStoreApi.getDownURL(house: house, file: files[i]);
+          await houseFireStoreApi.getDownloadURL(house: house, file: files[i]);
       urlHinhAnh.add(url);
     }
     return urlHinhAnh;
@@ -26,9 +26,10 @@ class HouseRepository {
 
   Future<model.House> getHouseByUid(String uid) async {
     final house = await houseFireStoreApi.getHouseByUID(uid);
-    if (house != null)
-    {final chuNha = await userFireStoreApi.getUserByUID(house.chuNha.uid);
-    house.setSensitiveInfo(false, chuNha);}
+    if (house != null) {
+      final chuNha = await userFireStoreApi.getUserByUID(house.chuNha.uid);
+      house.setSensitiveInfo(false, chuNha);
+    }
     return house;
   }
 
@@ -36,12 +37,12 @@ class HouseRepository {
     return houseFireStoreApi.houses();
   }
 
-  Stream<List<String>> savedHouses(String userUid) {
+  Stream<List<model.House>> savedHouses(String userUid) {
     return houseFireStoreApi.savedHouses(userUid);
   }
 
-  Stream<List<String>> viewedHouses(String userUid) {
-    return houseFireStoreApi.viewedHouses(userUid);
+  Stream<List<model.House>> viewedHouses(String userUid) {
+    return houseFireStoreApi.lastViewedHouses(userUid);
   }
 
   Future<void> addHouseToUserSavedHouses(

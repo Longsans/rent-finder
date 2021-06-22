@@ -6,6 +6,7 @@ abstract class RecentViewEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 class LoadViewedHouses extends RecentViewEvent {
   final String userUid;
 
@@ -30,9 +31,9 @@ class RemoveViewedHouse extends RecentViewEvent {
 }
 
 class ViewedHousesUpdate extends RecentViewEvent {
-  final List<String> housesUid;
+  final List<model.House> houses;
 
-  ViewedHousesUpdate({this.housesUid});
+  ViewedHousesUpdate({this.houses});
   @override
-  List<Object> get props => [housesUid];
+  List<Object> get props => [houses];
 }
