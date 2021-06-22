@@ -6,6 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
+import 'screens.dart';
+
 class LoginForm extends StatefulWidget {
   LoginForm();
 
@@ -237,7 +239,12 @@ class _LoginFormState extends State<LoginForm> {
                             "Quên mật khẩu?",
                             style: TextStyle(color: Colors.black45),
                           ),
-                          onTap: () {}),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ForgotPassword()),
+                            );
+                          }),
                     ),
                     SizedBox(
                       height: 30.0,
