@@ -7,14 +7,22 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Đăng ký",
-          style: TextStyle(fontSize: 36.0),
+       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
-        centerTitle: true,
+        title: Text(
+          'Đăng ký',
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
-        elevation: 0,
+        centerTitle: true,
       ),
       body: RegisterForm(),
     );

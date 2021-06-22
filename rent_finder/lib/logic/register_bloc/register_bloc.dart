@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rent_finder_hi/data/repos/user_repository.dart';
 import 'package:rent_finder_hi/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,8 +43,23 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       await _userRepository.createUser();
       yield RegisterState.success();
     } catch (error) {
-      print(error);
-      yield RegisterState.failure();
+      if (error is FirebaseAuthException) {
+        String e = "";
+        print(error.code);
+        switch (error.code) {
+          case 'network-request-failed':
+            e = 'Đã có lỗi mạng xảy ra';
+            break;
+          case 'email-already-in-use':
+            e = 'Email của bạn đã tồn tại';
+            break;
+          default:
+            e = 'Đăng ký thất bại';
+            break;
+        }
+        yield RegisterState.failure().copyWith(error: e);
+      }
+      else yield RegisterState.failure().copyWith(error: 'Đăng ký thất bại');
     }
   }
 }

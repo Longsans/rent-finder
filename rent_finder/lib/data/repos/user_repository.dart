@@ -21,15 +21,13 @@ class UserRepository {
       email: email,
       password: password,
     );
+
     createUser();
   }
 
   Future<User> signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount =
-        await _googleSignIn.signIn().catchError((err) {
-      print(err.toString());
-    });
-    print('cái đcm mày lần 2');
+        await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 

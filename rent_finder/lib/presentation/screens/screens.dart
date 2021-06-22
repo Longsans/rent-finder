@@ -16,3 +16,4 @@ export 'user_area.dart';
 export 'profile_screen.dart';
 export 'post_house_screen.dart';
 export 'my_houses_screen.dart';
+export 'faq_screen.dart';

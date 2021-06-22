@@ -6,11 +6,13 @@ class RegisterState {
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
+  final String error;
 
   bool get isFormValid => isEmailValid && isPasswordValid;
 
   RegisterState(
-      {this.isEmailValid,
+      {this.error,
+      this.isEmailValid,
       this.isPasswordValid,
       this.isSubmitting,
       this.isSuccess,
@@ -75,8 +77,10 @@ class RegisterState {
     bool isSubmitting,
     bool isSuccess,
     bool isFailure,
+    String error,
   }) {
     return RegisterState(
+      error: error ?? this.error,
       isEmailValid: isEmailValid ?? this.isEmailValid,
       isPasswordValid: isPasswordValid ?? this.isPasswordValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,

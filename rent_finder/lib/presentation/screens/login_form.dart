@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
@@ -20,7 +21,7 @@ class _LoginFormState extends State<LoginForm> {
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
   bool isButtonEnabled(LoginState state) {
-    return isPopulated && !state.isSubmitting;
+    return isPopulated && state.isFormValid;
   }
 
   LoginBloc _loginBloc;
@@ -42,7 +43,7 @@ class _LoginFormState extends State<LoginForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Đăng nhập thất bại"),
+                    Text(state.error),
                     Icon(Icons.error),
                   ],
                 ),
@@ -53,6 +54,7 @@ class _LoginFormState extends State<LoginForm> {
         if (state.isSubmitting) {
           print("isSubmitting");
           ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
                 content: Row(
@@ -67,6 +69,8 @@ class _LoginFormState extends State<LoginForm> {
         }
 
         if (state.isSuccess) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Fluttertoast.showToast(msg: 'Đăng nhập thành công');
           BlocProvider.of<AuthenticationBloc>(context)
               .add(AuthenticationEventLoggedIn());
           Navigator.of(context).pushReplacementNamed('/');
@@ -123,15 +127,15 @@ class _LoginFormState extends State<LoginForm> {
                               style: TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 24.0),
+                                  fontSize: 30.0),
                             ),
                             SizedBox(
                               height: 5.0,
                             ),
                             Text(
-                              "Đăng nhập để có thêm các tính năng mới",
+                              "Ứng dụng tìm nhà trọ tiện lợi cho bạn",
                               style: TextStyle(
-                                  fontSize: 10.0, color: Colors.black38),
+                                  fontSize: 12.0, color: Colors.black38),
                             )
                           ],
                         )),
@@ -143,7 +147,7 @@ class _LoginFormState extends State<LoginForm> {
                         _loginBloc.add(LoginEmailChange(email: value));
                       },
                       style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                           color: Colors.black45,
                           fontWeight: FontWeight.bold),
                       controller: _emailController,
@@ -156,17 +160,23 @@ class _LoginFormState extends State<LoginForm> {
                         focusedBorder: OutlineInputBorder(
                             borderSide: new BorderSide(color: Colors.blue),
                             borderRadius: BorderRadius.circular(10.0)),
-                        contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        contentPadding: EdgeInsets.only(
+                            left: 10.0, right: 10.0, top: 20, bottom: 20),
                         labelText: "E-Mail",
                         hintStyle: TextStyle(
                             color: Colors.grey, fontWeight: FontWeight.w500),
                         labelStyle: TextStyle(
                             color: Colors.grey, fontWeight: FontWeight.w500),
+                        border: OutlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.black54),
+                            borderRadius: BorderRadius.circular(10.0)),
                       ),
                       autocorrect: false,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (_) {
-                        return !state.isEmailValid ? "Email sai định dạng" : null;
+                        return !state.isEmailValid
+                            ? "Email không hợp lệ"
+                            : null;
                       },
                     ),
                     SizedBox(
@@ -174,10 +184,11 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                     TextFormField(
                         onChanged: (value) {
-                          _loginBloc.add(LoginPasswordChanged(password: _passwordController.text));
+                          _loginBloc.add(LoginPasswordChanged(
+                              password: _passwordController.text));
                         },
                         style: TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 16.0,
                             color: Colors.black45,
                             fontWeight: FontWeight.bold),
                         controller: _passwordController,
@@ -193,17 +204,20 @@ class _LoginFormState extends State<LoginForm> {
                           focusedBorder: OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.blue),
                               borderRadius: BorderRadius.circular(10.0)),
-                          contentPadding:
-                              EdgeInsets.only(left: 10.0, right: 10.0),
+                          contentPadding: EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 20, bottom: 20),
                           labelText: "Mật khẩu",
                           hintStyle: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500),
                           labelStyle: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500),
+                          border: OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(10.0)),
                         ),
                         autocorrect: false,
                         obscureText: true,
@@ -244,7 +258,8 @@ class _LoginFormState extends State<LoginForm> {
                       children: [
                         Text(
                           "Hoặc đăng nhập cách khác",
-                          style: TextStyle(color: Colors.black54, fontSize: 12.0),
+                          style:
+                              TextStyle(color: Colors.black54, fontSize: 12.0),
                         ),
                       ],
                     ),
@@ -314,6 +329,7 @@ class _LoginFormState extends State<LoginForm> {
     _passwordController.dispose();
     super.dispose();
   }
+
   void _onFormSubmitted() {
     _loginBloc.add(LoginWithCredentialsPressed(
         email: _emailController.text, password: _passwordController.text));

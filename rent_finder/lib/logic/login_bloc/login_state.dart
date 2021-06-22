@@ -1,20 +1,22 @@
+part of 'login_bloc.dart';
 
-part of'login_bloc.dart';
 class LoginState {
   final bool isEmailValid;
   final bool isPasswordValid;
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
+  final String error;
 
   bool get isFormValid => isEmailValid && isPasswordValid;
 
   LoginState(
-      {this.isEmailValid,
-        this.isPasswordValid,
-        this.isSubmitting,
-        this.isSuccess,
-        this.isFailure});
+      {this.error,
+      this.isEmailValid,
+      this.isPasswordValid,
+      this.isSubmitting,
+      this.isSuccess,
+      this.isFailure});
 
   factory LoginState.initial() {
     return LoginState(
@@ -75,6 +77,7 @@ class LoginState {
     bool isSubmitting,
     bool isSuccess,
     bool isFailure,
+    String error,
   }) {
     return LoginState(
       isEmailValid: isEmailValid ?? this.isEmailValid,
@@ -82,6 +85,7 @@ class LoginState {
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,
+      error: error ?? this.error,
     );
   }
 }
