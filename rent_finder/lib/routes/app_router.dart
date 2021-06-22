@@ -39,7 +39,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => FilterEnhanceScreen());
         break;
       case '/result':
-        return MaterialPageRoute(builder: (_) => SearchResultScreen());
+        return MaterialPageRoute(builder: (_) => SearchResultScreen(quanHuyen: args[0], phuongXa: args[1],));
+        break;
+      case '/my_houses':
+        return MaterialPageRoute(builder: (_) => MyHousesScreen());
         break;
       case '/profile':
         return MaterialPageRoute(
@@ -48,7 +51,7 @@ class AppRouter {
           ),
         );
         break;
-     
+
       default:
         return null;
     }

@@ -32,8 +32,11 @@ class HouseRepository {
     return house;
   }
 
-  Stream<List<model.House>> houses() {
-    return houseFireStoreApi.houses();
+  Stream<List<model.House>> housesByLocation(String quanHuyen, String phuongXa) {
+    return houseFireStoreApi.housesByLocation(quanHuyen, phuongXa);
+  }
+  Stream<List<model.House>> myHouses(String uuid) {
+    return houseFireStoreApi.myHouses(uuid);
   }
 
   Stream<List<String>> savedHouses(String userUid) {

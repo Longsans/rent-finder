@@ -7,159 +7,210 @@ import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/data/models/filter.dart';
 import 'package:rent_finder_hi/data/models/house.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
+import 'package:rent_finder_hi/logic/cubit/search_cubit.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 class SearchResultScreen extends StatelessWidget {
-  SearchResultScreen({Key key}) : super(key: key);
+  SearchResultScreen({Key key, this.phuongXa, this.quanHuyen})
+      : super(key: key);
+  final String phuongXa, quanHuyen;
   Filter filter = Filter();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => Container(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Column(
-              children: [
-                Stack(
-                  alignment: Alignment.centerRight,
-                  children: [
-                    SearchBar(
-                      hintText: "Quận 3, TP.HCM",
-                      press: () async {
-                        var t = showModalBottomSheet<Filter>(
-                            context: context,
-                            builder: (context) {
-                              return LocationBottomSheet(
-                                filter: filter,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FilteredHousesBloc(
+            housesBloc: BlocProvider.of<HouseBloc>(context),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SearchCubit()..search(quanHuyen, phuongXa),
+        ),
+      ],
+      child: SafeArea(
+        child: Scaffold(
+          body: Builder(
+            builder: (context) => Container(
+              padding: const EdgeInsets.all(defaultPadding),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      BlocBuilder<SearchCubit, List<String>>(
+                        builder: (context, state) {
+                          return SearchBar(
+                            hintText: (state[1] ?? "") +
+                                " " +
+                                (state[0] ?? "") +
+                                " TP.HCM",
+                            press: () {
+                              var t = showModalBottomSheet<List<String>>(
+                                context: context,
+                                builder: (context) {
+                                  return LocationBottomSheet(
+                                    quanHuyen: state[0],
+                                    phuongXa: state[1],
+                                  );
+                                },
                               );
-                            });
-                        t.then((value) {
-                          if (value != null) {
-                            filter = value;
-                            BlocProvider.of<FilteredHousesBloc>(context)
-                                .add(UpdateFilter(filter: filter));
-                          }
-                        });
-                      },
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 25,
-                        width: 25,
-                        margin: EdgeInsets.only(right: defaultPadding / 2),
-                        child: SvgPicture.asset('assets/icons/close.svg'),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: defaultPadding,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: BlocProvider(
-                      create: (context) => CategoryCubit(),
-                      child: Builder(
-                        builder: (context) => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              width: defaultPadding,
-                            ),
-                            _buildFilterButton(
-                              title: "Bộ lọc",
-                              type: 0,
-                              press: () async {
-                                var t = showModalBottomSheet<Filter>(
-                                    context: context,
-                                    builder: (context) {
-                                      return FilterBasicBottomSheet(
-                                        filter: filter,
-                                      );
-                                    });
-                                t.then((value) {
+                              t.then(
+                                (value) {
                                   if (value != null) {
-                                    filter = value;
-                                    BlocProvider.of<FilteredHousesBloc>(context)
-                                        .add(UpdateFilter(filter: filter));
+                                    BlocProvider.of<HouseBloc>(context)
+                                        .add(LoadHouses(value[0], value[1]));
+                                    BlocProvider.of<SearchCubit>(context)
+                                        .search(value[0], value[1]);
                                   }
-                                });
-                              },
-                            ),
-                            SizedBox(
-                              width: defaultPadding,
-                            ),
-                            _buildFilterButton(title: 'Nhà'),
-                            SizedBox(
-                              width: defaultPadding,
-                            ),
-                            _buildFilterButton(title: 'Căn hộ'),
-                            SizedBox(
-                              width: defaultPadding,
-                            ),
-                            _buildFilterButton(title: 'Phòng'),
-                          ],
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 25,
+                          width: 25,
+                          margin: EdgeInsets.only(right: defaultPadding / 2),
+                          child: SvgPicture.asset('assets/icons/close.svg'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: defaultPadding,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: BlocProvider(
+                        create: (context) => CategoryCubit(),
+                        child: Builder(
+                          builder: (context) => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: defaultPadding,
+                              ),
+                              _buildFilterButton(
+                                title: "Bộ lọc",
+                                type: 0,
+                                press: () async {
+                                  var t = showModalBottomSheet<Filter>(
+                                      context: context,
+                                      builder: (context) {
+                                        return FilterBasicBottomSheet(
+                                          filter: filter,
+                                        );
+                                      });
+                                  t.then((value) {
+                                    if (value != null) {
+                                      filter = value;
+                                      BlocProvider.of<FilteredHousesBloc>(
+                                              context)
+                                          .add(UpdateFilter(filter: filter));
+                                    }
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: defaultPadding,
+                              ),
+                              _buildFilterButton(title: 'Nhà'),
+                              SizedBox(
+                                width: defaultPadding,
+                              ),
+                              _buildFilterButton(title: 'Căn hộ'),
+                              SizedBox(
+                                width: defaultPadding,
+                              ),
+                              _buildFilterButton(title: 'Phòng'),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    BlocBuilder<FilteredHousesBloc, FilteredHousesState>(
-                      builder: (context, state) {
-                        if (state is FilteredHousesLoaded)
-                          return Text(
-                            '${state.filteredHouses.length} kết quả',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      BlocBuilder<HouseBloc, HouseState>(
+                        builder: (context, houseState) {
+                          if (houseState is HouseLoadSuccess) {
+                            return BlocBuilder<FilteredHousesBloc,
+                                FilteredHousesState>(
+                              builder: (context, state) {
+                                if (state is FilteredHousesLoaded)
+                                  return Text(
+                                    '${state.filteredHouses.length} kết quả',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  );
+                                else
+                                  return Container();
+                              },
+                            );
+                          } else return Container();
+                        },
+                      ),
+                      MaterialButton(
+                        onPressed: () {},
+                        shape: CircleBorder(),
+                        color: Colors.white,
+                        child: SvgPicture.asset(
+                          "assets/icons/ascending_sort.svg",
+                          height: 21,
+                          width: 21,
+                        ),
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: defaultPadding,
+                  ),
+                  Expanded(
+                    child: BlocBuilder<HouseBloc, HouseState>(
+                      builder: (context, houseState) {
+                        if (houseState is HouseLoadSuccess)
+                          return BlocBuilder<FilteredHousesBloc,
+                              FilteredHousesState>(
+                            builder: (context, state) {
+                              if (state is FilteredHousesLoaded)
+                                return ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    return HouseInfoBigCard(
+                                        house: state.filteredHouses[index]);
+                                  },
+                                  itemCount: state.filteredHouses.length,
+                                );
+                              else
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                            },
                           );
-                        else
-                          return Container();
+                        else if (houseState is HouseLoading) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          return Center(child: Text('Có lỗi xảy ra'));
+                        }
                       },
                     ),
-                    MaterialButton(
-                      onPressed: () {},
-                      shape: CircleBorder(),
-                      color: Colors.white,
-                      child: SvgPicture.asset(
-                        "assets/icons/ascending_sort.svg",
-                        height: 21,
-                        width: 21,
-                      ),
-                      height: 50,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: defaultPadding,
-                ),
-                Expanded(
-                  child: BlocBuilder<FilteredHousesBloc, FilteredHousesState>(
-                    builder: (context, state) {
-                      if (state is FilteredHousesLoaded)
-                        return ListView.builder(
-                          itemBuilder: (context, index) {
-                            return HouseInfoBigCard(
-                                house: state.filteredHouses[index]);
-                          },
-                          itemCount: state.filteredHouses.length,
-                        );
-                      return Container();
-                    },
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -174,7 +225,6 @@ class SearchResultScreen extends StatelessWidget {
         return OutlinedButton(
           onPressed: () async {
             if (type == 1) {
-          
               BlocProvider.of<CategoryCubit>(context).click(title);
               filter = filter.copyWith(
                   loaiChoThue: (title == 'Nhà')

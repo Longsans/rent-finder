@@ -80,10 +80,6 @@ class FilteredHousesBloc
           res = res &&
               (house.tienThueThang >= filter.tienThueMin &&
                   house.tienThueThang <= filter.tienThueMax);
-        if (filter.quanHuyen != null)
-          res = res && (house.quanHuyen == filter.quanHuyen);
-        if (filter.phuongXa != null)
-          res = res && (house.phuongXa == filter.phuongXa);
         return res;
       }
     }).toList();

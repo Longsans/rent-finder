@@ -19,6 +19,24 @@ class HouseFireStoreApi extends BaseApi {
     });
   }
 
+  Stream<List<House>> housesByLocation(String quanHuyen, String phuongXa) {
+    if (quanHuyen == null) return houses();
+    Query<Object> query;
+    if (phuongXa == null) {
+      query = _collection.where('quanHuyen', isEqualTo: quanHuyen);
+    } else {
+      query = _collection
+          .where('quanHuyen', isEqualTo: quanHuyen)
+          .where('phuongXa', isEqualTo: phuongXa);
+    }
+    return query.snapshots().map((snapshot) {
+      return snapshot.docs.map((e) {
+        final map = e.data() as Map<String, dynamic>;
+        return House.fromJson(map);
+      }).toList();
+    });
+  }
+
   Future<List<House>> getAllHousesOwnedByUser(String userUid) async {
     final queryResult =
         await _collection.where('idChuNha', isEqualTo: userUid).get();
@@ -40,6 +58,18 @@ class HouseFireStoreApi extends BaseApi {
       return House.fromJson(map);
     }
     return null;
+  }
+
+  Stream<List<House>> myHouses(String userUid) {
+    return _collection
+        .where('idChuNha', isEqualTo: userUid)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((e) {
+        final map = e.data() as Map<String, dynamic>;
+        return House.fromJson(map);
+      }).toList();
+    });
   }
 
   Stream<List<String>> savedHouses(String userUid) {
@@ -66,7 +96,7 @@ class HouseFireStoreApi extends BaseApi {
         .map((snapshot) {
       return snapshot.docs.map((e) {
         final map = e.data();
-       return map['uid'] as String;
+        return map['uid'] as String;
       }).toList();
     });
   }

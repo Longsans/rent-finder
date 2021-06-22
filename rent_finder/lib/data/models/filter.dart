@@ -4,10 +4,8 @@ class Filter {
   final int soPhongNgu, soPhongTam;
   final LoaiChoThue loaiChoThue;
   final double tienThueMin, tienThueMax;
-  final String quanHuyen, phuongXa;
   Filter(
-      {this.quanHuyen,
-      this.phuongXa,
+      {
       this.tienThueMin,
       this.tienThueMax,
       this.soPhongNgu,
@@ -15,8 +13,6 @@ class Filter {
       this.loaiChoThue});
 
   Filter copyWith({
-    String quanHuyen,
-    String phuongXa,
     int soPhongNgu,
     int soPhongTam,
     LoaiChoThue loaiChoThue,
@@ -24,8 +20,7 @@ class Filter {
     double tienThueMax,
   }) {
     return Filter(
-      quanHuyen: quanHuyen ?? this.quanHuyen,
-      phuongXa: phuongXa ?? this.phuongXa,
+
       soPhongNgu: soPhongNgu ?? this.soPhongNgu,
       soPhongTam: soPhongTam ?? this.soPhongTam,
       loaiChoThue: loaiChoThue ?? this.loaiChoThue,

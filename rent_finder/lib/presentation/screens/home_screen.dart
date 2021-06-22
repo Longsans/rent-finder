@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
           builder: (context, state) {
         return BottomNavigationBar(
           unselectedItemColor: Colors.black87,
-          selectedItemColor: textColor,
+          selectedItemColor: primaryColor,
           currentIndex: state.index,
           onTap: (index) {
             BlocProvider.of<NavigationBarBloc>(context)
@@ -25,37 +25,37 @@ class HomeScreen extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/home.svg',
+                state.index != 0 ? 'assets/icons/home.svg' : 'assets/icons/home_filled.svg',
                 width: 21,
                 height: 21,
-                color: state.index != 0 ? Colors.black87 : textColor,
+                color: state.index != 0 ? Colors.black87 : primaryColor,
               ),
               label: 'Trang Chính',
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/search.svg',
+                state.index != 1 ? 'assets/icons/search.svg' : 'assets/icons/search_filled.svg',
                 width: 21,
                 height: 21,
-                color: state.index != 1 ? Colors.black87 : textColor,
+                color: state.index != 1 ? Colors.black87 : primaryColor,
               ),
               label: 'Tìm kiếm',
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/heart.svg',
+                state.index != 2 ? 'assets/icons/heart.svg' : 'assets/icons/heart_filled.svg',
                 width: 21,
                 height: 21,
-                color: state.index != 2 ? Colors.black87 : textColor,
+                color: state.index != 2 ? Colors.black87 : primaryColor,
               ),
               label: 'Đã lưu',
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                'assets/icons/user.svg',
+                state.index != 3 ? 'assets/icons/user.svg' : 'assets/icons/user_filled.svg',
                 width: 21,
                 height: 21,
-                color: state.index != 3 ? Colors.black87 : textColor,
+                color: state.index != 3 ? Colors.black87 : primaryColor,
               ),
               label: 'Tài khoản',
             )

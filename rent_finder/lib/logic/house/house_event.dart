@@ -15,14 +15,20 @@ class AddHouse extends HouseEvent {
   List<Object> get props => [house];
 }
 
-class LoadHouses extends HouseEvent {}
+class LoadHouses extends HouseEvent {
+  final String quanHuyen, phuongXa;
+
+  LoadHouses(this.quanHuyen, this.phuongXa);
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
+}
 
 class FilterByCategory extends HouseEvent {
   final model.LoaiChoThue loaiChoThue;
 
   FilterByCategory({this.loaiChoThue});
   @override
-
   List<Object> get props => [loaiChoThue];
 }
 

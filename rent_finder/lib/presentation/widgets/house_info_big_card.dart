@@ -66,7 +66,7 @@ class HouseInfoBigCard extends StatelessWidget {
                               ),
                             ),
                             placeholder: (context, url) =>
-                                CircularProgressIndicator(),
+                                Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) => Icon(
                               Icons.error_outline,
                               size: 100,
@@ -93,7 +93,7 @@ class HouseInfoBigCard extends StatelessWidget {
                                   height: defaultPadding / 4,
                                 ),
                                 Text(
-                                  Format.toMoney(house.tienThueThang),
+                                  Format.toMoneyPerMonth(house.tienThueThang),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(

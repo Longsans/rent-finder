@@ -1,69 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent_finder_hi/data/models/filter.dart';
+import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/logic/place/commune/commune_cubit.dart';
 import 'package:rent_finder_hi/logic/place/district/district_cubit.dart';
+import 'package:rent_finder_hi/presentation/screens/screens.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 import '../../constants.dart';
 
 class LocationBottomSheet extends StatelessWidget {
   LocationBottomSheet({
-    this.filter,
     Key key,
+    this.quanHuyen,
+    this.phuongXa,
   }) : super(key: key);
-  Filter filter;
   String quanHuyen, phuongXa;
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<CommuneCubit>(
-          create: (context) => CommuneCubit(),
-        ),
-        BlocProvider<DistrictCubit>(
-          create: (context) => DistrictCubit(),
-        ),
-      ],
-      child: Container(
-        padding: EdgeInsets.all(defaultPadding * 1.25),
-        height: 300,
-        width: 800,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: defaultPadding,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Lựa chọn địa điểm',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: defaultPadding,
-            ),
-            _buildLocation(),
-            Spacer(),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CustomButton(
-                title: 'Tìm kiếm',
-                press: () {
-                  filter = filter.copyWith(quanHuyen: quanHuyen, phuongXa: phuongXa);
-                  Navigator.of(context).pop(filter);
-                },
+    return Container(
+      padding: EdgeInsets.all(defaultPadding * 1.25),
+      height: 300,
+      width: 800,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: defaultPadding,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Lựa chọn địa điểm',
+                style: Theme.of(context).textTheme.headline6,
               ),
-            )
-          ],
-        ),
+            ],
+          ),
+          SizedBox(
+            height: defaultPadding,
+          ),
+          _buildLocation(),
+          Spacer(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: CustomButton(
+              title: 'Tìm kiếm',
+              press: () {
+                Navigator.pop(context, [quanHuyen, phuongXa]);
+              },
+            ),
+          )
+        ],
       ),
     );
   }
@@ -74,18 +64,18 @@ class LocationBottomSheet extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) {
-              if (filter.quanHuyen == null)
+              if (quanHuyen == null)
                 return DistrictCubit();
               else
-                return DistrictCubit()..emit(filter.quanHuyen);
+                return DistrictCubit()..emit(quanHuyen);
             },
           ),
           BlocProvider(
             create: (context) {
-              if (filter.quanHuyen == null)
+              if (phuongXa == null)
                 return CommuneCubit();
               else
-                return CommuneCubit()..emit(filter.phuongXa);
+                return CommuneCubit()..emit(phuongXa);
             },
           )
         ],

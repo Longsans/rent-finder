@@ -49,6 +49,9 @@ void main() async {
         BlocProvider<HouseBloc>(
           create: (context) => HouseBloc(houseRepository: houseRepository),
         ),
+        BlocProvider(
+          create: (context) => MyHousesBloc(),
+        ),
       ],
       child: MyApp(
         appRouter: appRouter,

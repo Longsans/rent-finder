@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 const defaultPadding = 16.0;
-const primaryColor = Colors.white;
+const primaryColor = Color(0xFF0D4880);
 const textColor = Color(0xFF318E99);
 List<String> csvc = [
   'assets/icons/air_conditioner.svg',

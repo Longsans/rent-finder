@@ -55,7 +55,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
       yield LoginState.success();
     } catch (_) {
-      print('ko đăng nhập đc ');
       yield LoginState.failure();
     }
   }

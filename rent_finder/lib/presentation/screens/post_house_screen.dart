@@ -101,6 +101,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(SnackBar(
+                    duration: Duration(seconds: 10),
                     content: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

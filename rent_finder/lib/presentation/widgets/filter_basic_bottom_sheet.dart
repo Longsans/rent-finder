@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent_finder_hi/data/models/filter.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/custom_button.dart';
+import 'package:rent_finder_hi/utils/format.dart';
 
 import '../../constants.dart';
 
@@ -12,6 +13,8 @@ class FilterBasicBottomSheet extends StatelessWidget {
     this.filter,
   }) : super(key: key);
   Filter filter;
+  static double _lowerPrice = 0;
+  static double _upperPrice = 30000000;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,11 +53,32 @@ class FilterBasicBottomSheet extends StatelessWidget {
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(
-            height: defaultPadding,
+            height: defaultPadding / 2,
           ),
-          Text(
-            'Loại hình',
-            style: Theme.of(context).textTheme.subtitle1,
+          BlocProvider(
+            create: (context) =>
+                SliderCubit()..setValues(RangeValues( filter.tienThueMin ?? _lowerPrice,filter.tienThueMax ?? _upperPrice,)),
+            child: Builder(
+              builder: (context) => BlocBuilder<SliderCubit, RangeValues>(
+                builder: (context, state) {
+                  return RangeSlider(
+                    labels: RangeLabels(
+                        Format.toCurrenncy(state.start),
+                        Format.toCurrenncy(state.end) +
+                            ((state.end == _upperPrice) ? "+" : "")),
+                    divisions: 60,
+                    activeColor: primaryColor,
+                    min: _lowerPrice,
+                    max: _upperPrice,
+                    values: state,
+                    onChanged: (val) {
+                      BlocProvider.of<SliderCubit>(context).setValues(val);
+                     filter = filter.copyWith(tienThueMin: val.start, tienThueMax: val.end);
+                    },
+                  );
+                },
+              ),
+            ),
           ),
           SizedBox(
             height: defaultPadding,
@@ -78,8 +102,10 @@ class FilterBasicBottomSheet extends StatelessWidget {
               child: CustomButton(
                 title: 'Áp dụng',
                 press: () {
-                  if (filter.soPhongNgu == null) filter = filter.copyWith(soPhongNgu: 1);
-                  if (filter.soPhongTam == null) filter = filter.copyWith(soPhongTam: 1);
+                  if (filter.soPhongNgu == null)
+                    filter = filter.copyWith(soPhongNgu: 1);
+                  if (filter.soPhongTam == null)
+                    filter = filter.copyWith(soPhongTam: 1);
 
                   Navigator.of(context).pop(filter);
                 },

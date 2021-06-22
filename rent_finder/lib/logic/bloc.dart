@@ -19,3 +19,5 @@ export 'filtered_houses/filtered_houses_bloc.dart';
 export 'category/category_cubit.dart';
 export 'saved_house/saved_house_bloc.dart';
 export 'recent_view/recent_view_bloc.dart';
+export 'my_houses/my_houses_bloc.dart';
+export 'slider/slider_cubit.dart';

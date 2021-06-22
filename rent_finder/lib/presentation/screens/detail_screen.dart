@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'package:rent_finder_hi/presentation/widgets/save_button.dart';
 import 'package:rent_finder_hi/utils/format.dart';
@@ -26,40 +25,43 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        
         body: SafeArea(
-      child: Stack(
-        children: [
-          CustomScrollView(slivers: [
-            _buildSliverHead(),
-            SliverToBoxAdapter(
-              child: _buildDetail(context),
-            )
-          ]),
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black12,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  _buildSliverHead(),
+                  SliverToBoxAdapter(
+                    child: _buildDetail(context),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(defaultPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.black12,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
+                    SaveButton(house: house),
+                  ],
                 ),
-                SaveButton(house: house),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget _buildDetail(BuildContext context) {
@@ -70,7 +72,7 @@ class DetailScreen extends StatelessWidget {
       position: house.toaDo,
       infoWindow: InfoWindow(
         title: house.diaChi,
-        snippet: Format.toMoney(house.tienThueThang),
+        snippet: Format.toMoneyPerMonth(house.tienThueThang),
       ),
     );
     markers.add(homeMarker);
@@ -117,7 +119,7 @@ class DetailScreen extends StatelessWidget {
                 width: defaultPadding,
               ),
               Text(
-                Format.toMoney(house.tienThueThang),
+                Format.toMoneyPerMonth(house.tienThueThang),
                 style: Theme.of(context)
                     .textTheme
                     .button
@@ -158,7 +160,6 @@ class DetailScreen extends StatelessWidget {
           SizedBox(
             height: defaultPadding * 1.5,
           ),
-          
           Text(
             "Cơ sở vật chất & tiện nghi",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
@@ -230,12 +231,12 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/cctv.svg',
           title: 'CCTV',
         ),
-     if (house.coSoVatChat.nuoiThuCung)
+      if (house.coSoVatChat.nuoiThuCung)
         UtilityCard(
           svgSrc: 'assets/icons/pet.svg',
           title: 'Thú cưng',
         ),
-     if (house.coSoVatChat.sanThuong)
+      if (house.coSoVatChat.sanThuong)
         UtilityCard(
           svgSrc: 'assets/icons/roof.svg',
           title: 'Sân thượng',
@@ -264,8 +265,8 @@ class UtilityCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(defaultPadding / 2),
       decoration: BoxDecoration(
-          color: Colors.white,
-          ),
+        color: Colors.white,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -278,7 +279,8 @@ class UtilityCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: defaultPadding,),
+            height: defaultPadding,
+          ),
           Text(
             title,
             style: TextStyle(color: Color(0xFF0D4880)),
@@ -308,8 +310,7 @@ class ImageList extends StatelessWidget {
               Navigator.pushNamed(context, '/gallery',
                   arguments: [house.urlHinhAnh, index]);
             },
-            child:
-             Container(
+            child: Container(
               margin: EdgeInsets.only(right: defaultPadding),
               height: 150,
               width: 100,
@@ -348,7 +349,8 @@ class InfoOwner extends StatelessWidget {
               ),
             ),
           ),
-          placeholder: (context, url) => CircularProgressIndicator(),
+          placeholder: (context, url) =>
+              Center(child: CircularProgressIndicator()),
           errorWidget: (context, url, error) => Icon(
             Icons.account_circle_outlined,
             size: 60,
@@ -362,7 +364,7 @@ class InfoOwner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              house.chuNha.hoTen ?? '',
+              house.chuNha.hoTen ?? 'Chưa đặt tên',
               style: Theme.of(context).textTheme.subtitle1,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,

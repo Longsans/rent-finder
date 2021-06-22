@@ -47,7 +47,7 @@ class SavedArea extends StatelessWidget {
                           SizedBox(
                             height: 20,
                           ),
-                          Text('Không có dữ liệu'),
+                          Text('Không có dữ liệu', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),),
                         ],
                       ),
                     );

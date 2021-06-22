@@ -60,7 +60,10 @@ class UserArea extends StatelessWidget {
                             child: Column(
                               children: [
                                 IconTextButton(
-                                    press: () {},
+                                    press: () {
+                                      Navigator.of(context)
+                                          .pushNamed('/my_houses');
+                                    },
                                     title: 'Danh sách nhà đã đăng'),
                                 Divider(
                                   thickness: 1,
@@ -179,7 +182,9 @@ class UserArea extends StatelessWidget {
               color: Color(0xFF0D4880),
             ),
           ),
-          SizedBox(height: defaultPadding / 2,),
+          SizedBox(
+            height: defaultPadding / 2,
+          ),
           Text(
             (state.user != null)
                 ? state.user.hoTen ?? "Chưa đặt tên"
@@ -274,5 +279,3 @@ class TitleCard extends StatelessWidget {
     );
   }
 }
-
-

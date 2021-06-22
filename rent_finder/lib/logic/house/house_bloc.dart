@@ -19,7 +19,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     if (event is AddHouse) {
       yield* _mapAddHouseEventToState(event.house);
     } else if (event is LoadHouses) {
-      yield* _mapLoadHousesEventToState();
+      yield* _mapLoadHousesEventToState(event);
     } else if (event is FilterByCategory) {
       yield* _mapFilterByCategoryEventToState(event);
     } else if (event is HousesUpdate) {
@@ -31,14 +31,17 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
   Stream<HouseState> _mapFilterByCategoryEventToState(
       FilterByCategory event) async* {}
 
-  Stream<HouseState> _mapLoadHousesEventToState() async* {
+  Stream<HouseState> _mapLoadHousesEventToState(LoadHouses event) async* {
     if (housesSubscription != null) housesSubscription.cancel();
-    housesSubscription = houseRepository.houses().listen((houses) {
+    housesSubscription = houseRepository
+        .housesByLocation(event.quanHuyen, event.phuongXa)
+        .listen((houses) {
       add(HousesUpdate(houses: houses));
     });
   }
 
   Stream<HouseState> _mapHousesUpdateEventToState(HousesUpdate event) async* {
+    yield HouseLoading();
     for (int i = 0; i < event.houses.length; i++) {
       model.User user =
           await userRepository.getUserByUID(event.houses[i].chuNha.uid);

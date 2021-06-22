@@ -7,10 +7,12 @@ class CustomButton extends StatelessWidget {
     this.title,
     this.icon,
     this.press,
+    this.color,
   }) : super(key: key);
   final String title;
   final Icon icon;
   final Function press;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -21,7 +23,7 @@ class CustomButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon ??  Container(),
+            icon ?? Container(),
             SizedBox(
               width: defaultPadding / 2,
             ),
@@ -35,7 +37,7 @@ class CustomButton extends StatelessWidget {
           ],
         ),
         decoration: BoxDecoration(
-            color: Color(0xFF0D4880),
+            color: color ?? Color(0xFF0D4880),
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
