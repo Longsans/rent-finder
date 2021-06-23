@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/screens/faq_screen.dart';
+import 'package:rent_finder_hi/presentation/widgets/Contact_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 class UserArea extends StatelessWidget {
@@ -130,7 +131,13 @@ class UserArea extends StatelessWidget {
                           ),
                           IconTextButton(
                             title: 'Liên hệ',
-                            press: () {},
+                            press: () {
+                              showDialog(context: context,
+                              builder:(BuildContext context){
+                                return AdvanceCustomAlert();
+                              }
+                          );
+                              }
                           ),
                           Divider(
                             thickness: 1,
