@@ -243,6 +243,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                                       selectedAssets: images);
                                               if (results == null) return;
                                               images = results;
+                                              files = [];
                                               for (int i = 0;
                                                   i < images.length;
                                                   i++) {
@@ -309,8 +310,8 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                                             EdgeInsets.all(0),
                                                         iconSize: 20,
                                                         onPressed: () {
-                                                          images
-                                                              .removeAt(index);
+                                                          images.remove(
+                                                              images[index]);
                                                           BlocProvider.of<
                                                                       PickMultiImageCubit>(
                                                                   context)
