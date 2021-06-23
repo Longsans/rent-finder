@@ -66,6 +66,7 @@ class House extends SerializableObject {
         urlHinhDaiDien: json['avatarChuNha'] as String,
         hoTen: json['tenChuNha'] as String);
     _uid = json['uid'] as String;
+    _dangCapNhat = json['dangCapNhat'] as bool;
   }
 
   House.fromSnippetJson(Map<String, dynamic> map) {
@@ -117,6 +118,7 @@ class House extends SerializableObject {
     jsonMap['daGo'] = _daGo;
     jsonMap['idChuNha'] = _chuNha.uid;
     jsonMap['toaDo'] = GeoPoint(toaDo.latitude, toaDo.longitude);
+    jsonMap['dangCapNhat'] = _dangCapNhat;
 
     return jsonMap;
   }
@@ -167,10 +169,13 @@ class House extends SerializableObject {
   bool _daGo = false; // true nếu bài đăng nhà đã bị gỡ
   User _chuNha;
   String _uid;
+  bool _dangCapNhat =
+      false; // true nếu thông tin nhà đang được chủ nhà cập nhật
 
   bool get daGO => _daGo;
   User get chuNha => _chuNha;
   String get uid => _uid;
+  bool get dangCapNhat => _dangCapNhat;
   String get diaChi =>
       soNha +
       " " +
