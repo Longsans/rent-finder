@@ -6,15 +6,19 @@ import 'package:rent_finder_hi/data/models/models.dart' as model;
 class HouseRepository {
   final HouseFireStoreApi houseFireStoreApi = HouseFireStoreApi();
   final UserFireStoreApi userFireStoreApi = UserFireStoreApi();
-  Future<void> createHouse(model.House house) async {
-    return await houseFireStoreApi.createHouse(house);
+  Future<void> createHouse(model.House house, List<File> housePictures) async {
+    house.setUid(houseFireStoreApi.createHouseDocument());
+    house.urlHinhAnh =
+        await uploadHousePicsAndGetDownloadUrls(house, housePictures);
+    await houseFireStoreApi.setHouseData(house);
   }
 
-  Future<List<String>> getDownURLs(model.House house, List<File> files) async {
+  Future<List<String>> uploadHousePicsAndGetDownloadUrls(
+      model.House house, List<File> files) async {
     List<String> urlHinhAnh = [];
     for (int i = 0; i < files.length; i++) {
-      String url =
-          await houseFireStoreApi.getDownloadURL(house: house, file: files[i]);
+      String url = await houseFireStoreApi.uploadHousePicAndGetDownloadUrl(
+          house: house, file: files[i]);
       urlHinhAnh.add(url);
     }
     return urlHinhAnh;

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:rent_finder_hi/data/models/models.dart';
 import 'package:flutter/foundation.dart';
@@ -130,12 +131,40 @@ class HouseFireStoreApi extends BaseApi {
     }
   }
 
-  Future<void> createHouse(House house) async {
-    await _collection.add(house.toJson());
+  String createHouseDocument() {
+    return _collection.doc().id;
+  }
+
+  Future<void> setHouseData(House house) async {
+    await _collection.doc(house.uid).set(house.toJson());
   }
 
   Future<void> updateHouse({@required House updatedHouse}) async {
-    await _collection.doc(updatedHouse.uid).update(updatedHouse.toJson());
+    final updatedHouseMap = updatedHouse.toJson();
+    updatedHouseMap['dangCapNhat'] = true;
+    await _collection.doc(updatedHouse.uid).update(updatedHouseMap);
+
+    final savedHousesList = await _savedHousesCollection
+        .where('houseUid', isEqualTo: updatedHouse.uid)
+        .get();
+    final viewedHouseList = await _viewedHousesCollection
+        .where('houseUid', isEqualTo: updatedHouse.uid)
+        .get();
+    final batch = FirebaseFirestore.instance.batch();
+
+    try {
+      for (final doc in savedHousesList.docs) {
+        batch.update(doc.reference, updatedHouse.toSnippetJson());
+      }
+      for (final doc in viewedHouseList.docs) {
+        batch.update(doc.reference, updatedHouse.toSnippetJson());
+      }
+      await batch.commit();
+    } on FirebaseException {
+      rethrow;
+    } finally {
+      await _collection.doc(updatedHouse.uid).update({'dangCapNhat': false});
+    }
   }
 
   Future<void> setHouseRemoved(String uid) async {
@@ -146,12 +175,12 @@ class HouseFireStoreApi extends BaseApi {
     await _collection.doc(uid).update({'daGo': false});
   }
 
-  Future<String> getDownloadURL(
+  Future<String> uploadHousePicAndGetDownloadUrl(
       {@required model.House house, @required File file}) async {
     final newPfpRef = _storageRoot
         .child('house_pfp')
-        .child(house.ngayVaoO.millisecondsSinceEpoch.hashCode.toString())
-        .child(file.path);
+        .child(house.uid)
+        .child(path.basename(file.path));
     var uploadTask = newPfpRef.putFile(file);
     firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
     String url = await taskSnapshot.ref.getDownloadURL();
