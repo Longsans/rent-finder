@@ -25,43 +25,42 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        
         body: SafeArea(
-          child: Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  _buildSliverHead(),
-                  SliverToBoxAdapter(
-                    child: _buildDetail(context),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(defaultPadding),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.black12,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SaveButton(house: house),
-                  ],
-                ),
-              ),
+      child: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              _buildSliverHead(),
+              SliverToBoxAdapter(
+                child: _buildDetail(context),
+              )
             ],
           ),
-        ));
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.black12,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SaveButton(house: house),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 
   Widget _buildDetail(BuildContext context) {
@@ -164,8 +163,11 @@ class DetailScreen extends StatelessWidget {
             "Cơ sở vật chất & tiện nghi",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
+          SizedBox(
+            height: defaultPadding / 2,
+          ),
           GridView.count(
-            crossAxisCount: 3,
+            crossAxisCount: 4,
             physics: NeverScrollableScrollPhysics(),
             children: _buildUtilitiesList,
             childAspectRatio: 1,
@@ -268,22 +270,21 @@ class UtilityCard extends StatelessWidget {
         color: Colors.white,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           SizedBox(
-            height: 35,
-            width: 35,
+            height: 24,
+            width: 24,
             child: SvgPicture.asset(
               svgSrc,
               color: Color(0xFF0D4880),
             ),
           ),
-          SizedBox(
-            height: defaultPadding,
-          ),
           Text(
             title,
-            style: TextStyle(color: Color(0xFF0D4880)),
+            style: TextStyle(
+              color: Color(0xFF0D4880),
+            ),
           ),
         ],
       ),
@@ -360,22 +361,28 @@ class InfoOwner extends StatelessWidget {
         SizedBox(
           width: defaultPadding,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              house.chuNha.hoTen ?? 'Chưa đặt tên',
-              style: Theme.of(context).textTheme.subtitle1,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            Text(
-              "Chủ sở hữu",
-              style: Theme.of(context).textTheme.caption,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            )
-          ],
+        Container(
+          width: 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                house.chuNha.hoTen ?? 'Chưa đặt tên',
+                style: Theme.of(context).textTheme.subtitle1,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                "Chủ sở hữu",
+                style: Theme.of(context).textTheme.caption,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              )
+            ],
+          ),
         ),
         Spacer(),
         CircleAvatar(

@@ -98,7 +98,7 @@ class UserArea extends StatelessWidget {
                       height: 40,
                     ),
                     TitleCard(
-                      subtitle: 'Gửi cho chúng tôi câu hỏi và phản hồi của bạn',
+                      subtitle: 'Gửi câu hỏi và phản hồi của bạn',
                       title: 'Trợ giúp và Phản hồi',
                       icon: Icon(
                         Icons.mail_outline,
@@ -256,7 +256,6 @@ class TitleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           width: 40,
@@ -264,6 +263,9 @@ class TitleCard extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), color: Colors.lightBlue),
           child: icon,
+        ),
+        SizedBox(
+          width: 10,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,9 +280,7 @@ class TitleCard extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          width: 10,
-        ),
+        
       ],
     );
   }

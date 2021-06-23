@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'package:rent_finder_hi/data/repos/repos.dart';
+import 'package:rent_finder_hi/logic/bloc.dart';
 part 'house_event.dart';
 part 'house_state.dart';
 
@@ -11,7 +12,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
   HouseBloc({this.houseRepository}) : super(HouseLoading());
   final HouseRepository houseRepository;
   final UserRepository userRepository = UserRepository();
-  StreamSubscription housesSubscription;
+  // StreamSubscription housesSubscription;
   @override
   Stream<HouseState> mapEventToState(
     HouseEvent event,
@@ -32,27 +33,20 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       FilterByCategory event) async* {}
 
   Stream<HouseState> _mapLoadHousesEventToState(LoadHouses event) async* {
-    if (housesSubscription != null) housesSubscription.cancel();
-    housesSubscription = houseRepository
-        .housesByLocation(event.quanHuyen, event.phuongXa)
-        .listen((houses) {
-      add(HousesUpdate(houses: houses));
-    });
-  }
-
-  Stream<HouseState> _mapHousesUpdateEventToState(HousesUpdate event) async* {
     yield HouseLoading();
-    for (int i = 0; i < event.houses.length; i++) {
-      model.User user =
-          await userRepository.getUserByUID(event.houses[i].chuNha.uid);
-      event.houses[i].setSensitiveInfo(false, user);
+    try {
+      final houses = await houseRepository.getHousesByLocation(
+          event.quanHuyen, event.phuongXa);
+      for (int i = 0; i < houses.length; i++) {
+        model.User user =
+            await userRepository.getUserByUID(houses[i].chuNha.uid);
+        houses[i].setSensitiveInfo(false, user);
+      }
+      yield HouseLoadSuccess(houses: houses);
+    } catch (err) {
+      yield HouseLoadFailure();
     }
-    yield HouseLoadSuccess(houses: event.houses);
   }
 
-  @override
-  Future<void> close() {
-    if (housesSubscription != null) housesSubscription.cancel();
-    return super.close();
-  }
+  Stream<HouseState> _mapHousesUpdateEventToState(HousesUpdate event) async* {}
 }

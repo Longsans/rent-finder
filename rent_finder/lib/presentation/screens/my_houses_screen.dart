@@ -38,7 +38,8 @@ class MyHousesScreen extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                  builder: (context) =>
+                      BlocBuilder<AuthenticationBloc, AuthenticationState>(
                     builder: (context, state) {
                       return MultiBlocProvider(
                         providers: [
@@ -73,9 +74,38 @@ class MyHousesScreen extends StatelessWidget {
                         return ListView.builder(
                             itemCount: state.houses.length,
                             itemBuilder: (context, index) {
-                              return HouseInfoSmallCard(
-                                size: MediaQuery.of(context).size,
-                                house: state.houses[index],
+                              return Stack(
+                                children: [
+                                  HouseInfoSmallCard(
+                                    size: MediaQuery.of(context).size,
+                                    house: state.houses[index],
+                                  ),
+                                  Align(
+                                    child: PopupMenuButton(
+                                        itemBuilder: (context) {
+                                          return [
+                                            PopupMenuItem(
+                                              child: Row(
+                                                children: [
+                                                  Text('Gỡ'),
+                                                  Icon(Icons.delete),
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              child: Row(
+                                                children: [
+                                                  Text('Sửa'),
+                                                  Icon(Icons.edit),
+                                                ],
+                                              ),
+                                            ),
+                                          ];
+                                        },
+                                        icon: Icon(Icons.more_vert)),
+                                    alignment: Alignment.topRight,
+                                  )
+                                ],
                               );
                             });
                       else

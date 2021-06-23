@@ -37,6 +37,9 @@ class HouseRepository {
       String quanHuyen, String phuongXa) {
     return houseFireStoreApi.housesByLocation(quanHuyen, phuongXa);
   }
+  Future<List<model.House>> getHousesByLocation(String quanHuyen, String phuongXa) async{
+    return await houseFireStoreApi.getHousesByLocation(quanHuyen, phuongXa);
+  }
 
   Stream<List<model.House>> myHouses(String uuid) {
     return houseFireStoreApi.myHouses(uuid);

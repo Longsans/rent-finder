@@ -67,7 +67,7 @@ class SearchResultScreen extends StatelessWidget {
                                         .search(value[0], value[1]);
                                     BlocProvider.of<FilteredHousesBloc>(context)
                                         .add(UpdateFilter(filter: Filter()));
-                                         BlocProvider.of<CategoryCubit>(context)
+                                    BlocProvider.of<CategoryCubit>(context)
                                         .click(null);
                                   }
                                 },
@@ -216,12 +216,23 @@ class SearchResultScreen extends StatelessWidget {
                               FilteredHousesState>(
                             builder: (context, state) {
                               if (state is FilteredHousesLoaded)
-                                return ListView.builder(
-                                  itemBuilder: (context, index) {
-                                    return HouseInfoBigCard(
-                                        house: state.filteredHouses[index]);
+                                return BlocBuilder<SearchCubit, List<String>>(
+                                  builder: (context, stringState) {
+                                    return RefreshIndicator(
+                                      onRefresh: () async {
+                                        BlocProvider.of<HouseBloc>(context).add(
+                                            LoadHouses(stringState[0], stringState[1]));
+                                      },
+                                      child: ListView.builder(
+                                        itemBuilder: (context, index) {
+                                          return HouseInfoBigCard(
+                                              house:
+                                                  state.filteredHouses[index]);
+                                        },
+                                        itemCount: state.filteredHouses.length,
+                                      ),
+                                    );
                                   },
-                                  itemCount: state.filteredHouses.length,
                                 );
                               else
                                 return Center(

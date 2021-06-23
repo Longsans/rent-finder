@@ -42,6 +42,30 @@ class HouseFireStoreApi extends BaseApi {
     });
   }
 
+  Future<List<House>> getHousesByLocation(
+      String quanHuyen, String phuongXa) async {
+    QuerySnapshot<Object> query;
+    if (quanHuyen == null) query = await _collection.get();
+    if (phuongXa == null) {
+      query = await _collection.where('quanHuyen', isEqualTo: quanHuyen).get();
+    } else {
+      query = await _collection
+          .where('quanHuyen', isEqualTo: quanHuyen)
+          .where('phuongXa', isEqualTo: phuongXa)
+          .get();
+    }
+    final docs =  query.docs;
+    if (docs.isNotEmpty) {
+      return docs.map((e) {
+        final map = e.data() as Map<String, dynamic>;
+        map['uid'] = e.reference.id;
+
+        return House.fromJson(map);
+      }).toList();
+    }
+    return [];
+  }
+
   Future<House> getHouseByUID(String uid) async {
     final doc = await _collection.doc(uid).get();
 

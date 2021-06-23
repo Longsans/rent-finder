@@ -48,12 +48,28 @@ class SearchArea extends StatelessWidget {
                 ],
               ),
               SizedBox(height: defaultPadding),
-              // Text(
-              //   'Đã xem gần đây',
-              //   style: TextStyle(fontSize: 16),
-              // ),
-
-              SizedBox(height: defaultPadding),
+              BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, authState) {
+                  return BlocBuilder<RecentViewBloc, RecentViewState>(
+                    builder: (context, state) {
+                      if (authState is AuthenticationStateSuccess &&
+                          state is RecentViewLoaded) {
+                        if (state.houses.length > 0)
+                          return Container(
+                            margin: EdgeInsets.only(bottom: defaultPadding),
+                            child: Text(
+                              'Đã xem gần đây',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        else
+                          return Container();
+                      } else
+                        return Container();
+                    },
+                  );
+                },
+              ),
               Expanded(
                 child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                   builder: (context, authState) {
