@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdvanceCustomAlert extends StatelessWidget {
   @override
@@ -24,7 +25,10 @@ class AdvanceCustomAlert extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              String phoneo="tel:0793111038";
+                              launch(phoneo);
+                            },
                             child: Icon(Icons.settings_phone, color: Colors.white),
                             style: ElevatedButton.styleFrom(
                               shape: CircleBorder(),
@@ -32,7 +36,7 @@ class AdvanceCustomAlert extends StatelessWidget {
                               primary: Colors.blue, // <-- Button color
                             ),
                           ),
-                          Text("Hotline: 0793111038")
+                          Text("Hotline: +0793111038")
                         ]
                     ),
                     SizedBox(height: 10,),
@@ -40,7 +44,10 @@ class AdvanceCustomAlert extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              final url ='mailto:vhao1509@gmail.com?subject=${Uri.encodeFull("Cần liên hệ với Rent-Finder")}&body=${Uri.encodeFull("")}';
+                              launch(url);
+                              },
                             child: Icon(Icons.mail_sharp, color: Colors.white),
                             style: ElevatedButton.styleFrom(
                               shape: CircleBorder(),
