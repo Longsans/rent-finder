@@ -15,6 +15,6 @@ final List<model.House> houses;
 
   MyHousesLoaded(this.houses);
   @override
-  // TODO: implement props
+
   List<Object> get props => [houses];
 }

@@ -27,6 +27,9 @@ class SearchResultScreen extends StatelessWidget {
         BlocProvider(
           create: (context) => SearchCubit()..search(quanHuyen, phuongXa),
         ),
+        BlocProvider(
+          create: (context) => CategoryCubit(),
+        ),
       ],
       child: SafeArea(
         child: Scaffold(
@@ -62,6 +65,10 @@ class SearchResultScreen extends StatelessWidget {
                                         .add(LoadHouses(value[0], value[1]));
                                     BlocProvider.of<SearchCubit>(context)
                                         .search(value[0], value[1]);
+                                    BlocProvider.of<FilteredHousesBloc>(context)
+                                        .add(UpdateFilter(filter: Filter()));
+                                         BlocProvider.of<CategoryCubit>(context)
+                                        .click(null);
                                   }
                                 },
                               );
@@ -89,52 +96,74 @@ class SearchResultScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: BlocProvider(
-                        create: (context) => CategoryCubit(),
-                        child: Builder(
-                          builder: (context) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: defaultPadding,
-                              ),
-                              _buildFilterButton(
-                                title: "Bộ lọc",
-                                type: 0,
-                                press: () async {
-                                  var t = showModalBottomSheet<Filter>(
-                                      context: context,
-                                      builder: (context) {
-                                        return FilterBasicBottomSheet(
-                                          filter: filter,
-                                        );
-                                      });
-                                  t.then((value) {
-                                    if (value != null) {
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: defaultPadding,
+                          ),
+                          _buildFilterButton(
+                            title: "Bộ lọc",
+                            type: 0,
+                            press: () async {
+                              var t = showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return FilterBasicBottomSheet(
+                                      filter: filter,
+                                    );
+                                  });
+                              t.then(
+                                (value) {
+                                  if (value != null) {
+                                    if (value is Filter) {
                                       filter = value;
                                       BlocProvider.of<FilteredHousesBloc>(
                                               context)
                                           .add(UpdateFilter(filter: filter));
+                                    } else {
+                                      var a = Navigator.of(context).pushNamed(
+                                          '/filter_enhance',
+                                          arguments: [filter]);
+                                      a.then((value) {
+                                        if (value != null) {
+                                          if (value is Filter) {
+                                            filter = value;
+                                            BlocProvider.of<FilteredHousesBloc>(
+                                                    context)
+                                                .add(UpdateFilter(
+                                                    filter: filter));
+                                          } else {
+                                            BlocProvider.of<CategoryCubit>(
+                                                    context)
+                                                .click(null);
+                                            BlocProvider.of<FilteredHousesBloc>(
+                                                    context)
+                                                .add(UpdateFilter(
+                                                    filter: Filter()));
+                                          }
+                                        }
+                                      });
                                     }
-                                  });
+                                  }
                                 },
-                              ),
-                              SizedBox(
-                                width: defaultPadding,
-                              ),
-                              _buildFilterButton(title: 'Nhà'),
-                              SizedBox(
-                                width: defaultPadding,
-                              ),
-                              _buildFilterButton(title: 'Căn hộ'),
-                              SizedBox(
-                                width: defaultPadding,
-                              ),
-                              _buildFilterButton(title: 'Phòng'),
-                            ],
+                              );
+                            },
                           ),
-                        ),
+                          SizedBox(
+                            width: defaultPadding,
+                          ),
+                          _buildFilterButton(title: 'Nhà'),
+                          SizedBox(
+                            width: defaultPadding,
+                          ),
+                          _buildFilterButton(title: 'Căn hộ'),
+                          SizedBox(
+                            width: defaultPadding,
+                          ),
+                          _buildFilterButton(title: 'Phòng'),
+                        ],
                       ),
                     ),
                   ),
@@ -159,7 +188,8 @@ class SearchResultScreen extends StatelessWidget {
                                   return Container();
                               },
                             );
-                          } else return Container();
+                          } else
+                            return Container();
                         },
                       ),
                       MaterialButton(

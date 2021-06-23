@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
-import 'package:rent_finder_hi/data/repos/repos.dart' as repos;
 
 import 'package:rent_finder_hi/logic/bloc.dart';
-import 'package:rent_finder_hi/presentation/screens/screens.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 import '../../constants.dart';

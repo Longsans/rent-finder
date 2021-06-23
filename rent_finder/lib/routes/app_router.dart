@@ -36,7 +36,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => SearchArea());
         break;
       case '/filter_enhance':
-        return MaterialPageRoute(builder: (_) => FilterEnhanceScreen());
+        return MaterialPageRoute(builder: (_) => FilterEnhanceScreen(filter: args[0]));
         break;
       case '/result':
         return MaterialPageRoute(builder: (_) => SearchResultScreen(quanHuyen: args[0], phuongXa: args[1],));

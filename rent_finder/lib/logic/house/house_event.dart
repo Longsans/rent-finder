@@ -20,7 +20,6 @@ class LoadHouses extends HouseEvent {
 
   LoadHouses(this.quanHuyen, this.phuongXa);
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 

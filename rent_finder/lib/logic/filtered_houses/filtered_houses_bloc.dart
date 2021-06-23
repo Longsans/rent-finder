@@ -76,10 +76,32 @@ class FilteredHousesBloc
           res = res && (house.soPhongNgu >= filter.soPhongNgu);
         if (filter.soPhongTam != null)
           res = res && (house.soPhongTam >= filter.soPhongTam);
-        if (filter.tienThueMin != null && filter.tienThueMax != null)
-          res = res &&
-              (house.tienThueThang >= filter.tienThueMin &&
-                  house.tienThueThang <= filter.tienThueMax);
+        if (filter.tienThueMin != null)
+          res = res && (house.tienThueThang >= filter.tienThueMin);
+        if (filter.tienThueMax != null) {
+          if (filter.tienThueMax < 30000000)
+            res = res && house.tienThueThang <= filter.tienThueMax;
+        }
+        if (filter.areaMin != null) {
+          res = res && (house.dienTich >= filter.areaMin);
+        }
+        if (filter.areaMax != null) {
+          if (filter.areaMax < 100)
+            res = res && (house.dienTich <= filter.areaMax);
+        }
+        if (filter.coSoVatChat != null) {
+          if (filter.coSoVatChat.banCong) res = res && (house.coSoVatChat.banCong);
+          if (filter.coSoVatChat.baoVe) res = res && (house.coSoVatChat.baoVe);
+          if (filter.coSoVatChat.cctv) res = res && (house.coSoVatChat.cctv);
+          if (filter.coSoVatChat.dieuHoa) res = res && (house.coSoVatChat.dieuHoa);
+          if (filter.coSoVatChat.gacLung) res = res && (house.coSoVatChat.gacLung);
+          if (filter.coSoVatChat.hoBoi) res = res && (house.coSoVatChat.hoBoi);
+          if (filter.coSoVatChat.noiThat) res = res && (house.coSoVatChat.noiThat);
+          if (filter.coSoVatChat.nuoiThuCung) res = res && (house.coSoVatChat.nuoiThuCung);
+          if (filter.coSoVatChat.sanThuong) res = res && (house.coSoVatChat.sanThuong);
+          if (filter.coSoVatChat.choDauXe != null) res = res && (house.coSoVatChat.choDauXe == filter.coSoVatChat.choDauXe);
+          if (filter.coSoVatChat.mayGiat != null) res = res && (house.coSoVatChat.mayGiat == filter.coSoVatChat.mayGiat);
+        }
         return res;
       }
     }).toList();
