@@ -21,7 +21,6 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  
   flutter:
     sdk: flutter
 
@@ -50,12 +49,11 @@ dependencies:
   wechat_assets_picker: ^5.5.5
   geocoder: ^0.2.1
   intl: ^0.17.0
-  
+  mailer: ^5.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

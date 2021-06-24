@@ -8,6 +8,8 @@ import 'package:rent_finder_hi/presentation/screens/faq_screen.dart';
 import 'package:rent_finder_hi/presentation/widgets/Contact_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
+import 'package:rent_finder_hi/data/models/models.dart' as models;
+
 class UserArea extends StatelessWidget {
   UserArea();
   @override
@@ -122,7 +124,8 @@ class UserArea extends StatelessWidget {
                             press: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => FAQPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => FAQPage()),
                               );
                             },
                           ),
@@ -130,22 +133,50 @@ class UserArea extends StatelessWidget {
                             thickness: 1,
                           ),
                           IconTextButton(
-                            title: 'Liên hệ',
-                            press: () {
-                              showDialog(context: context,
-                              builder:(BuildContext context){
-                                return AdvanceCustomAlert();
-                              }
-                          );
-                              }
-                          ),
+                              title: 'Liên hệ',
+                              press: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AdvanceCustomAlert();
+                                    });
+                              }),
                           Divider(
                             thickness: 1,
                           ),
-                          IconTextButton(
-                            title: 'Báo cáo lỗi ứng dụng',
-                            press: () {},
-                          ),
+                          BlocProvider<ReportHouseBloc>(
+                              create: (context) => ReportHouseBloc(),
+                              child: BlocConsumer<ReportHouseBloc,
+                                  ReportHouseState>(
+                                listener: (context, state) {
+                                  if (state is ReportHouseFail) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Đã có lỗi xảy ra: ${state.errorDescription}'),
+                                      ),
+                                    );
+                                  }
+                                },
+                                builder: (context, state) {
+                                  return IconTextButton(
+                                    title: 'Báo cáo lỗi ứng dụng',
+                                    press: () {
+                                      BlocProvider.of<ReportHouseBloc>(context)
+                                          .add(ReportHouseEvent(
+                                              reportedHouse: models.House()
+                                                ..setUid('hdAiuoj942AycQAXPsXn')
+                                                ..setSensitiveInfo(
+                                                  false,
+                                                  models.User(
+                                                      uid:
+                                                          'i3sdR1AGIqVZB8qPeZI8an6nnC42'),
+                                                ),
+                                              description: 'still testing...'));
+                                    },
+                                  );
+                                },
+                              )),
                         ],
                       ),
                     ),
