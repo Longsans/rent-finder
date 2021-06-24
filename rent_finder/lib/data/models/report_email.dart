@@ -1,20 +1,31 @@
+import 'package:flutter/cupertino.dart';
 import 'package:rent_finder_hi/data/models/base_feedback_email.dart';
 
-class ReportEmail extends BaseFeedbackEmail {
-  bool reportHouse;
+abstract class ReportEmail extends BaseFeedbackEmail {
   String reportedUserUid;
+
+  ReportEmail(
+      {@required userUid,
+      @required this.reportedUserUid,
+      @required description})
+      : super(userUid, description);
+}
+
+class ReportHouseEmail extends ReportEmail {
   String reportedHouseUid;
 
   @override
   String content() {
-    String result = 'Reporting user UID: $userUid';
-    if (reportHouse)
-      result +=
-          '\nReported house: $reportedHouseUid \nOwned by user with UID: $reportedUserUid';
-    else
-      result += '\nReported user UID: $reportedUserUid';
-
-    result += '\n\n$description';
-    return result;
+    return 'Reporting user UID: $userUid \nReported house: $reportedHouseUid \nOwned by user with UID: $reportedUserUid \n\n$description';
   }
+
+  ReportHouseEmail(
+      {@required userUid,
+      @required this.reportedHouseUid,
+      @required reportedUserUid,
+      @required description})
+      : super(
+            userUid: userUid,
+            reportedUserUid: reportedUserUid,
+            description: description);
 }

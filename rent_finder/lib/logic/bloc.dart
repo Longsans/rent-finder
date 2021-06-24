@@ -21,3 +21,5 @@ export 'saved_house/saved_house_bloc.dart';
 export 'recent_view/recent_view_bloc.dart';
 export 'my_houses/my_houses_bloc.dart';
 export 'slider/slider_cubit.dart';
+export 'report_issue_bloc/report_issue_bloc.dart';
+export 'report_house_bloc/report_house_bloc.dart';

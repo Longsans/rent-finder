@@ -3,4 +3,6 @@ abstract class BaseFeedbackEmail {
   String description;
 
   String content();
+
+  BaseFeedbackEmail(this.userUid, this.description);
 }

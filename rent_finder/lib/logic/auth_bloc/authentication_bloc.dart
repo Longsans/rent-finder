@@ -20,14 +20,14 @@ class AuthenticationBloc
     if (authenticationEvent is AuthenticationEventStarted) {
       final isSignedIn = await _userRepository.isSignedIn();
       if (isSignedIn) {
-        final user = await _userRepository.getCurrentUser();
+        final user = await _userRepository.getCurrentUserData();
         yield AuthenticationStateSuccess(user: user);
       } else {
         yield AuthenticationStateFailure();
       }
     } else if (authenticationEvent is AuthenticationEventLoggedIn) {
       yield AuthenticationStateSuccess(
-          user: await _userRepository.getCurrentUser());
+          user: await _userRepository.getCurrentUserData());
     } else if (authenticationEvent is AuthenticationEventLoggedOut) {
       _userRepository.signOut();
       yield AuthenticationStateFailure();
