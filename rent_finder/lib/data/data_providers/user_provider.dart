@@ -6,7 +6,7 @@ import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class UserFireStoreApi extends BaseApi {
+class UserFireStoreApi {
   Future<model.User> getUserByUID(String uid) async {
     final snapshot = await _collection.doc(uid).get();
     if (snapshot.exists) {

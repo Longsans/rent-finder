@@ -9,7 +9,7 @@ import 'data_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class HouseFireStoreApi extends BaseApi {
+class HouseFireStoreApi {
   UserFireStoreApi userFireStoreApi = UserFireStoreApi();
 
   Stream<List<House>> houses() {
