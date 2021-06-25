@@ -4,14 +4,15 @@ import 'package:rent_finder_hi/data/models/issue_email.dart';
 import 'package:rent_finder_hi/data/models/models.dart';
 
 class AdministrationRepository {
-  Stream<AdministrationData> administrationData() {
-    return _adminProvider
+  Future<AdministrationData> administrationData() async {
+    return await _adminProvider
         .administrationData()
-        .map((event) => AdministrationData.fromJson(event));
+        .then((value) => AdministrationData.fromJson(value));
   }
 
   Future<SendReport> sendReportEmail(ReportEmail email) async {
     await _adminProvider.incrementReportNumber();
+    _adminData = await administrationData();
 
     final message = Message()
       ..from = Address(_adminData.smtpUsername, 'Rent Finder')
@@ -24,6 +25,7 @@ class AdministrationRepository {
 
   Future<SendReport> sendIssueEmail(IssueEmail email) async {
     await _adminProvider.incrementIssueNumber();
+    _adminData = await administrationData();
 
     final message = Message()
       ..from = Address(_adminData.smtpUsername, 'Rent Finder')
@@ -32,12 +34,6 @@ class AdministrationRepository {
       ..text = email.content();
 
     return await _adminProvider.sendEmail(message, _adminData);
-  }
-
-  AdministrationRepository() {
-    administrationData().listen((event) {
-      _adminData = event;
-    });
   }
 
   AdministrationData _adminData;
