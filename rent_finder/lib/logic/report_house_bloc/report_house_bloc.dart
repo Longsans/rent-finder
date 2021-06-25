@@ -16,6 +16,7 @@ class ReportHouseBloc extends Bloc<ReportHouseEvent, ReportHouseState> {
   @override
   Stream<ReportHouseState> mapEventToState(ReportHouseEvent event) async* {
     try {
+      yield ReportHouseSending();
       await _adminRepo.sendReportEmail(ReportHouseEmail(
           userUid: _userRepo.currentUser.uid,
           reportedHouseUid: event.reportedHouse.uid,

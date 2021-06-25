@@ -9,6 +9,8 @@ class ReportIssueInit extends ReportIssueState {}
 
 class ReportIssueSuccess extends ReportIssueState {}
 
+class ReportIssueSending extends ReportIssueState {}
+
 class ReportIssueFail extends ReportIssueState {
   final String errorCode;
   final String errorDescription;

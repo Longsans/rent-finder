@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
@@ -149,13 +150,58 @@ class UserArea extends StatelessWidget {
                               child: BlocConsumer<ReportHouseBloc,
                                   ReportHouseState>(
                                 listener: (context, state) {
-                                  if (state is ReportHouseFail) {
+                                  if (state is ReportHouseSending) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                            'Đã có lỗi xảy ra: ${state.errorDescription}'),
+                                        content: Row(
+                                          children: <Widget>[
+                                            Text('Đang gửi báo cáo...'),
+                                            Spacer(),
+                                            CircularProgressIndicator(
+                                              value: null,
+                                            ),
+                                          ],
+                                        ),
+                                        duration: Duration(minutes: 4),
                                       ),
                                     );
+                                  }
+                                  if (state is ReportHouseFail) {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                            content: Row(
+                                          children: <Widget>[
+                                            Text(
+                                                'Đã có lỗi xảy ra: \'${state.errorDescription}\''),
+                                            Spacer(),
+                                            Icon(
+                                              Icons.error,
+                                              color: Colors.red,
+                                            ),
+                                          ],
+                                        )),
+                                      );
+                                  }
+                                  if (state is ReportHouseSuccess) {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          content: Row(
+                                            children: [
+                                              Text(
+                                                  'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!'),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
                                   }
                                 },
                                 builder: (context, state) {

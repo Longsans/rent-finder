@@ -9,6 +9,8 @@ class ReportHouseInit extends ReportHouseState {}
 
 class ReportHouseSuccess extends ReportHouseState {}
 
+class ReportHouseSending extends ReportHouseState {}
+
 class ReportHouseFail extends ReportHouseState {
   final String errorCode;
   final String errorDescription;
