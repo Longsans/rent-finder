@@ -16,6 +16,7 @@ class ReportIssueBloc extends Bloc<ReportIssueEvent, ReportIssueState> {
   @override
   Stream<ReportIssueState> mapEventToState(ReportIssueEvent event) async* {
     try {
+      yield ReportIssueSending();
       await _adminRepo.sendIssueEmail(IssueEmail(
           userUid: _userRepo.currentUser.uid,
           description: event.issueDescription));
