@@ -150,64 +150,51 @@ class UserArea extends StatelessWidget {
                           Divider(
                             thickness: 1,
                           ),
-                          BlocProvider<ReportIssueBloc>(
-                            create: (context) => ReportIssueBloc(),
-                            child:
-                                BlocListener<ReportIssueBloc, ReportIssueState>(
-                              listener: (context, state) {},
-                              child: Builder(
-                                builder: (context) {
-                                  return IconTextButton(
-                                    title: 'Báo cáo lỗi ứng dụng',
-                                    press: () async {
-                                      final controller =
-                                          TextEditingController();
-                                      final result = await showModalBottomSheet(
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (buildContext) {
-                                          return ReportIssueBottomSheet(
-                                            controller: controller,
-                                          );
-                                        },
-                                      );
-
-                                      if (result is ReportIssueSuccess) {
-                                        ScaffoldMessenger.of(context)
-                                          ..showSnackBar(
-                                            SnackBar(
-                                              content: Row(
-                                                children: [
-                                                  Text(
-                                                      'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!'),
-                                                  Spacer(),
-                                                  Icon(Icons.check_circle,
-                                                      color: Colors.green),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                      } else if (result is ReportIssueFail) {
-                                        ScaffoldMessenger.of(context)
-                                          ..showSnackBar(
-                                            SnackBar(
-                                              content: Row(
-                                                children: <Widget>[
-                                                  Text(
-                                                      'Đã có lỗi xảy ra: \'${result.errorDescription}\''),
-                                                  Spacer(),
-                                                  Icon(Icons.error,
-                                                      color: Colors.red),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                      }
-                                    },
+                          IconTextButton(
+                            title: 'Báo cáo lỗi ứng dụng',
+                            press: () async {
+                              final controller = TextEditingController();
+                              final result = await showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (buildContext) {
+                                  return ReportIssueBottomSheet(
+                                    controller: controller,
                                   );
                                 },
-                              ),
-                            ),
+                              );
+
+                              if (result is ReportIssueSuccess) {
+                                ScaffoldMessenger.of(context)
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          Text(
+                                              'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!'),
+                                          Spacer(),
+                                          Icon(Icons.check_circle,
+                                              color: Colors.green),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                              } else if (result is ReportIssueFail) {
+                                ScaffoldMessenger.of(context)
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: <Widget>[
+                                          Text(
+                                              'Đã có lỗi xảy ra: \'${result.errorDescription}\''),
+                                          Spacer(),
+                                          Icon(Icons.error, color: Colors.red),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -370,6 +357,9 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                           });
                           return;
                         }
+                        setState(() {
+                          invalid = false;
+                        });
                         BlocProvider.of<ReportIssueBloc>(context).add(
                             ReportIssueEvent(
                                 issueDescription: widget.controller.text));
