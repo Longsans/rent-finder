@@ -39,9 +39,7 @@ class HouseInfoSmallCard extends StatelessWidget {
                   BlocProvider.of<RecentViewBloc>(context)
                       .add(AddToViewed(user: authState.user, house: house));
                 }
-                Navigator.pushNamed(context, '/detail', arguments: [
-                  await repos.HouseRepository().getHouseByUid(house.uid)
-                ]);
+                Navigator.pushNamed(context, '/detail', arguments: [house]);
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: defaultPadding / 2),
@@ -69,8 +67,10 @@ class HouseInfoSmallCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                      placeholder: (context, url) => SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Center(child: CircularProgressIndicator())),
                       errorWidget: (context, url, error) => Icon(
                         Icons.error_outline,
                         size: 100,

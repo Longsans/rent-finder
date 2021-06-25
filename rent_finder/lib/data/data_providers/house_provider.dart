@@ -21,6 +21,15 @@ class HouseFireStoreApi {
       }).toList();
     });
   }
+  Stream<List<House>> newestHouses() {
+    return _collection.orderBy('ngayVaoO', descending: true).limit(5).snapshots().map((snapshot) {
+      return snapshot.docs.map((e) {
+        final map = e.data() as Map<String, dynamic>;
+        map['uid'] = e.reference.id;
+        return House.fromJson(map);
+      }).toList();
+    });
+  }
 
   Stream<List<House>> housesByLocation(String quanHuyen, String phuongXa) {
     if (quanHuyen == null) return houses();
@@ -45,11 +54,11 @@ class HouseFireStoreApi {
   Future<List<House>> getHousesByLocation(
       String quanHuyen, String phuongXa) async {
     QuerySnapshot<Object> query;
-    if (quanHuyen == null) query = await _collection.get();
+    if (quanHuyen == null) query = await _collection.orderBy('ngayVaoO', descending: true).get();
     if (phuongXa == null) {
-      query = await _collection.where('quanHuyen', isEqualTo: quanHuyen).get();
+      query = await _collection.orderBy('ngayVaoO', descending: true).where('quanHuyen', isEqualTo: quanHuyen).get();
     } else {
-      query = await _collection
+      query = await _collection.orderBy('ngayVaoO', descending: true)
           .where('quanHuyen', isEqualTo: quanHuyen)
           .where('phuongXa', isEqualTo: phuongXa)
           .get();

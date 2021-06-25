@@ -23,3 +23,6 @@ export 'my_houses/my_houses_bloc.dart';
 export 'slider/slider_cubit.dart';
 export 'report_issue_bloc/report_issue_bloc.dart';
 export 'report_house_bloc/report_house_bloc.dart';
+export 'search/search_cubit.dart';
+export 'detail_house/detail_house_cubit.dart';
+export 'newest_house/newest_house_cubit.dart';

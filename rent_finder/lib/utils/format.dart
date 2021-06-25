@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class Format {
   static String toMoneyPerMonth(double num) {
     final formatCurrency = new NumberFormat.simpleCurrency(decimalDigits: 0);
-    return formatCurrency.format(num) + " VNĐ/Tháng";
+    return formatCurrency.format(num).substring(1) + " đ";
   }
   static String toCurrenncy(double num) {
     final formatCurrency = new NumberFormat.simpleCurrency(decimalDigits: 0 );

@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/save_button.dart';
 import 'package:rent_finder_hi/utils/format.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,53 +16,70 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../constants.dart';
 
 class DetailScreen extends StatelessWidget {
-  const DetailScreen({
+  DetailScreen({
     Key key,
     this.house,
   }) : super(key: key);
   final double expandedHeight = 300;
   final double roundedContainerHeight = 30;
-  final model.House house;
+  model.House house;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              _buildSliverHead(),
-              SliverToBoxAdapter(
-                child: _buildDetail(context),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black12,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
+      body: SafeArea(
+        child: BlocProvider(
+          create: (context) => DetailHouseCubit()..click(house),
+          child: BlocBuilder<DetailHouseCubit, DetailHouseState>(
+            builder: (context, state) {
+              house = state.house;
+              if (state.status == DetailStatus.success) {
+                return Stack(
+                  children: [
+                    CustomScrollView(
+                      slivers: [
+                        _buildSliverHead(),
+                        SliverToBoxAdapter(
+                          child: _buildDetail(context),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                SaveButton(house: house),
-              ],
-            ),
+                    Padding(
+                      padding: const EdgeInsets.all(defaultPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.black12,
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SaveButton(house: house),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else if (state.status == DetailStatus.loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return Center(child: Text('Đã có lỗi xảy ra'));
+              }
+            },
           ),
-        ],
+        ),
       ),
-    ));
+    );
   }
 
   Widget _buildDetail(BuildContext context) {
@@ -351,7 +370,7 @@ class InfoOwner extends StatelessWidget {
             ),
           ),
           placeholder: (context, url) =>
-              Center(child: CircularProgressIndicator()),
+              SizedBox(height: 60,width: 60, child: Center(child: CircularProgressIndicator())),
           errorWidget: (context, url, error) => Icon(
             Icons.account_circle_outlined,
             size: 60,

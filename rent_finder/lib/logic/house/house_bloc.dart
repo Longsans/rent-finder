@@ -37,11 +37,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     try {
       final houses = await houseRepository.getHousesByLocation(
           event.quanHuyen, event.phuongXa);
-      for (int i = 0; i < houses.length; i++) {
-        model.User user =
-            await userRepository.getUserByUID(houses[i].chuNha.uid);
-        houses[i].setSensitiveInfo(false, user);
-      }
+      
       yield HouseLoadSuccess(houses: houses);
     } catch (err) {
       yield HouseLoadFailure();

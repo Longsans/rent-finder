@@ -42,9 +42,7 @@ class HouseInfoBigCard extends StatelessWidget {
                       BlocProvider.of<RecentViewBloc>(context)
                           .add(AddToViewed(user: authState.user, house: house));
                     }
-                    Navigator.pushNamed(context, '/detail', arguments: [
-                      await repos.HouseRepository().getHouseByUid(house.uid)
-                    ]);
+                    Navigator.pushNamed(context, '/detail', arguments: [house]);
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: defaultPadding),

@@ -7,7 +7,6 @@ import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/data/models/filter.dart';
 import 'package:rent_finder_hi/data/models/house.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
-import 'package:rent_finder_hi/logic/cubit/search_cubit.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 class SearchResultScreen extends StatelessWidget {

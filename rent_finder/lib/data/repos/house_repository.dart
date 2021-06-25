@@ -44,6 +44,9 @@ class HouseRepository {
   Stream<List<model.House>> myHouses(String uuid) {
     return houseFireStoreApi.myHouses(uuid);
   }
+  Stream<List<model.House>> newestHouses() {
+    return houseFireStoreApi.newestHouses();
+  }
 
   Stream<List<model.House>> savedHouses(String userUid) {
     return houseFireStoreApi.savedHouses(userUid);
