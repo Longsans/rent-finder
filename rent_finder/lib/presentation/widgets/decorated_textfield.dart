@@ -12,6 +12,7 @@ class DecoratedTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: true,
       keyboardType: TextInputType.multiline,
       maxLines: null,
       style: TextStyle(fontSize: 14, height: 1.5),
