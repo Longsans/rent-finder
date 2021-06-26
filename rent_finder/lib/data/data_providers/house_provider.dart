@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class HouseFireStoreApi {
   UserFireStoreApi userFireStoreApi = UserFireStoreApi();
 
+  // get methods
   Stream<List<House>> houses() {
     return _collection.snapshots().map((snapshot) {
       return snapshot.docs.map((e) {
@@ -21,8 +22,13 @@ class HouseFireStoreApi {
       }).toList();
     });
   }
+
   Stream<List<House>> newestHouses() {
-    return _collection.orderBy('ngayVaoO', descending: true).limit(5).snapshots().map((snapshot) {
+    return _collection
+        .orderBy('ngayCapNhat', descending: true)
+        .limit(5)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((e) {
         final map = e.data() as Map<String, dynamic>;
         map['uid'] = e.reference.id;
@@ -54,16 +60,21 @@ class HouseFireStoreApi {
   Future<List<House>> getHousesByLocation(
       String quanHuyen, String phuongXa) async {
     QuerySnapshot<Object> query;
-    if (quanHuyen == null) query = await _collection.orderBy('ngayVaoO', descending: true).get();
-    if (phuongXa == null) {
-      query = await _collection.orderBy('ngayVaoO', descending: true).where('quanHuyen', isEqualTo: quanHuyen).get();
+    if (quanHuyen == null)
+      query = await _collection.orderBy('ngayCapNhat', descending: true).get();
+    else if (phuongXa == null) {
+      query = await _collection
+          .orderBy('ngayCapNhat', descending: true)
+          .where('quanHuyen', isEqualTo: quanHuyen)
+          .get();
     } else {
-      query = await _collection.orderBy('ngayVaoO', descending: true)
+      query = await _collection
+          .orderBy('ngayCapNhat', descending: true)
           .where('quanHuyen', isEqualTo: quanHuyen)
           .where('phuongXa', isEqualTo: phuongXa)
           .get();
     }
-    final docs =  query.docs;
+    final docs = query.docs;
     if (docs.isNotEmpty) {
       return docs.map((e) {
         final map = e.data() as Map<String, dynamic>;
@@ -128,6 +139,17 @@ class HouseFireStoreApi {
     });
   }
 
+  // end region
+
+  // Create and Delete methods
+  String createHouseDocument() {
+    return _collection.doc().id;
+  }
+
+  Future<void> setHouseData(House house) async {
+    await _collection.doc(house.uid).set(house.toJson());
+  }
+
   Future<void> addHouseToUserSavedHouses(String userUid, House house) async {
     final map = house.toSnippetJson();
     map['userUid'] = userUid;
@@ -164,14 +186,9 @@ class HouseFireStoreApi {
     }
   }
 
-  String createHouseDocument() {
-    return _collection.doc().id;
-  }
+  // end region
 
-  Future<void> setHouseData(House house) async {
-    await _collection.doc(house.uid).set(house.toJson());
-  }
-
+  // Update methods
   Future<void> updateHouse({@required House updatedHouse}) async {
     final updatedHouseMap = updatedHouse.toJson();
     updatedHouseMap['dangCapNhat'] = true;
@@ -200,6 +217,12 @@ class HouseFireStoreApi {
     }
   }
 
+  Future<void> updateViewedHouseViewTime(String houseUid) async {
+    await _viewedHousesCollection
+        .doc(houseUid)
+        .update({'ngayCapNhat': DateTime.now()});
+  }
+
   Future<void> setHouseRemoved(String uid) async {
     await _collection.doc(uid).update({'daGo': true});
   }
@@ -208,6 +231,9 @@ class HouseFireStoreApi {
     await _collection.doc(uid).update({'daGo': false});
   }
 
+  // end region
+
+  // Other methods
   Future<String> uploadHousePicAndGetDownloadUrl(
       {@required model.House house, @required File file}) async {
     final newPfpRef = _storageRoot
@@ -219,6 +245,8 @@ class HouseFireStoreApi {
     String url = await taskSnapshot.ref.getDownloadURL();
     return url;
   }
+
+  // end region
 
   // private members
   final CollectionReference _collection =

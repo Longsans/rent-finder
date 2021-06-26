@@ -4,15 +4,15 @@ import 'package:rent_finder_hi/data/models/issue_email.dart';
 import 'package:rent_finder_hi/data/models/models.dart';
 
 class AdministrationRepository {
-  Future<AdministrationData> administrationData() async {
+  Future<AdministrationData> getAdministrationData() async {
     return await _adminProvider
-        .administrationData()
+        .getAdministrationData()
         .then((value) => AdministrationData.fromJson(value));
   }
 
   Future<SendReport> sendReportEmail(ReportEmail email) async {
     await _adminProvider.incrementReportNumber();
-    _adminData = await administrationData();
+    _adminData = await getAdministrationData();
 
     final message = Message()
       ..from = Address(_adminData.smtpUsername, 'Rent Finder')
@@ -25,12 +25,25 @@ class AdministrationRepository {
 
   Future<SendReport> sendIssueEmail(IssueEmail email) async {
     await _adminProvider.incrementIssueNumber();
-    _adminData = await administrationData();
+    _adminData = await getAdministrationData();
 
     final message = Message()
       ..from = Address(_adminData.smtpUsername, 'Rent Finder')
       ..recipients.add(_myDumbEmail)
       ..subject = 'App issue report no. ${_adminData.issueNumber}'
+      ..text = email.content();
+
+    return await _adminProvider.sendEmail(message, _adminData);
+  }
+
+  Future<SendReport> sendContentAttentionEmail(
+      ContentAttentionEmail email) async {
+    if (_adminData == null) _adminData = await getAdministrationData();
+
+    final message = Message()
+      ..from = Address(_adminData.smtpUsername, 'Rent Finder')
+      ..recipients.add(_myDumbEmail)
+      ..subject = email.header
       ..text = email.content();
 
     return await _adminProvider.sendEmail(message, _adminData);

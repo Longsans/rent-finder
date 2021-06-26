@@ -499,7 +499,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                             _moneyController.text);
                                         house.tinhTrang =
                                             model.TinhTrangChoThue.ConTrong;
-                                        house.ngayVaoO = DateTime.now();
+                                        house.ngayCapNhat = DateTime.now();
                                         house.coSoVatChat = coSoVatChat;
                                         house.moTa = _describeController.text;
                                         BlocProvider.of<PostFormBloc>(context)
