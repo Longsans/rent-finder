@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rent_finder_hi/constants.dart';
+import 'package:rent_finder_hi/data/repos/repos.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/screens/screens.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
@@ -82,18 +83,115 @@ class MyHousesScreen extends StatelessWidget {
                                   ),
                                   Align(
                                     child: PopupMenuButton(
+                                        onSelected: (val) async {
+                                          if (val == 'Gỡ') {
+                                            var t = showDialog<bool>(
+                                              context: context,
+                                              builder: (context) {
+                                                return ConfirmDialog(
+                                                  title:
+                                                      'Bạn có chắc chắn muốn gỡ nhà này không?',
+                                                );
+                                              },
+                                            );
+                                            t.then((value) async {
+                                              if (value != null) {
+                                                if (value) {
+                                                  ScaffoldMessenger.of(context)
+                                                    ..hideCurrentSnackBar()
+                                                    ..showSnackBar(
+                                                      SnackBar(
+                                                        content: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Text(
+                                                                " Đang gỡ nhà..."),
+                                                            CircularProgressIndicator(),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  Future.delayed(
+                                                      Duration(seconds: 3));
+                                                  try {
+                                                   await HouseRepository()
+                                                        .setHouseRemoved(state
+                                                            .houses[index].uid);
+                                                             ScaffoldMessenger.of(
+                                                        context)
+                                                      ..hideCurrentSnackBar()
+                                                      ..showSnackBar(
+                                                        SnackBar(
+                                                          content: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Text(
+                                                                  " Gỡ nhà thành công"),
+                                                              Icon(
+                                                                Icons.verified,
+                                                                color:
+                                                                    Colors.green,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                        context)
+                                                      ..hideCurrentSnackBar()
+                                                      ..showSnackBar(
+                                                        SnackBar(
+                                                          content: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Text(
+                                                                  " Đã có lỗi xảy ra"),
+                                                              Icon(
+                                                                Icons.error,
+                                                                color:
+                                                                    Colors.red,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                  }
+                                                } else
+                                                  print('Hủy');
+                                              }
+                                            });
+                                          } else
+                                            print('Sửa');
+                                        },
                                         itemBuilder: (context) {
                                           return [
                                             PopupMenuItem(
-                                              child: Row(
-                                                children: [
-                                                  Text('Gỡ'),
-                                                  Icon(Icons.delete),
-                                                ],
+                                              value: 'Gỡ',
+                                              child: Container(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Text('Gỡ'),
+                                                    Icon(Icons.delete),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             PopupMenuItem(
+                                              value: 'Sửa',
                                               child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 children: [
                                                   Text('Sửa'),
                                                   Icon(Icons.edit),

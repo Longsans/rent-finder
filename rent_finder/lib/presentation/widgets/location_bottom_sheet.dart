@@ -109,24 +109,28 @@ class LocationBottomSheet extends StatelessWidget {
             Builder(
               builder: (context) => BlocBuilder<CommuneCubit, String>(
                 builder: (context, state) {
-                  return DropdownButton(
-                    value: state,
-                    onChanged: (value) {
-                      phuongXa = value;
-                      BlocProvider.of<CommuneCubit>(context)
-                          .selectedChange(value);
+                  return BlocBuilder<DistrictCubit, String>(
+                    builder: (context, district) {
+                      return DropdownButton(
+                        value: state,
+                        onChanged: (value) {
+                          phuongXa = value;
+                          BlocProvider.of<CommuneCubit>(context)
+                              .selectedChange(value);
+                        },
+                        items: district != null
+                            ? districts
+                                .where((e) => e.name == district)
+                                .first
+                                .commune
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList()
+                            : [],
+                        hint: Text('Chọn xã/phường'),
+                        isExpanded: true,
+                      );
                     },
-                    items: quanHuyen != null
-                        ? districts
-                            .where((e) => e.name == quanHuyen)
-                            .first
-                            .commune
-                            .map((e) =>
-                                DropdownMenuItem(value: e, child: Text(e)))
-                            .toList()
-                        : [],
-                    hint: Text('Chọn xã/phường'),
-                    isExpanded: true,
                   );
                 },
               ),

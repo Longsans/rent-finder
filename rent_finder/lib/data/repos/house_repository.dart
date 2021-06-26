@@ -28,7 +28,7 @@ class HouseRepository {
     final house = await houseFireStoreApi.getHouseByUID(uid);
     if (house != null) {
       final chuNha = await userFireStoreApi.getUserByUID(house.chuNha.uid);
-      house.setSensitiveInfo(false, chuNha);
+      house.setSensitiveInfo(house.daGO, chuNha);
     }
     return house;
   }
@@ -37,13 +37,16 @@ class HouseRepository {
       String quanHuyen, String phuongXa) {
     return houseFireStoreApi.housesByLocation(quanHuyen, phuongXa);
   }
-  Future<List<model.House>> getHousesByLocation(String quanHuyen, String phuongXa) async{
+
+  Future<List<model.House>> getHousesByLocation(
+      String quanHuyen, String phuongXa) async {
     return await houseFireStoreApi.getHousesByLocation(quanHuyen, phuongXa);
   }
 
   Stream<List<model.House>> myHouses(String uuid) {
     return houseFireStoreApi.myHouses(uuid);
   }
+
   Stream<List<model.House>> newestHouses() {
     return houseFireStoreApi.newestHouses();
   }
@@ -74,5 +77,9 @@ class HouseRepository {
   Future<void> removeHouseFromUserViewHouses(
       String userUid, String houseUid) async {
     await houseFireStoreApi.removeHouseFromUserViewHouses(userUid, houseUid);
+  }
+
+  Future<void> setHouseRemoved(String uid) async {
+    await houseFireStoreApi.setHouseRemoved(uid);
   }
 }

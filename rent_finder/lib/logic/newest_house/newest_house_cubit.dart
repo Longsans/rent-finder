@@ -14,6 +14,7 @@ class NewestHouseCubit extends Cubit<NewestHouseState> {
   void loadNewestHouse() {
     if (housesSubscription != null) housesSubscription.cancel();
     housesSubscription = houseRepository.newestHouses().listen((houses) {
+      print(' a update nè');
       updateNewestHouse(houses);
     });
   }
@@ -21,6 +22,7 @@ class NewestHouseCubit extends Cubit<NewestHouseState> {
   void updateNewestHouse(List<House> houses) {
     emit(state.copyWith(status: Status.success, houses: houses));
   }
+
   @override
   Future<void> close() {
     if (housesSubscription != null) housesSubscription.cancel();

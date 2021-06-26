@@ -37,7 +37,7 @@ class SearchArea extends StatelessWidget {
                         t.then((value) {
                           if (value != null) {
                             BlocProvider.of<HouseBloc>(context)
-                                .add(LoadHouses(value[0], value[1]));
+                                .add(LoadHouses(value[0], value[1], sortType: 0));
                             Navigator.pushNamed(context, '/result',
                                 arguments: [value[0], value[1]]);
                           }
