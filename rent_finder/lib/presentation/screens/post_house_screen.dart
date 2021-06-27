@@ -45,13 +45,11 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
     coSoVatChat.banCong = false;
     coSoVatChat.baoVe = false;
     coSoVatChat.cctv = false;
-    coSoVatChat.choDauXeGarage = false;
-    coSoVatChat.choDauXeTrongKhuChungCu = false;
+    coSoVatChat.baiDauXe = false;
     coSoVatChat.dieuHoa = false;
     coSoVatChat.gacLung = false;
     coSoVatChat.hoBoi = false;
-    coSoVatChat.mayGiatTrongNha = false;
-    coSoVatChat.mayGiatTrongKhuChungCu = false;
+    coSoVatChat.mayGiat = false;
     coSoVatChat.noiThat = false;
     coSoVatChat.nuoiThuCung = false;
     coSoVatChat.sanThuong = false;
@@ -187,10 +185,6 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       _buildBedNumSelector(),
                                       Text('Số phòng tắm'),
                                       _buildBathNumSelector(),
-                                      Text('Máy giặt'),
-                                      _buildWasherSelector(),
-                                      Text('Chỗ đậu xe'),
-                                      _buildParkingSelector(),
                                       BlocBuilder<PostFormBloc, PostFormState>(
                                         builder: (context, state) {
                                           return TextFormField(
@@ -616,6 +610,13 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
         BlocProvider(
           create: (context) => EnableCubit(),
           child: _buildUtilityCard(
+            svgSrc: 'assets/icons/washer.svg',
+            title: 'Máy giặt',
+          ),
+        ),
+        BlocProvider(
+          create: (context) => EnableCubit(),
+          child: _buildUtilityCard(
             svgSrc: 'assets/icons/interior.svg',
             title: 'Nội thất',
           ),
@@ -639,6 +640,13 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
           child: _buildUtilityCard(
             svgSrc: 'assets/icons/pool.svg',
             title: 'Hồ bơi',
+          ),
+        ),
+        BlocProvider(
+          create: (context) => EnableCubit(),
+          child: _buildUtilityCard(
+            svgSrc: 'assets/icons/parking.svg',
+            title: 'Bãi đậu xe',
           ),
         ),
         BlocProvider(
@@ -951,110 +959,6 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
     );
   }
 
-  BlocProvider<RadioCubit> _buildWasherSelector() {
-    return BlocProvider(
-      create: (context) => RadioCubit(),
-      child: Builder(
-        builder: (context) => BlocBuilder<RadioCubit, int>(
-          builder: (context, state) {
-            return Row(
-              children: [
-                MaterialButton(
-                  color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.mayGiat = model.CSVCMayGiat.KhongCo;
-                    BlocProvider.of<RadioCubit>(context).click(0);
-                  },
-                  child: Text(
-                    'Không có',
-                    style: TextStyle(
-                        color: !(state == 0) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 1) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.mayGiat = model.CSVCMayGiat.TrongKhuChungCu;
-                    BlocProvider.of<RadioCubit>(context).click(1);
-                  },
-                  child: Text(
-                    'Trong khu chung cư',
-                    style: TextStyle(
-                        color: !(state == 1) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 2) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.mayGiat = model.CSVCMayGiat.TrongNha;
-                    BlocProvider.of<RadioCubit>(context).click(2);
-                  },
-                  child: Text(
-                    'Trong nhà',
-                    style: TextStyle(
-                        color: !(state == 2) ? Colors.black : Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  BlocProvider<RadioCubit> _buildParkingSelector() {
-    return BlocProvider(
-      create: (context) => RadioCubit(),
-      child: Builder(
-        builder: (context) => BlocBuilder<RadioCubit, int>(
-          builder: (context, state) {
-            return Row(
-              children: [
-                MaterialButton(
-                  color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.choDauXe = model.CSVCChoDauXe.TrongNha;
-                    BlocProvider.of<RadioCubit>(context).click(0);
-                  },
-                  child: Text(
-                    'Trong nhà',
-                    style: TextStyle(
-                        color: !(state == 0) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 1) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.choDauXe = model.CSVCChoDauXe.TrongKhuChungCu;
-                    BlocProvider.of<RadioCubit>(context).click(1);
-                  },
-                  child: Text(
-                    'Trong khu chung cư',
-                    style: TextStyle(
-                        color: !(state == 1) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 2) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.choDauXe = model.CSVCChoDauXe.Garage;
-                    BlocProvider.of<RadioCubit>(context).click(2);
-                  },
-                  child: Text(
-                    'Garage',
-                    style: TextStyle(
-                        color: !(state == 2) ? Colors.black : Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
   BlocBuilder<EnableCubit, bool> _buildUtilityCard(
       {String svgSrc, String title}) {
     return BlocBuilder<EnableCubit, bool>(
@@ -1088,6 +992,13 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                 break;
               case 'Thú cưng':
                 coSoVatChat.nuoiThuCung = !state;
+                break;
+              case 'Máy giặt':
+                coSoVatChat.mayGiat = !state;
+                break;
+
+              case 'Bãi đậu xe':
+                coSoVatChat.baiDauXe = !state;
                 break;
             }
             BlocProvider.of<EnableCubit>(context).click();

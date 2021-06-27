@@ -69,7 +69,6 @@ class FilteredHousesBloc
         return true;
       } else {
         bool res = true;
-        // if (filter == null) return true;
         if (filter.loaiChoThue != null)
           res = house.loaiChoThue == filter.loaiChoThue;
         if (filter.soPhongNgu != null)
@@ -90,17 +89,25 @@ class FilteredHousesBloc
             res = res && (house.dienTich <= filter.areaMax);
         }
         if (filter.coSoVatChat != null) {
-          if (filter.coSoVatChat.banCong) res = res && (house.coSoVatChat.banCong);
+          if (filter.coSoVatChat.banCong)
+            res = res && (house.coSoVatChat.banCong);
           if (filter.coSoVatChat.baoVe) res = res && (house.coSoVatChat.baoVe);
           if (filter.coSoVatChat.cctv) res = res && (house.coSoVatChat.cctv);
-          if (filter.coSoVatChat.dieuHoa) res = res && (house.coSoVatChat.dieuHoa);
-          if (filter.coSoVatChat.gacLung) res = res && (house.coSoVatChat.gacLung);
+          if (filter.coSoVatChat.dieuHoa)
+            res = res && (house.coSoVatChat.dieuHoa);
+          if (filter.coSoVatChat.gacLung)
+            res = res && (house.coSoVatChat.gacLung);
           if (filter.coSoVatChat.hoBoi) res = res && (house.coSoVatChat.hoBoi);
-          if (filter.coSoVatChat.noiThat) res = res && (house.coSoVatChat.noiThat);
-          if (filter.coSoVatChat.nuoiThuCung) res = res && (house.coSoVatChat.nuoiThuCung);
-          if (filter.coSoVatChat.sanThuong) res = res && (house.coSoVatChat.sanThuong);
-          if (filter.coSoVatChat.choDauXe != null) res = res && (house.coSoVatChat.choDauXe == filter.coSoVatChat.choDauXe);
-          if (filter.coSoVatChat.mayGiat != null) res = res && (house.coSoVatChat.mayGiat == filter.coSoVatChat.mayGiat);
+          if (filter.coSoVatChat.noiThat)
+            res = res && (house.coSoVatChat.noiThat);
+          if (filter.coSoVatChat.nuoiThuCung)
+            res = res && (house.coSoVatChat.nuoiThuCung);
+          if (filter.coSoVatChat.sanThuong)
+            res = res && (house.coSoVatChat.sanThuong);
+          if (filter.coSoVatChat.baiDauXe)
+            res = res && (house.coSoVatChat.baiDauXe);
+          if (filter.coSoVatChat.mayGiat)
+            res = res && (house.coSoVatChat.mayGiat);
         }
         return res;
       }

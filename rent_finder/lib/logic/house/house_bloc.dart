@@ -36,12 +36,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     try {
       var houses = await houseRepository.getHousesByLocation(
           event.quanHuyen, event.phuongXa);
-      if (event.sortType == 0)
-        houses.sort((a, b) => b.ngayVaoO.compareTo(a.ngayVaoO));
-      else if (event.sortType == 1)
-        houses.sort((a, b) => a.tienThueThang.compareTo(b.tienThueThang));
-      else
-        houses.sort((a, b) => b.tienThueThang.compareTo(a.tienThueThang));
+     
       yield HouseLoadSuccess(
           houses: houses.where((element) => element.daGO != true).toList());
     } catch (err) {

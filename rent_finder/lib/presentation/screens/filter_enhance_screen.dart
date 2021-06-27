@@ -15,6 +15,8 @@ class FilterEnhanceScreen extends StatelessWidget {
   double _lowerArea = 0;
   double _upperArea = 100;
   model.CoSoVatChat coSoVatChat = model.CoSoVatChat(
+      baiDauXe: false,
+      mayGiat: false,
       banCong: false,
       baoVe: false,
       cctv: false,
@@ -29,7 +31,8 @@ class FilterEnhanceScreen extends StatelessWidget {
     if (filter.coSoVatChat != null) coSoVatChat = filter.coSoVatChat;
     return Scaffold(
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: defaultPadding *2 , vertical: defaultPadding),
+        padding: EdgeInsets.symmetric(
+            horizontal: defaultPadding * 2, vertical: defaultPadding),
         child: CustomButton(
           title: 'Áp dụng',
           press: () {
@@ -164,22 +167,6 @@ class FilterEnhanceScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle1,
             ),
             _buildBathNumSelector(),
-            SizedBox(
-              height: defaultPadding,
-            ),
-            Text(
-              'Máy giặt',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            _buildWasherSelector(),
-            SizedBox(
-              height: defaultPadding,
-            ),
-            Text(
-              'Chỗ đậu xe',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            _buildParkingSelector(),
             SizedBox(
               height: defaultPadding,
             ),
@@ -339,130 +326,6 @@ class FilterEnhanceScreen extends StatelessWidget {
     );
   }
 
-  BlocProvider<RadioCubit> _buildWasherSelector() {
-    return BlocProvider(
-      create: (context) {
-        if (coSoVatChat.mayGiat != null)
-          return RadioCubit()
-            ..click(coSoVatChat.mayGiat == model.CSVCMayGiat.KhongCo
-                ? coSoVatChat.mayGiat == model.CSVCMayGiat.TrongKhuChungCu
-                    ? 1
-                    : 0
-                : 2);
-        else
-          return RadioCubit()..click(null);
-      },
-      child: Builder(
-        builder: (context) => BlocBuilder<RadioCubit, int>(
-          builder: (context, state) {
-            return Row(
-              children: [
-                MaterialButton(
-                  color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.mayGiat = model.CSVCMayGiat.KhongCo;
-                    BlocProvider.of<RadioCubit>(context).click(0);
-                  },
-                  child: Text(
-                    'Không có',
-                    style: TextStyle(
-                        color: !(state == 0) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 1) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.mayGiat = model.CSVCMayGiat.TrongKhuChungCu;
-                    BlocProvider.of<RadioCubit>(context).click(1);
-                  },
-                  child: Text(
-                    'Trong khu chung cư',
-                    style: TextStyle(
-                        color: !(state == 1) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 2) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.mayGiat = model.CSVCMayGiat.TrongNha;
-                    BlocProvider.of<RadioCubit>(context).click(2);
-                  },
-                  child: Text(
-                    'Trong nhà',
-                    style: TextStyle(
-                        color: !(state == 2) ? Colors.black : Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  BlocProvider<RadioCubit> _buildParkingSelector() {
-    return BlocProvider(
-      create: (context) {
-        if (coSoVatChat.choDauXe != null)
-          return RadioCubit()
-            ..click(coSoVatChat == model.CSVCChoDauXe.TrongNha
-                ? coSoVatChat == model.CSVCChoDauXe.TrongKhuChungCu
-                    ? 1
-                    : 0
-                : 2);
-        else
-          return RadioCubit()..click(null);
-      },
-      child: Builder(
-        builder: (context) => BlocBuilder<RadioCubit, int>(
-          builder: (context, state) {
-            return Row(
-              children: [
-                MaterialButton(
-                  color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.choDauXe = model.CSVCChoDauXe.TrongNha;
-                    BlocProvider.of<RadioCubit>(context).click(0);
-                  },
-                  child: Text(
-                    'Trong nhà',
-                    style: TextStyle(
-                        color: !(state == 0) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 1) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.choDauXe = model.CSVCChoDauXe.TrongKhuChungCu;
-                    BlocProvider.of<RadioCubit>(context).click(1);
-                  },
-                  child: Text(
-                    'Trong khu chung cư',
-                    style: TextStyle(
-                        color: !(state == 1) ? Colors.black : Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: (state == 2) ? Color(0xFF0D4880) : Colors.white,
-                  onPressed: () {
-                    coSoVatChat.choDauXe = model.CSVCChoDauXe.Garage;
-                    BlocProvider.of<RadioCubit>(context).click(2);
-                  },
-                  child: Text(
-                    'Garage',
-                    style: TextStyle(
-                        color: !(state == 2) ? Colors.black : Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
   GridView _buildUtilitiesList() {
     return GridView.count(
       crossAxisSpacing: defaultPadding,
@@ -498,6 +361,14 @@ class FilterEnhanceScreen extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
+              (coSoVatChat.mayGiat) ? (EnableCubit()..click()) : EnableCubit(),
+          child: _buildUtilityCard(
+            svgSrc: 'assets/icons/washer.svg',
+            title: 'Máy giặt',
+          ),
+        ),
+        BlocProvider(
+          create: (context) =>
               (coSoVatChat.gacLung) ? (EnableCubit()..click()) : EnableCubit(),
           child: _buildUtilityCard(
             svgSrc: 'assets/icons/mezzanine.svg',
@@ -510,6 +381,14 @@ class FilterEnhanceScreen extends StatelessWidget {
           child: _buildUtilityCard(
             svgSrc: 'assets/icons/guard.svg',
             title: 'Bảo vệ',
+          ),
+        ),
+        BlocProvider(
+          create: (context) =>
+              (coSoVatChat.baiDauXe) ? (EnableCubit()..click()) : EnableCubit(),
+          child: _buildUtilityCard(
+            svgSrc: 'assets/icons/parking.svg',
+            title: 'Bãi đậu xe',
           ),
         ),
         BlocProvider(
@@ -583,6 +462,13 @@ class FilterEnhanceScreen extends StatelessWidget {
                 break;
               case 'Thú cưng':
                 coSoVatChat.nuoiThuCung = !state;
+                break;
+              case 'Máy giặt':
+                coSoVatChat.mayGiat = !state;
+                break;
+
+              case 'Bãi đậu xe':
+                coSoVatChat.baiDauXe = !state;
                 break;
             }
             BlocProvider.of<EnableCubit>(context).click();

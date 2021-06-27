@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
-import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/save_button.dart';
 import 'package:rent_finder_hi/utils/format.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -215,11 +213,17 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/interior.svg',
           title: 'Nội thất',
         ),
+        if (house.coSoVatChat.mayGiat)
+        UtilityCard(
+          svgSrc: 'assets/icons/washer.svg',
+          title: 'Máy giặt',
+        ),
       if (house.coSoVatChat.gacLung)
         UtilityCard(
           svgSrc: 'assets/icons/mezzanine.svg',
           title: 'Gác lửng',
         ),
+ 
       if (house.coSoVatChat.baoVe)
         UtilityCard(
           svgSrc: 'assets/icons/guard.svg',
@@ -229,6 +233,11 @@ class DetailScreen extends StatelessWidget {
         UtilityCard(
           svgSrc: 'assets/icons/pool.svg',
           title: 'Hồ bơi',
+        ),
+        if (house.coSoVatChat.baiDauXe)
+        UtilityCard(
+          svgSrc: 'assets/icons/parking.svg',
+          title: 'Bãi đậu xe',
         ),
       if (house.coSoVatChat.cctv)
         UtilityCard(

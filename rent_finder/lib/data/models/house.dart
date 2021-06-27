@@ -41,12 +41,8 @@ class House extends SerializableObject {
     ngayCapNhat = (json['ngayCapNhat'] as Timestamp).toDate();
 
     coSoVatChat = CoSoVatChat(
-      mayGiatTrongNha: json['coSoVatChat']['mayGiatTrongNha'] as bool,
-      mayGiatTrongKhuChungCu:
-          json['coSoVatChat']['mayGiatTrongKhuChungCu'] as bool,
-      choDauXeGarage: json['coSoVatChat']['choDauXeGarage'] as bool,
-      choDauXeTrongKhuChungCu:
-          json['coSoVatChat']['choDauXeTrongKhuChungCu'] as bool,
+      mayGiat: json['coSoVatChat']['mayGiat'] as bool,
+      baiDauXe: json['coSoVatChat']['baiDauXe'] as bool,
       banCong: json['coSoVatChat']['banCong'] as bool,
       baoVe: json['coSoVatChat']['baoVe'] as bool,
       cctv: json['coSoVatChat']['cctv'] as bool,
@@ -92,10 +88,8 @@ class House extends SerializableObject {
     jsonMap['tinhTrang'] = describeEnum(tinhTrang);
     jsonMap['ngayCapNhat'] = ngayCapNhat;
     jsonMap['coSoVatChat'] = {
-      'mayGiatTrongNha': coSoVatChat.mayGiatTrongNha,
-      'mayGiatTrongKhuChungCu': coSoVatChat.mayGiatTrongKhuChungCu,
-      'choDauXeGarage': coSoVatChat.choDauXeGarage,
-      'choDauXeTrongKhuChungCu': coSoVatChat.choDauXeTrongKhuChungCu,
+      'mayGiat': coSoVatChat.mayGiat,
+      'baiDauXe': coSoVatChat.baiDauXe,
       'banCong': coSoVatChat.banCong,
       'baoVe': coSoVatChat.baoVe,
       'cctv': coSoVatChat.cctv,
@@ -203,10 +197,8 @@ enum TinhTrangChoThue { ConTrong, DaThue, DangBaoTri }
 
 class CoSoVatChat {
   CoSoVatChat(
-      {this.mayGiatTrongNha,
-      this.mayGiatTrongKhuChungCu,
-      this.choDauXeGarage,
-      this.choDauXeTrongKhuChungCu,
+      {this.mayGiat,
+      this.baiDauXe,
       this.dieuHoa,
       this.banCong,
       this.noiThat,
@@ -217,10 +209,9 @@ class CoSoVatChat {
       this.cctv,
       this.nuoiThuCung});
 
-  bool mayGiatTrongNha;
-  bool mayGiatTrongKhuChungCu;
-  bool choDauXeGarage;
-  bool choDauXeTrongKhuChungCu;
+  bool mayGiat;
+
+  bool baiDauXe;
   bool dieuHoa;
   bool banCong;
   bool noiThat;
