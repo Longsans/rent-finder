@@ -14,7 +14,10 @@ class HouseFireStoreApi {
 
   // get methods
   Stream<List<House>> houses() {
-    return _collection.snapshots().map((snapshot) {
+    return _collection
+        .where('daGo', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((e) {
         final map = e.data() as Map<String, dynamic>;
         map['uid'] = e.reference.id;
@@ -42,11 +45,14 @@ class HouseFireStoreApi {
     if (quanHuyen == null) return houses();
     Query<Object> query;
     if (phuongXa == null) {
-      query = _collection.where('quanHuyen', isEqualTo: quanHuyen);
+      query = _collection
+          .where('quanHuyen', isEqualTo: quanHuyen)
+          .where('daGo', isEqualTo: false);
     } else {
       query = _collection
           .where('quanHuyen', isEqualTo: quanHuyen)
-          .where('phuongXa', isEqualTo: phuongXa);
+          .where('phuongXa', isEqualTo: phuongXa)
+          .where('daGo', isEqualTo: false);
     }
     return query.snapshots().map((snapshot) {
       return snapshot.docs.map((e) {
@@ -60,20 +66,23 @@ class HouseFireStoreApi {
 
   Future<List<House>> getHousesByLocation(
       String quanHuyen, String phuongXa) async {
-    QuerySnapshot<Object> query;
+    Query query = _collection.where('daGo', isEqualTo: false);
+    QuerySnapshot<Object> querySnapshot;
 
-    if (quanHuyen == null)
-      query = await _collection.get();
-    else if (phuongXa == null) {
-      query = await _collection.where('quanHuyen', isEqualTo: quanHuyen).get();
-    } else {
-      query = await _collection
-          .where('quanHuyen', isEqualTo: quanHuyen)
-          .where('phuongXa', isEqualTo: phuongXa)
-          .get();
-    }
+    if (quanHuyen != null) {
+      if (phuongXa == null) {
+        querySnapshot =
+            await query.where('quanHuyen', isEqualTo: quanHuyen).get();
+      } else {
+        querySnapshot = await query
+            .where('quanHuyen', isEqualTo: quanHuyen)
+            .where('phuongXa', isEqualTo: phuongXa)
+            .get();
+      }
+    } else
+      querySnapshot = await query.get();
 
-    final docs = query.docs;
+    final docs = querySnapshot.docs;
     if (docs.isNotEmpty) {
       return docs.map((e) {
         final map = e.data() as Map<String, dynamic>;
@@ -245,9 +254,13 @@ class HouseFireStoreApi {
     return url;
   }
 
+  // Future<void> _deleteUnusedHousePictures(String houseUid, List<String> housePicUrls) async {
+
+  // }
+
   // end region
 
-  // private members
+  // private references
   final CollectionReference _collection =
       FirebaseFirestore.instance.collection('houses');
 
