@@ -4,8 +4,8 @@ import 'package:mailer/smtp_server.dart';
 import 'package:rent_finder_hi/data/models/models.dart';
 
 class AdministrationProvider {
-  Stream<Map<String, dynamic>> administrationData() {
-    return _collection.snapshots().map((event) => event.docs[0].data());
+  Future<Map<String, dynamic>> getAdministrationData() async {
+    return (await _collection.doc('1').get()).data();
   }
 
   Future<SendReport> sendEmail(

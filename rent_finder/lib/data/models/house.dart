@@ -18,7 +18,7 @@ class House extends SerializableObject {
       this.soPhongTam,
       this.tienThueThang,
       this.tinhTrang,
-      this.ngayVaoO,
+      this.ngayCapNhat,
       this.coSoVatChat,
       this.moTa,
       this.toaDo});
@@ -38,26 +38,31 @@ class House extends SerializableObject {
     tienThueThang = json['tienThueThang'] as double;
     tinhTrang = TinhTrangChoThue.values.firstWhere(
         (element) => describeEnum(element) == json['tinhTrang'].toString());
-    ngayVaoO = (json['ngayVaoO'] as Timestamp).toDate();
+    ngayCapNhat = (json['ngayCapNhat'] as Timestamp).toDate();
 
-    coSoVatChat = CoSoVatChat();
-    coSoVatChat.mayGiat = CSVCMayGiat.values.firstWhere((element) =>
-        describeEnum(element) == json['coSoVatChat']['mayGiat'].toString());
-    coSoVatChat.choDauXe = CSVCChoDauXe.values.firstWhere((element) =>
-        describeEnum(element) == json['coSoVatChat']['choDauXe'].toString());
-    coSoVatChat.banCong = json['coSoVatChat']['banCong'] as bool;
-    coSoVatChat.baoVe = json['coSoVatChat']['baoVe'] as bool;
-    coSoVatChat.cctv = json['coSoVatChat']['cctv'] as bool;
-    coSoVatChat.dieuHoa = json['coSoVatChat']['dieuHoa'] as bool;
-    coSoVatChat.gacLung = json['coSoVatChat']['gacLung'] as bool;
-    coSoVatChat.hoBoi = json['coSoVatChat']['hoBoi'] as bool;
-    coSoVatChat.noiThat = json['coSoVatChat']['noiThat'] as bool;
-    coSoVatChat.nuoiThuCung = json['coSoVatChat']['nuoiThuCung'] as bool;
-    coSoVatChat.sanThuong = json['coSoVatChat']['sanThuong'] as bool;
+    coSoVatChat = CoSoVatChat(
+      mayGiatTrongNha: json['coSoVatChat']['mayGiatTrongNha'] as bool,
+      mayGiatTrongKhuChungCu:
+          json['coSoVatChat']['mayGiatTrongKhuChungCu'] as bool,
+      choDauXeGarage: json['coSoVatChat']['choDauXeGarage'] as bool,
+      choDauXeTrongKhuChungCu:
+          json['coSoVatChat']['choDauXeTrongKhuChungCu'] as bool,
+      banCong: json['coSoVatChat']['banCong'] as bool,
+      baoVe: json['coSoVatChat']['baoVe'] as bool,
+      cctv: json['coSoVatChat']['cctv'] as bool,
+      dieuHoa: json['coSoVatChat']['dieuHoa'] as bool,
+      gacLung: json['coSoVatChat']['gacLung'] as bool,
+      hoBoi: json['coSoVatChat']['hoBoi'] as bool,
+      noiThat: json['coSoVatChat']['noiThat'] as bool,
+      nuoiThuCung: json['coSoVatChat']['nuoiThuCung'] as bool,
+      sanThuong: json['coSoVatChat']['sanThuong'] as bool,
+    );
 
     moTa = json['moTa'] as String;
-    GeoPoint location = json['toaDo'];
-    toaDo = LatLng(location.latitude, location.longitude);
+    if (json['toaDo'] != null) {
+      GeoPoint location = json['toaDo'];
+      toaDo = LatLng(location.latitude, location.longitude);
+    }
 
     _daGo = json['daGo'] as bool;
     _chuNha = User(
@@ -67,21 +72,6 @@ class House extends SerializableObject {
         hoTen: json['tenChuNha'] as String);
     _uid = json['uid'] as String;
     _dangCapNhat = json['dangCapNhat'] as bool;
-  }
-
-  House.fromSnippetJson(Map<String, dynamic> map) {
-    _uid = map['houseUid'] as String;
-    soNha = map['soNha'] as String;
-    tenDuong = map['tenDuong'] as String;
-    phuongXa = map['phuongXa'] as String;
-    quanHuyen = map['quanHuyen'] as String;
-    dienTich = map['dienTich'] as double;
-    loaiChoThue = LoaiChoThue.values.firstWhere(
-        (element) => describeEnum(element) == map['loaiChoThue'] as String);
-    tienThueThang = map['tienThueThang'] as double;
-    soPhongNgu = map['soPhongNgu'] as int;
-    soPhongTam = map['soPhongTam'] as int;
-    urlHinhAnh = List<String>.from(map['urlHinhAnh']);
   }
 
   // Serialize
@@ -100,10 +90,12 @@ class House extends SerializableObject {
     jsonMap['soPhongTam'] = soPhongTam;
     jsonMap['tienThueThang'] = tienThueThang;
     jsonMap['tinhTrang'] = describeEnum(tinhTrang);
-    jsonMap['ngayVaoO'] = ngayVaoO;
+    jsonMap['ngayCapNhat'] = ngayCapNhat;
     jsonMap['coSoVatChat'] = {
-      'mayGiat': describeEnum(coSoVatChat.mayGiat),
-      'choDauXe': describeEnum(coSoVatChat.choDauXe),
+      'mayGiatTrongNha': coSoVatChat.mayGiatTrongNha,
+      'mayGiatTrongKhuChungCu': coSoVatChat.mayGiatTrongKhuChungCu,
+      'choDauXeGarage': coSoVatChat.choDauXeGarage,
+      'choDauXeTrongKhuChungCu': coSoVatChat.choDauXeTrongKhuChungCu,
       'banCong': coSoVatChat.banCong,
       'baoVe': coSoVatChat.baoVe,
       'cctv': coSoVatChat.cctv,
@@ -117,10 +109,26 @@ class House extends SerializableObject {
     jsonMap['moTa'] = moTa;
     jsonMap['daGo'] = _daGo;
     jsonMap['idChuNha'] = _chuNha.uid;
-    jsonMap['toaDo'] = GeoPoint(toaDo.latitude, toaDo.longitude);
+    jsonMap['toaDo'] =
+        toaDo != null ? GeoPoint(toaDo.latitude, toaDo.longitude) : null;
     jsonMap['dangCapNhat'] = _dangCapNhat;
 
     return jsonMap;
+  }
+
+  House.fromSnippetJson(Map<String, dynamic> map) {
+    _uid = map['houseUid'] as String;
+    soNha = map['soNha'] as String;
+    tenDuong = map['tenDuong'] as String;
+    phuongXa = map['phuongXa'] as String;
+    quanHuyen = map['quanHuyen'] as String;
+    dienTich = map['dienTich'] as double;
+    loaiChoThue = LoaiChoThue.values.firstWhere(
+        (element) => describeEnum(element) == map['loaiChoThue'] as String);
+    tienThueThang = map['tienThueThang'] as double;
+    soPhongNgu = map['soPhongNgu'] as int;
+    soPhongTam = map['soPhongTam'] as int;
+    urlHinhAnh = List<String>.from(map['urlHinhAnh']);
   }
 
   Map<String, dynamic> toSnippetJson() {
@@ -161,7 +169,7 @@ class House extends SerializableObject {
   int soPhongTam;
   double tienThueThang;
   TinhTrangChoThue tinhTrang;
-  DateTime ngayVaoO;
+  DateTime ngayCapNhat;
   CoSoVatChat coSoVatChat;
   String moTa;
   LatLng toaDo;
@@ -193,15 +201,12 @@ enum LoaiChoThue { Nha, CanHo, Phong }
 /// Enum for house rental status
 enum TinhTrangChoThue { ConTrong, DaThue, DangBaoTri }
 
-// Enums for facility
-enum CSVCMayGiat { TrongNha, TrongKhuChungCu, KhongCo }
-
-enum CSVCChoDauXe { Garage, TrongKhuChungCu, TrongNha }
-
 class CoSoVatChat {
   CoSoVatChat(
-      {this.mayGiat,
-      this.choDauXe,
+      {this.mayGiatTrongNha,
+      this.mayGiatTrongKhuChungCu,
+      this.choDauXeGarage,
+      this.choDauXeTrongKhuChungCu,
       this.dieuHoa,
       this.banCong,
       this.noiThat,
@@ -212,8 +217,10 @@ class CoSoVatChat {
       this.cctv,
       this.nuoiThuCung});
 
-  CSVCMayGiat mayGiat;
-  CSVCChoDauXe choDauXe;
+  bool mayGiatTrongNha;
+  bool mayGiatTrongKhuChungCu;
+  bool choDauXeGarage;
+  bool choDauXeTrongKhuChungCu;
   bool dieuHoa;
   bool banCong;
   bool noiThat;

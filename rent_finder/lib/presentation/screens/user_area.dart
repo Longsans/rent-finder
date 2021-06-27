@@ -13,7 +13,6 @@ import 'package:rent_finder_hi/data/models/models.dart' as models;
 
 import '../../constants.dart';
 import '../../logic/bloc.dart';
-import '../../logic/bloc.dart';
 
 class UserArea extends StatelessWidget {
   UserArea();
@@ -489,7 +488,6 @@ class TitleCard extends StatelessWidget {
             ),
           ],
         ),
-        
       ],
     );
   }

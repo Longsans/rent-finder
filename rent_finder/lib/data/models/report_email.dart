@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:rent_finder_hi/data/models/base_feedback_email.dart';
+import 'package:rent_finder_hi/data/models/models.dart';
 
 abstract class ReportEmail extends BaseFeedbackEmail {
   String reportedUserUid;

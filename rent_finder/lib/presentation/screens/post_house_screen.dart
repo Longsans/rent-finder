@@ -45,11 +45,13 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
     coSoVatChat.banCong = false;
     coSoVatChat.baoVe = false;
     coSoVatChat.cctv = false;
-    coSoVatChat.choDauXe = model.CSVCChoDauXe.TrongNha;
+    coSoVatChat.choDauXeGarage = false;
+    coSoVatChat.choDauXeTrongKhuChungCu = false;
     coSoVatChat.dieuHoa = false;
     coSoVatChat.gacLung = false;
     coSoVatChat.hoBoi = false;
-    coSoVatChat.mayGiat = model.CSVCMayGiat.KhongCo;
+    coSoVatChat.mayGiatTrongNha = false;
+    coSoVatChat.mayGiatTrongKhuChungCu = false;
     coSoVatChat.noiThat = false;
     coSoVatChat.nuoiThuCung = false;
     coSoVatChat.sanThuong = false;
@@ -530,7 +532,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                         },
                                       );
                                       t.then(
-                                        (value)  {
+                                        (value) {
                                           print(value);
                                           if (value != null) {
                                             print(value);
@@ -555,7 +557,8 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                                       _moneyController.text);
                                               house.tinhTrang = model
                                                   .TinhTrangChoThue.ConTrong;
-                                              house.ngayVaoO = DateTime.now();
+                                              house.ngayCapNhat =
+                                                  DateTime.now();
                                               house.coSoVatChat = coSoVatChat;
                                               house.moTa =
                                                   _describeController.text;
