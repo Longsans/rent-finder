@@ -25,6 +25,7 @@ class HouseFireStoreApi {
 
   Stream<List<House>> newestHouses() {
     return _collection
+        .where('daGo', isEqualTo: false)
         .orderBy('ngayCapNhat', descending: true)
         .limit(5)
         .snapshots()
@@ -60,20 +61,18 @@ class HouseFireStoreApi {
   Future<List<House>> getHousesByLocation(
       String quanHuyen, String phuongXa) async {
     QuerySnapshot<Object> query;
+
     if (quanHuyen == null)
-      query = await _collection.orderBy('ngayCapNhat', descending: true).get();
+      query = await _collection.get();
     else if (phuongXa == null) {
-      query = await _collection
-          .orderBy('ngayCapNhat', descending: true)
-          .where('quanHuyen', isEqualTo: quanHuyen)
-          .get();
+      query = await _collection.where('quanHuyen', isEqualTo: quanHuyen).get();
     } else {
       query = await _collection
-          .orderBy('ngayCapNhat', descending: true)
           .where('quanHuyen', isEqualTo: quanHuyen)
           .where('phuongXa', isEqualTo: phuongXa)
           .get();
     }
+
     final docs = query.docs;
     if (docs.isNotEmpty) {
       return docs.map((e) {

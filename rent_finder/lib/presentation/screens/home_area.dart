@@ -8,6 +8,7 @@ import 'package:rent_finder_hi/data/models/models.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 import 'package:rent_finder_hi/utils/format.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'screens.dart';
 
 class HomeArea extends StatelessWidget {
@@ -44,7 +45,7 @@ class HomeArea extends StatelessWidget {
                 );
               else
                 Fluttertoast.showToast(
-                    msg: 'Cần đnăg nhập để thực hiện chức năng này');
+                    msg: 'Cần đăng nhập để thực hiện chức năng này');
             },
           );
         },
@@ -74,7 +75,7 @@ class HomeArea extends StatelessWidget {
                     DistrictCard(
                       press: () {
                         BlocProvider.of<HouseBloc>(context)
-                            .add(LoadHouses('Quận 1', null));
+                            .add(LoadHouses('Quận 1', null, sortType: 0));
                         Navigator.pushNamed(context, '/result',
                             arguments: ['Quận 1', null]);
                       },
@@ -84,7 +85,7 @@ class HomeArea extends StatelessWidget {
                     DistrictCard(
                       press: () {
                         BlocProvider.of<HouseBloc>(context)
-                            .add(LoadHouses('Quận 3', null));
+                            .add(LoadHouses('Quận 3', null, sortType: 0));
                         Navigator.pushNamed(context, '/result',
                             arguments: ['Quận 3', null]);
                       },
@@ -93,8 +94,8 @@ class HomeArea extends StatelessWidget {
                     ),
                     DistrictCard(
                       press: () {
-                        BlocProvider.of<HouseBloc>(context)
-                            .add(LoadHouses('Quận Bình Thạnh', null));
+                        BlocProvider.of<HouseBloc>(context).add(
+                            LoadHouses('Quận Bình Thạnh', null, sortType: 0));
                         Navigator.pushNamed(context, '/result',
                             arguments: ['Quận Bình Thạnh', null]);
                       },
@@ -104,7 +105,7 @@ class HomeArea extends StatelessWidget {
                     DistrictCard(
                       press: () {
                         BlocProvider.of<HouseBloc>(context)
-                            .add(LoadHouses('Quận Thủ Đức', null));
+                            .add(LoadHouses('Quận Thủ Đức', null, sortType: 0));
                         Navigator.pushNamed(context, '/result',
                             arguments: ['Quận Thủ Đức', null]);
                       },
@@ -114,7 +115,7 @@ class HomeArea extends StatelessWidget {
                     DistrictCard(
                       press: () {
                         BlocProvider.of<HouseBloc>(context)
-                            .add(LoadHouses('Quận 10', null));
+                            .add(LoadHouses('Quận 10', null, sortType: 0));
                         Navigator.pushNamed(context, '/result',
                             arguments: ['Quận 10', null]);
                       },
@@ -124,7 +125,7 @@ class HomeArea extends StatelessWidget {
                     DistrictCard(
                       press: () {
                         BlocProvider.of<HouseBloc>(context)
-                            .add(LoadHouses('Quận 7', null));
+                            .add(LoadHouses('Quận 7', null, sortType: 0));
                         Navigator.pushNamed(context, '/result',
                             arguments: ['Quận 7', null]);
                       },
@@ -156,7 +157,8 @@ class HomeArea extends StatelessWidget {
                             MaterialStateProperty.all(primaryColor),
                       ),
                       onPressed: () {
-                        BlocProvider.of<HouseBloc>(context).add(LoadHouses(null, null));
+                        BlocProvider.of<HouseBloc>(context)
+                            .add(LoadHouses(null, null, sortType: 0));
                         Navigator.of(context)
                             .pushNamed('/result', arguments: [null, null]);
                       },
@@ -202,8 +204,103 @@ class HomeArea extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
+              SizedBox(
+                height: defaultPadding / 2,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                height: 250,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    NewsCard(
+                      size: size,
+                      title: 'Những nhà trọ hào phóng ở Sài Gòn',
+                      urlPost:
+                          'https://vnexpress.net/nhung-chu-nha-tro-hao-phong-o-sai-gon-4293332.html',
+                      urlImage:
+                          'https://i1-giadinh.vnecdn.net/2021/06/13/z2549223051104-e726f60b5d8d7f0-1373-8104-1623559223.jpg?w=1020&h=0&q=100&dpr=1&fit=crop&s=c1IXY3mIwasDGD4Aq-Rggw',
+                    ),
+                    NewsCard(
+                      size: size,
+                      title: 'Cải tạo dãy phòng trọ thành tổ ấm trong mơ',
+                      urlPost:
+                          'https://vnexpress.net/cai-tao-day-phong-tro-thanh-to-am-trong-mo-4290794.html',
+                      urlImage:
+                          'https://i1-giadinh.vnecdn.net/2021/06/09/AICCSS001-3580-1623222371.jpg?w=1020&h=0&q=100&dpr=1&fit=crop&s=SVUYNEhzFHy_gW9yjokZdw',
+                    ),
+                    NewsCard(
+                      size: size,
+                      title: 'Phong toả khu nhà trọ ở Sài Gòn',
+                      urlPost:
+                          'https://vnexpress.net/phong-toa-khu-nha-tro-o-sai-gon-4280372.html',
+                      urlImage:
+                          'https://i1-vnexpress.vnecdn.net/2021/05/18/quan-7-3-6956-1621350739.jpg?w=1020&h=0&q=100&dpr=1&fit=crop&s=aFASOvSMylOAdEMqkUBCjg',
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class NewsCard extends StatelessWidget {
+  const NewsCard({
+    Key key,
+    @required this.size,
+    this.title,
+    this.urlImage,
+    this.urlPost,
+  }) : super(key: key);
+
+  final Size size;
+  final String title, urlImage, urlPost;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        if (await canLaunch(urlPost)) {
+          await launch(urlPost);
+        } else
+          Fluttertoast.showToast(msg: 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+      },
+      child: Container(
+        width: size.width * 0.7,
+        margin: EdgeInsets.only(right: defaultPadding),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(urlImage),
+                    ),
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -221,154 +318,207 @@ class HouseMediumCard extends StatelessWidget {
   final House house;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        
-        Navigator.of(context).pushNamed('/detail', arguments: [house]);
-      },
-      child: Container(
-        width: size.width * 0.8,
-        margin: EdgeInsets.only(right: defaultPadding),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black26),
-        ),
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: CachedNetworkImage(
-                    imageUrl: house.urlHinhAnh[0] ?? '',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        ),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+    return BlocProvider(
+      create: (context) => DetailHouseCubit(),
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, authState) {
+          return BlocBuilder<RecentViewBloc, RecentViewState>(
+            builder: (context, state) =>
+                BlocListener<DetailHouseCubit, DetailHouseState>(
+              listener: (context, detailState) {
+                if (detailState.status == DetailStatus.success) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  if (detailState.house.daGO == true) {
+                    Fluttertoast.showToast(
+                        msg: 'Nhà đã bị gỡ xin vui lòng xem nhà khác');
+                  } else {
+                    if (state is RecentViewLoaded &&
+                        authState is AuthenticationStateSuccess) {
+                      if (state.houses
+                          .map((e) => e.uid)
+                          .toList()
+                          .contains(house.uid)) {
+                        BlocProvider.of<RecentViewBloc>(context).add(
+                            RemoveViewedHouse(
+                                user: authState.user, house: house));
+                      }
+                      BlocProvider.of<RecentViewBloc>(context)
+                          .add(AddToViewed(user: authState.user, house: house));
+                    }
+                    Navigator.of(context)
+                        .pushNamed('/detail', arguments: [detailState.house]);
+                  }
+                } else if (detailState.status == DetailStatus.loading) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(" Đang tải..."),
+                            CircularProgressIndicator(),
+                          ],
                         ),
                       ),
-                    ),
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => Icon(
-                      Icons.error_outline,
-                      size: 100,
-                      color: Colors.red,
-                    ),
+                    );
+                } else
+                  Fluttertoast.showToast(msg: 'Đã có lỗi xảy ra');
+              },
+              child: GestureDetector(
+                onTap: () {
+                  BlocProvider.of<DetailHouseCubit>(context).click(house);
+                },
+                child: Container(
+                  width: size.width * 0.8,
+                  margin: EdgeInsets.only(right: defaultPadding),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.black26),
                   ),
-                  flex: 6,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          Format.toMoneyPerMonth(house.tienThueThang),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                              color: textColor),
-                          maxLines: 1,
-                        ),
-                        Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: SvgPicture.asset('assets/icons/bed.svg',
-                                  color: primaryColor),
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          Expanded(
+                            child: CachedNetworkImage(
+                              imageUrl: house.urlHinhAnh[0] ?? '',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error_outline,
+                                size: 100,
+                                color: Colors.red,
+                              ),
                             ),
-                            Text(house.soPhongNgu.toString()),
-                          ],
-                        ),
-                        SizedBox(
-                          width: defaultPadding,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: SvgPicture.asset(
-                                  'assets/icons/bathtub.svg',
-                                  color: primaryColor),
+                            flex: 6,
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    Format.toMoneyPerMonth(house.tienThueThang),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18,
+                                        color: textColor),
+                                    maxLines: 1,
+                                  ),
+                                  Spacer(),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: SvgPicture.asset(
+                                            'assets/icons/bed.svg',
+                                            color: primaryColor),
+                                      ),
+                                      Text(house.soPhongNgu.toString()),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: defaultPadding,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: SvgPicture.asset(
+                                            'assets/icons/bathtub.svg',
+                                            color: primaryColor),
+                                      ),
+                                      Text(house.soPhongTam.toString()),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: defaultPadding,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: SvgPicture.asset(
+                                            'assets/icons/area.svg',
+                                            color: primaryColor),
+                                      ),
+                                      Text(house.dienTich.toStringAsFixed(0)),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                            Text(house.soPhongTam.toString()),
-                          ],
-                        ),
-                        SizedBox(
-                          width: defaultPadding,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset('assets/icons/area.svg',
-                                  color: primaryColor),
+                            flex: 2,
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: defaultPadding / 2),
+                              decoration: BoxDecoration(),
+                              child: Center(
+                                child: Text(
+                                  house.diaChi,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                      color: textColor),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              ),
                             ),
-                            Text(house.dienTich.toStringAsFixed(0)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  flex: 2,
-                ),
-                Expanded(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-                    decoration: BoxDecoration(
-                      border: Border(top: BorderSide(color: Colors.black26)),
-                    ),
-                    child: Center(
-                      child: Text(
-                        house.diaChi,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15,
-                            color: textColor),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+                            flex: 2,
+                          ),
+                        ],
                       ),
-                    ),
+                      Positioned(
+                        left: 8,
+                        top: 8,
+                        child: Container(
+                          padding: EdgeInsets.all(defaultPadding / 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: textColor,
+                          ),
+                          child: Text(
+                            house.loaiChoThue == LoaiChoThue.CanHo
+                                ? 'Căn hộ'
+                                : house.loaiChoThue == LoaiChoThue.Nha
+                                    ? 'Nhà'
+                                    : 'Phòng',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  flex: 2,
-                ),
-              ],
-            ),
-            Positioned(
-              left: 8,
-              top: 8,
-              child: Container(
-                padding: EdgeInsets.all(defaultPadding / 2),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: textColor,
-                ),
-                child: Text(
-                  house.loaiChoThue == LoaiChoThue.CanHo
-                      ? 'Căn hộ'
-                      : house.loaiChoThue == LoaiChoThue.Nha
-                          ? 'Nhà'
-                          : 'Phòng',
-                  style: TextStyle(color: Colors.white),
                 ),
               ),
-            )
-          ],
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -437,12 +587,30 @@ class HeaderWithSearchBox extends StatelessWidget {
               bottom: 36 + defaultPadding,
             ),
             height: size.height * 0.25 - 27,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: primaryColor,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(36),
                 bottomRight: Radius.circular(36),
               ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  "assets/icons/logo.png",
+                  height: 50,
+                ),
+                SizedBox(
+                  height: defaultPadding,
+                ),
+                Text(
+                  'Rent Finder',
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -474,7 +642,7 @@ class SearchBarHome extends StatelessWidget {
         t.then((value) {
           if (value != null) {
             BlocProvider.of<HouseBloc>(context)
-                .add(LoadHouses(value[0], value[1]));
+                .add(LoadHouses(value[0], value[1], sortType: 0));
             Navigator.pushNamed(context, '/result',
                 arguments: [value[0], value[1]]);
           }

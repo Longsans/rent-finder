@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'package:rent_finder_hi/data/repos/repos.dart';
-import 'package:rent_finder_hi/logic/bloc.dart';
 part 'house_event.dart';
 part 'house_state.dart';
 
@@ -35,10 +34,16 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
   Stream<HouseState> _mapLoadHousesEventToState(LoadHouses event) async* {
     yield HouseLoading();
     try {
-      final houses = await houseRepository.getHousesByLocation(
+      var houses = await houseRepository.getHousesByLocation(
           event.quanHuyen, event.phuongXa);
-      
-      yield HouseLoadSuccess(houses: houses);
+      if (event.sortType == 0)
+        houses.sort((a, b) => b.ngayVaoO.compareTo(a.ngayVaoO));
+      else if (event.sortType == 1)
+        houses.sort((a, b) => a.tienThueThang.compareTo(b.tienThueThang));
+      else
+        houses.sort((a, b) => b.tienThueThang.compareTo(a.tienThueThang));
+      yield HouseLoadSuccess(
+          houses: houses.where((element) => element.daGO != true).toList());
     } catch (err) {
       yield HouseLoadFailure();
     }

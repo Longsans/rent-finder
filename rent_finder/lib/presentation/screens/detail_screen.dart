@@ -28,57 +28,40 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocProvider(
-          create: (context) => DetailHouseCubit()..click(house),
-          child: BlocBuilder<DetailHouseCubit, DetailHouseState>(
-            builder: (context, state) {
-              house = state.house;
-              if (state.status == DetailStatus.success) {
-                return Stack(
-                  children: [
-                    CustomScrollView(
-                      slivers: [
-                        _buildSliverHead(),
-                        SliverToBoxAdapter(
-                          child: _buildDetail(context),
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(defaultPadding),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.black12,
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SaveButton(house: house),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              } else if (state.status == DetailStatus.loading) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return Center(child: Text('Đã có lỗi xảy ra'));
-              }
-            },
+          child: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              _buildSliverHead(),
+              SliverToBoxAdapter(
+                child: _buildDetail(context),
+              )
+            ],
           ),
-        ),
-      ),
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.black12,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SaveButton(house: house),
+              ],
+            ),
+          ),
+        ],
+      )),
     );
   }
 
@@ -369,8 +352,10 @@ class InfoOwner extends StatelessWidget {
               ),
             ),
           ),
-          placeholder: (context, url) =>
-              SizedBox(height: 60,width: 60, child: Center(child: CircularProgressIndicator())),
+          placeholder: (context, url) => SizedBox(
+              height: 60,
+              width: 60,
+              child: Center(child: CircularProgressIndicator())),
           errorWidget: (context, url, error) => Icon(
             Icons.account_circle_outlined,
             size: 60,

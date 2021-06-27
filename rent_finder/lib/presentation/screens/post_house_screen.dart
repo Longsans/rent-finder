@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as ggMap;
 import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/logic/radio/radio_cubit.dart';
@@ -20,6 +22,8 @@ class PostHouseScreen extends StatefulWidget {
 }
 
 class _PostHouseScreenState extends State<PostHouseScreen> {
+  FocusNode focus = FocusNode();
+  ggMap.LatLng toaDo;
   int bed = 1, bath = 1;
   List<File> files = [];
   String phuongXa, quanHuyen;
@@ -41,11 +45,13 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
     coSoVatChat.banCong = false;
     coSoVatChat.baoVe = false;
     coSoVatChat.cctv = false;
-    coSoVatChat.choDauXe = model.CSVCChoDauXe.TrongNha;
+    coSoVatChat.choDauXeGarage = false;
+    coSoVatChat.choDauXeTrongKhuChungCu = false;
     coSoVatChat.dieuHoa = false;
     coSoVatChat.gacLung = false;
     coSoVatChat.hoBoi = false;
-    coSoVatChat.mayGiat = model.CSVCMayGiat.KhongCo;
+    coSoVatChat.mayGiatTrongNha = false;
+    coSoVatChat.mayGiatTrongKhuChungCu = false;
     coSoVatChat.noiThat = false;
     coSoVatChat.nuoiThuCung = false;
     coSoVatChat.sanThuong = false;
@@ -122,7 +128,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                           if (state > 0)
                             BlocProvider.of<StepperCubit>(context).cancel();
                           else {
-                            bool confirm = await showDialog<bool>(
+                            var t = showDialog<bool>(
                               context: context,
                               builder: (context) {
                                 return ConfirmDialog(
@@ -130,7 +136,11 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                 );
                               },
                             );
-                            if (confirm) Navigator.of(context).pop();
+                            t.then((value) {
+                              if (value != null) {
+                                if (value) Navigator.of(context).pop();
+                              }
+                            });
                           }
                         },
                         child: Icon(
@@ -439,6 +449,45 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                             .add(StreetChanged(street: ""));
                                       }
                                       return;
+                                    } else {
+                                      var query =
+                                          '${_numController.text} ${_streetController.text}, ${phuongXa}, ${quanHuyen} Thành phố Hồ Chí Minh';
+                                      try {
+                                        var address = await Geocoder.local
+                                            .findAddressesFromQuery(query);
+                                        // print(address.first.addressLine
+                                        //     .split(',')
+                                        //     .length);
+                                        // print(address.first.addressLine);
+                                        // print(address.first.adminArea);
+                                        // print(address.first.subAdminArea);
+                                        // print(address.first.thoroughfare);
+                                        // print(address.first.subThoroughfare);
+                                        // print(address.first.locality);
+                                        // print(address.first.subLocality);
+                                        var splitAddress = address
+                                            .first.addressLine
+                                            .split(',');
+                                        if (splitAddress.length < 4 ||
+                                            !quanHuyen.contains(
+                                                address.first.subAdminArea)) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
+                                          return;
+                                        }
+                                        toaDo = ggMap.LatLng(
+                                            address.first.coordinates.latitude,
+                                            address
+                                                .first.coordinates.longitude);
+                                      } catch (e) {
+                                        print(e.toString());
+                                        print('Địa chỉ không hợp lệ');
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
+                                        return;
+                                      }
                                     }
 
                                     if (state == 1 &&
@@ -473,40 +522,55 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                                 'Vui lòng nhập mô tả nhà của bạn');
                                         return;
                                       }
-                                      bool confirm = await showDialog<bool>(
+                                      var t = showDialog(
                                         context: context,
                                         builder: (context) {
                                           return ConfirmDialog(
                                             title:
-                                                'Bạn có chắc chắn đăng tin này không',
+                                                'Bạn có chắc chắn đăng tin này không?',
                                           );
                                         },
                                       );
-                                      if (confirm) {
-                                        model.House house = model.House();
-                                        house.setSensitiveInfo(false, user);
-                                        house.soNha = _numController.text;
-                                        house.tenDuong = _streetController.text;
-                                        house.phuongXa = phuongXa;
-                                        house.quanHuyen = quanHuyen;
-                                        house.dienTich = double.tryParse(
-                                            _areaController.text);
-                                        house.urlHinhAnh = urlHinhAnh;
-                                        house.loaiChoThue = loaiChoThue;
-                                        house.soPhongNgu = bed;
-                                        house.soPhongTam = bath;
-                                        house.tienThueThang = double.tryParse(
-                                            _moneyController.text);
-                                        house.tinhTrang =
-                                            model.TinhTrangChoThue.ConTrong;
-                                        house.ngayCapNhat = DateTime.now();
-                                        house.coSoVatChat = coSoVatChat;
-                                        house.moTa = _describeController.text;
-                                        BlocProvider.of<PostFormBloc>(context)
-                                            .add(PostFormSubmitted(
-                                                house: house, files: files));
-                                      } else
-                                        print('Hủy');
+                                      t.then(
+                                        (value) {
+                                          print(value);
+                                          if (value != null) {
+                                            print(value);
+                                            if (value) {
+                                              model.House house = model.House();
+                                              house.toaDo = toaDo;
+                                              house.setSensitiveInfo(
+                                                  false, user);
+                                              house.soNha = _numController.text;
+                                              house.tenDuong =
+                                                  _streetController.text;
+                                              house.phuongXa = phuongXa;
+                                              house.quanHuyen = quanHuyen;
+                                              house.dienTich = double.tryParse(
+                                                  _areaController.text);
+                                              house.urlHinhAnh = urlHinhAnh;
+                                              house.loaiChoThue = loaiChoThue;
+                                              house.soPhongNgu = bed;
+                                              house.soPhongTam = bath;
+                                              house.tienThueThang =
+                                                  double.tryParse(
+                                                      _moneyController.text);
+                                              house.tinhTrang = model
+                                                  .TinhTrangChoThue.ConTrong;
+                                              house.ngayCapNhat =
+                                                  DateTime.now();
+                                              house.coSoVatChat = coSoVatChat;
+                                              house.moTa =
+                                                  _describeController.text;
+                                              BlocProvider.of<PostFormBloc>(
+                                                      context)
+                                                  .add(PostFormSubmitted(
+                                                      house: house,
+                                                      files: files));
+                                            }
+                                          }
+                                        },
+                                      );
                                     }
                                   },
                                 );
@@ -644,24 +708,28 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
             Builder(
               builder: (context) => BlocBuilder<CommuneCubit, String>(
                 builder: (context, state) {
-                  return DropdownButton(
-                    value: state,
-                    onChanged: (value) {
-                      phuongXa = value;
-                      BlocProvider.of<CommuneCubit>(context)
-                          .selectedChange(value);
+                  return BlocBuilder<DistrictCubit, String>(
+                    builder: (context, district) {
+                      return DropdownButton(
+                        value: state,
+                        onChanged: (value) {
+                          phuongXa = value;
+                          BlocProvider.of<CommuneCubit>(context)
+                              .selectedChange(value);
+                        },
+                        items: district != null
+                            ? districts
+                                .where((e) => e.name == district)
+                                .first
+                                .commune
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList()
+                            : [],
+                        hint: Text('Chọn xã/phường'),
+                        isExpanded: true,
+                      );
                     },
-                    items: quanHuyen != null
-                        ? districts
-                            .where((e) => e.name == quanHuyen)
-                            .first
-                            .commune
-                            .map((e) =>
-                                DropdownMenuItem(value: e, child: Text(e)))
-                            .toList()
-                        : [],
-                    hint: Text('Chọn xã/phường'),
-                    isExpanded: true,
                   );
                 },
               ),
@@ -1129,88 +1197,6 @@ class CustomStepper extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog({
-    Key key,
-    this.title,
-  }) : super(key: key);
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        padding: EdgeInsets.only(top: 10, bottom: 20, right: 20, left: 20),
-        height: 220,
-        width: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Icon(
-                  Icons.confirmation_num_outlined,
-                  color: Color(0xFF0D4880),
-                  size: 50,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(100, 50)),
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
-                      backgroundColor:
-                          MaterialStateProperty.all(Color(0xFF0D4880))),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: Text(
-                    'Xác nhận',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                  style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(100, 50)),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.black54),
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.grey[200])),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'Hủy',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
     );
   }
 }
