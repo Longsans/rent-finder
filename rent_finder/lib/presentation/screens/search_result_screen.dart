@@ -23,7 +23,7 @@ class SearchResultScreen extends StatelessWidget {
         BlocProvider(
           create: (context) => FilteredHousesBloc(
             housesBloc: BlocProvider.of<HouseBloc>(context),
-          ),
+          )..add(UpdateFilter(filter: filter, type: type)),
         ),
         BlocProvider(
           create: (context) => SearchCubit()..search(quanHuyen, phuongXa),
@@ -62,13 +62,10 @@ class SearchResultScreen extends StatelessWidget {
                               t.then(
                                 (value) {
                                   if (value != null) {
-                                    BlocProvider.of<HouseBloc>(context).add(
-                                        LoadHouses(value[0], value[1],
-                                            sortType: type));
+                                    BlocProvider.of<HouseBloc>(context)
+                                        .add(LoadHouses(value[0], value[1]));
                                     BlocProvider.of<SearchCubit>(context)
                                         .search(value[0], value[1]);
-                                    BlocProvider.of<FilteredHousesBloc>(context)
-                                        .add(UpdateFilter(filter: Filter()));
                                     BlocProvider.of<CategoryCubit>(context)
                                         .click(null);
                                   }
@@ -123,7 +120,8 @@ class SearchResultScreen extends StatelessWidget {
                                       filter = value;
                                       BlocProvider.of<FilteredHousesBloc>(
                                               context)
-                                          .add(UpdateFilter(filter: filter));
+                                          .add(UpdateFilter(
+                                              filter: filter, type: type));
                                     } else {
                                       var a = Navigator.of(context).pushNamed(
                                           '/filter_enhance',
@@ -135,17 +133,18 @@ class SearchResultScreen extends StatelessWidget {
                                             BlocProvider.of<FilteredHousesBloc>(
                                                     context)
                                                 .add(UpdateFilter(
-                                              filter: filter,
-                                            ));
+                                                    filter: filter,
+                                                    type: type));
                                           } else {
                                             BlocProvider.of<CategoryCubit>(
                                                     context)
                                                 .click(null);
+                                            filter = Filter();
                                             BlocProvider.of<FilteredHousesBloc>(
                                                     context)
                                                 .add(UpdateFilter(
-                                              filter: Filter(),
-                                            ));
+                                                    filter: filter,
+                                                    type: type));
                                           }
                                         }
                                       });
@@ -286,9 +285,9 @@ class SearchResultScreen extends StatelessWidget {
                               t.then((value) {
                                 if (value != null) {
                                   type = value;
-                                  BlocProvider.of<HouseBloc>(context).add(
-                                      LoadHouses(state[0], state[1],
-                                          sortType: type));
+                                  BlocProvider.of<FilteredHousesBloc>(context)
+                                      .add(UpdateFilter(
+                                          type: type, filter: filter));
                                 }
                               });
                             },
@@ -309,154 +308,7 @@ class SearchResultScreen extends StatelessWidget {
                     height: defaultPadding,
                   ),
                   Expanded(
-                    child: BlocBuilder<HouseBloc, HouseState>(
-                      builder: (context, houseState) {
-                        if (houseState is HouseLoadSuccess)
-                          return BlocBuilder<FilteredHousesBloc,
-                              FilteredHousesState>(
-                            builder: (context, state) {
-                              if (state is FilteredHousesLoaded)
-                                return BlocBuilder<SearchCubit, List<String>>(
-                                  builder: (context, stringState) {
-                                    return RefreshIndicator(
-                                      onRefresh: () async {
-                                        BlocProvider.of<HouseBloc>(context).add(
-                                            LoadHouses(
-                                                stringState[0], stringState[1],
-                                                sortType: type));
-                                      },
-                                      child: ListView.builder(
-                                        itemBuilder: (context, index) {
-                                          return BlocProvider(
-                                            create: (context) =>
-                                                DetailHouseCubit(),
-                                            child: BlocListener<
-                                                DetailHouseCubit,
-                                                DetailHouseState>(
-                                              listener: (context, state) {
-                                                if (state.status ==
-                                                    DetailStatus.success) {
-                                                  if (state.house.daGO == true)
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            'Nhà đã bị gỡ vui lòng tải lại trang');
-                                                  else
-                                                    Navigator.of(context)
-                                                        .pushNamed(
-                                                            '/detail',
-                                                            arguments: [
-                                                          state.house
-                                                        ]);
-                                                } else if (state.status ==
-                                                    DetailStatus.loading) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                          content: Center(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  )));
-                                                } else
-                                                  Fluttertoast.showToast(
-                                                      msg: 'Đã có lỗi xảy ra');
-                                              },
-                                              child: Stack(
-                                                children: [
-                                                  BlocBuilder<
-                                                      AuthenticationBloc,
-                                                      AuthenticationState>(
-                                                    builder:
-                                                        (context, authState) {
-                                                      return BlocBuilder<
-                                                          RecentViewBloc,
-                                                          RecentViewState>(
-                                                        builder: (context,
-                                                            recentState) {
-                                                          return GestureDetector(
-                                                            onTap: () async {
-                                                              if (recentState
-                                                                      is RecentViewLoaded &&
-                                                                  authState
-                                                                      is AuthenticationStateSuccess) {
-                                                                if (recentState
-                                                                    .houses
-                                                                    .map((e) =>
-                                                                        e.uid)
-                                                                    .toList()
-                                                                    .contains(state
-                                                                        .filteredHouses[
-                                                                            index]
-                                                                        .uid)) {
-                                                                  BlocProvider.of<
-                                                                              RecentViewBloc>(
-                                                                          context)
-                                                                      .add(
-                                                                    RemoveViewedHouse(
-                                                                      user: authState
-                                                                          .user,
-                                                                      house: state
-                                                                              .filteredHouses[
-                                                                          index],
-                                                                    ),
-                                                                  );
-                                                                }
-                                                                BlocProvider.of<
-                                                                            RecentViewBloc>(
-                                                                        context)
-                                                                    .add(
-                                                                  AddToViewed(
-                                                                    user: authState
-                                                                        .user,
-                                                                    house: state
-                                                                            .filteredHouses[
-                                                                        index],
-                                                                  ),
-                                                                );
-                                                                BlocProvider.of<
-                                                                            DetailHouseCubit>(
-                                                                        context)
-                                                                    .click(state
-                                                                            .filteredHouses[
-                                                                        index]);
-                                                              }
-                                                            },
-                                                            child: HouseInfoBigCard(
-                                                                house: state
-                                                                        .filteredHouses[
-                                                                    index]),
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                  ),
-                                                  SaveButton(
-                                                      house:
-                                                          state.filteredHouses[
-                                                              index])
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        itemCount: state.filteredHouses.length,
-                                      ),
-                                    );
-                                  },
-                                );
-                              else
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                            },
-                          );
-                        else if (houseState is HouseLoading) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else {
-                          return Center(child: Text('Có lỗi xảy ra'));
-                        }
-                      },
-                    ),
+                    child: _buildListHouse(),
                   )
                 ],
               ),
@@ -464,6 +316,141 @@ class SearchResultScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  BlocBuilder<AuthenticationBloc, AuthenticationState> _buildListHouse() {
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (context, authState) {
+        return BlocBuilder<HouseBloc, HouseState>(
+          builder: (context, houseState) {
+            if (houseState is HouseLoadSuccess)
+              return BlocBuilder<FilteredHousesBloc, FilteredHousesState>(
+                builder: (context, state) {
+                  if (state is FilteredHousesLoaded)
+                    return BlocBuilder<SearchCubit, List<String>>(
+                      builder: (context, stringState) {
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            BlocProvider.of<HouseBloc>(context).add(
+                                LoadHouses(stringState[0], stringState[1]));
+                          },
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return BlocProvider(
+                                create: (context) => DetailHouseCubit(),
+                                child: BlocBuilder<RecentViewBloc,
+                                    RecentViewState>(
+                                  builder: (context, recentState) {
+                                    return BlocListener<DetailHouseCubit,
+                                        DetailHouseState>(
+                                      listener: (context, detailState) {
+                                        if (detailState.status ==
+                                            DetailStatus.success) {
+                                          if (detailState.house.daGO == true)
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Nhà đã bị gỡ vui lòng tải lại trang');
+                                          else {
+                                            if (recentState
+                                                    is RecentViewLoaded &&
+                                                authState
+                                                    is AuthenticationStateSuccess) {
+                                              if (recentState.houses
+                                                  .map((e) => e.uid)
+                                                  .toList()
+                                                  .contains(state
+                                                      .filteredHouses[index]
+                                                      .uid)) {
+                                                BlocProvider.of<RecentViewBloc>(
+                                                        context)
+                                                    .add(
+                                                  RemoveViewedHouse(
+                                                    user: authState.user,
+                                                    house: state
+                                                        .filteredHouses[index],
+                                                  ),
+                                                );
+                                              }
+                                              BlocProvider.of<RecentViewBloc>(
+                                                      context)
+                                                  .add(
+                                                AddToViewed(
+                                                  user: authState.user,
+                                                  house: state
+                                                      .filteredHouses[index],
+                                                ),
+                                              );
+                                            }
+                                            Navigator.of(context).pushNamed(
+                                                '/detail',
+                                                arguments: [detailState.house]);
+                                          }
+                                        } else if (detailState.status ==
+                                            DetailStatus.loading) {
+                                          ScaffoldMessenger.of(context)
+                                            ..hideCurrentSnackBar()
+                                            ..showSnackBar(
+                                              SnackBar(
+                                                content: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(" Đang tải..."),
+                                                    CircularProgressIndicator(),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                        } else
+                                          Fluttertoast.showToast(
+                                              msg: 'Đã có lỗi xảy ra');
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              BlocProvider.of<DetailHouseCubit>(
+                                                      context)
+                                                  .click(state
+                                                      .filteredHouses[index]);
+                                            },
+                                            child: HouseInfoBigCard(
+                                                house: state
+                                                    .filteredHouses[index]),
+                                          ),
+                                          SaveButton(
+                                              house:
+                                                  state.filteredHouses[index])
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            itemCount: state.filteredHouses.length,
+                          ),
+                        );
+                      },
+                    );
+                  else
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                },
+              );
+            else if (houseState is HouseLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return Center(child: Text('Có lỗi xảy ra'));
+            }
+          },
+        );
+      },
     );
   }
 
@@ -482,7 +469,7 @@ class SearchResultScreen extends StatelessWidget {
                           ? LoaiChoThue.CanHo
                           : LoaiChoThue.Phong);
               BlocProvider.of<FilteredHousesBloc>(context).add(
-                UpdateFilter(filter: filter),
+                UpdateFilter(filter: filter, type: type),
               );
             } else
               press();

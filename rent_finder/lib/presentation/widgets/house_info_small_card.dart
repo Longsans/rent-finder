@@ -75,10 +75,19 @@ class HouseInfoSmallCard extends StatelessWidget {
                           .pushNamed('/detail', arguments: [detailState.house]);
                     }
                   } else if (detailState.status == DetailStatus.loading) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Center(
-                      child: CircularProgressIndicator(),
-                    )));
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(" Đang tải..."),
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                        ),
+                      );
                   } else
                     Fluttertoast.showToast(msg: 'Đã có lỗi xảy ra');
                 },
