@@ -351,10 +351,12 @@ class SearchResultScreen extends StatelessWidget {
                                                     DetailStatus.loading) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(SnackBar(
+                                                          backgroundColor:
+                                                              Colors.white,
                                                           content: Center(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  )));
+                                                            child:
+                                                                CircularProgressIndicator(),
+                                                          )));
                                                 } else
                                                   Fluttertoast.showToast(
                                                       msg: 'Đã có lỗi xảy ra');
@@ -411,13 +413,13 @@ class SearchResultScreen extends StatelessWidget {
                                                                         index],
                                                                   ),
                                                                 );
-                                                                BlocProvider.of<
-                                                                            DetailHouseCubit>(
-                                                                        context)
-                                                                    .click(state
-                                                                            .filteredHouses[
-                                                                        index]);
                                                               }
+                                                              BlocProvider.of<
+                                                                          DetailHouseCubit>(
+                                                                      context)
+                                                                  .click(state
+                                                                          .filteredHouses[
+                                                                      index]);
                                                             },
                                                             child: HouseInfoBigCard(
                                                                 house: state

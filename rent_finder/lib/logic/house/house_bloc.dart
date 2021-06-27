@@ -36,9 +36,8 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     try {
       var houses = await houseRepository.getHousesByLocation(
           event.quanHuyen, event.phuongXa);
-     
-      yield HouseLoadSuccess(
-          houses: houses.where((element) => element.daGO != true).toList());
+
+      yield HouseLoadSuccess(houses: houses);
     } catch (err) {
       yield HouseLoadFailure();
     }
