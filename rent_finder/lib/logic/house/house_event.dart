@@ -17,10 +17,9 @@ class AddHouse extends HouseEvent {
 
 class LoadHouses extends HouseEvent {
   final String quanHuyen, phuongXa;
-
-  LoadHouses(this.quanHuyen, this.phuongXa);
+  final int sortType;
+  LoadHouses(this.quanHuyen, this.phuongXa, {this.sortType});
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 

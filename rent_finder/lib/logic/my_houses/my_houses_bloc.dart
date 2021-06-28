@@ -36,12 +36,7 @@ class MyHousesBloc extends Bloc<MyHousesEvent, MyHousesState> {
   Stream<MyHousesState> _mapMyHousesUpdateToState(
     MyHousesUpdate event,
   ) async* {
-    for (int i = 0; i < event.houses.length; i++) {
-      model.User user =
-          await userRepository.getUserByUID(event.houses[i].chuNha.uid);
-      event.houses[i].setSensitiveInfo(false, user);
-    }
-    yield MyHousesLoaded(event.houses);
+    yield MyHousesLoaded(event.houses.where((element) => element.daGO != true).toList());
   }
 
   @override

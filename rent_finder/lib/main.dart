@@ -52,6 +52,9 @@ void main() async {
         BlocProvider(
           create: (context) => MyHousesBloc(),
         ),
+        BlocProvider(
+          create: (context) => NewestHouseCubit()..loadNewestHouse(),
+        ),
       ],
       child: MyApp(
         appRouter: appRouter,

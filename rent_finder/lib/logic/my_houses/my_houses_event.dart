@@ -12,7 +12,6 @@ class LoadMyHouses extends MyHousesEvent {
 
   LoadMyHouses({this.userUid});
   @override
-  // TODO: implement props
   List<Object> get props => [userUid];
 }
 
@@ -23,6 +22,5 @@ class MyHousesUpdate extends MyHousesEvent {
 
   MyHousesUpdate(this.houses);
   @override
-  // TODO: implement props
   List<Object> get props => [houses];
 }

@@ -40,7 +40,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     yield RegisterState.loading();
     try {
       await _userRepository.signUp(email, password);
-      await _userRepository.createUser();
       yield RegisterState.success();
     } catch (error) {
       if (error is FirebaseAuthException) {
@@ -58,8 +57,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             break;
         }
         yield RegisterState.failure().copyWith(error: e);
-      }
-      else yield RegisterState.failure().copyWith(error: 'Đăng ký thất bại');
+      } else
+        yield RegisterState.failure().copyWith(error: 'Đăng ký thất bại');
     }
   }
 }

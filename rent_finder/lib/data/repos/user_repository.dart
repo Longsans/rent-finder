@@ -8,6 +8,7 @@ class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   UserFireStoreApi _userProvider = UserFireStoreApi();
+
   UserRepository({FirebaseAuth firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
@@ -48,14 +49,8 @@ class UserRepository {
     return _firebaseAuth.currentUser != null;
   }
 
-  Future<User> getUser() async {
-    return _firebaseAuth.currentUser;
-  }
-
-  Future<model.User> getCurrentUser() async {
-    User currentUser = await getUser();
-    String uid = currentUser.uid;
-    return await _userProvider.getUserByUID(uid);
+  Future<model.User> getCurrentUserData() async {
+    return await _userProvider.getUserByUID(currentUser.uid);
   }
 
   Future<model.User> getUserByUID(String uid) async {
@@ -73,7 +68,7 @@ class UserRepository {
   }
 
   Future<void> updateUser(String phone, String name, String url) async {
-    model.User user = await getCurrentUser();
+    model.User user = await getCurrentUserData();
     user.sdt = phone ?? "";
     user.hoTen = name ?? "";
     await _userProvider.updateAllUserInfo(updatedUser: user);
@@ -81,4 +76,6 @@ class UserRepository {
       await _userProvider.updateHinhDaiDienUser(
           user: user, pathHinhDaiDien: url);
   }
+
+  User get currentUser => _firebaseAuth.currentUser;
 }

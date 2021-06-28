@@ -44,9 +44,10 @@ class FilteredHousesBloc
     final currentState = housesBloc.state;
     if (currentState is HouseLoadSuccess) {
       yield FilteredHousesLoaded(
+        type: event.type,
           filter: event.filter,
-          filteredHouses:
-              _mapHousesToFilteredTodos(currentState.houses, event.filter));
+          filteredHouses: _mapHousesToFilteredTodos(
+              currentState.houses, event.filter, event.type));
     }
   }
 
@@ -56,33 +57,73 @@ class FilteredHousesBloc
     final filter = state is FilteredHousesLoaded
         ? (state as FilteredHousesLoaded).filter
         : model.Filter();
+    final type = state is FilteredHousesLoaded
+        ? (state as FilteredHousesLoaded).type
+        : 0;
     yield FilteredHousesLoaded(
+        type: type,
         filter: filter,
         filteredHouses: _mapHousesToFilteredTodos(
-            (housesBloc.state as HouseLoadSuccess).houses, filter));
+            (housesBloc.state as HouseLoadSuccess).houses, filter, type));
   }
 
   List<model.House> _mapHousesToFilteredTodos(
-      List<model.House> houses, model.Filter filter) {
-    return houses.where((house) {
+      List<model.House> houses, model.Filter filter, int type) {
+    var res = houses.where((house) {
       if (filter == model.Filter()) {
         return true;
       } else {
         bool res = true;
-        // if (filter == null) return true;
         if (filter.loaiChoThue != null)
           res = house.loaiChoThue == filter.loaiChoThue;
         if (filter.soPhongNgu != null)
           res = res && (house.soPhongNgu >= filter.soPhongNgu);
         if (filter.soPhongTam != null)
           res = res && (house.soPhongTam >= filter.soPhongTam);
-        if (filter.tienThueMin != null && filter.tienThueMax != null)
-          res = res &&
-              (house.tienThueThang >= filter.tienThueMin &&
-                  house.tienThueThang <= filter.tienThueMax);
+        if (filter.tienThueMin != null)
+          res = res && (house.tienThueThang >= filter.tienThueMin);
+        if (filter.tienThueMax != null) {
+          if (filter.tienThueMax < 30000000)
+            res = res && house.tienThueThang <= filter.tienThueMax;
+        }
+        if (filter.areaMin != null) {
+          res = res && (house.dienTich >= filter.areaMin);
+        }
+        if (filter.areaMax != null) {
+          if (filter.areaMax < 100)
+            res = res && (house.dienTich <= filter.areaMax);
+        }
+        if (filter.coSoVatChat != null) {
+          if (filter.coSoVatChat.banCong)
+            res = res && (house.coSoVatChat.banCong);
+          if (filter.coSoVatChat.baoVe) res = res && (house.coSoVatChat.baoVe);
+          if (filter.coSoVatChat.cctv) res = res && (house.coSoVatChat.cctv);
+          if (filter.coSoVatChat.dieuHoa)
+            res = res && (house.coSoVatChat.dieuHoa);
+          if (filter.coSoVatChat.gacLung)
+            res = res && (house.coSoVatChat.gacLung);
+          if (filter.coSoVatChat.hoBoi) res = res && (house.coSoVatChat.hoBoi);
+          if (filter.coSoVatChat.noiThat)
+            res = res && (house.coSoVatChat.noiThat);
+          if (filter.coSoVatChat.nuoiThuCung)
+            res = res && (house.coSoVatChat.nuoiThuCung);
+          if (filter.coSoVatChat.sanThuong)
+            res = res && (house.coSoVatChat.sanThuong);
+          if (filter.coSoVatChat.baiDauXe)
+            res = res && (house.coSoVatChat.baiDauXe);
+          if (filter.coSoVatChat.mayGiat)
+            res = res && (house.coSoVatChat.mayGiat);
+        }
         return res;
       }
     }).toList();
+    if (type == 0)
+      res.sort((a, b) => b.ngayCapNhat.compareTo(a.ngayCapNhat));
+    else if (type == 1)
+      res.sort((a, b) => a.tienThueThang.compareTo(b.tienThueThang));
+    else
+      res.sort((a, b) => b.tienThueThang.compareTo(a.tienThueThang));
+    return res;
   }
 
   @override

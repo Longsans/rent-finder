@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
-import 'package:rent_finder_hi/data/repos/repos.dart' as repos;
 
 import 'package:rent_finder_hi/logic/bloc.dart';
-import 'package:rent_finder_hi/presentation/screens/screens.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
 import '../../constants.dart';
@@ -39,7 +37,7 @@ class SearchArea extends StatelessWidget {
                         t.then((value) {
                           if (value != null) {
                             BlocProvider.of<HouseBloc>(context)
-                                .add(LoadHouses(value[0], value[1]));
+                                .add(LoadHouses(value[0], value[1], sortType: 0));
                             Navigator.pushNamed(context, '/result',
                                 arguments: [value[0], value[1]]);
                           }
@@ -50,12 +48,28 @@ class SearchArea extends StatelessWidget {
                 ],
               ),
               SizedBox(height: defaultPadding),
-              // Text(
-              //   'Đã xem gần đây',
-              //   style: TextStyle(fontSize: 16),
-              // ),
-
-              SizedBox(height: defaultPadding),
+              BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, authState) {
+                  return BlocBuilder<RecentViewBloc, RecentViewState>(
+                    builder: (context, state) {
+                      if (authState is AuthenticationStateSuccess &&
+                          state is RecentViewLoaded) {
+                        if (state.houses.length > 0)
+                          return Container(
+                            margin: EdgeInsets.only(bottom: defaultPadding),
+                            child: Text(
+                              'Đã xem gần đây',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        else
+                          return Container();
+                      } else
+                        return Container();
+                    },
+                  );
+                },
+              ),
               Expanded(
                 child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                   builder: (context, authState) {

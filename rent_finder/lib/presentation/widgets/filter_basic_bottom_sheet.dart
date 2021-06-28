@@ -39,7 +39,7 @@ class FilterBasicBottomSheet extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/filter_enhance');
+                  Navigator.of(context).pop('haha');
                 },
                 child: Text('Nâng cao'),
               ),

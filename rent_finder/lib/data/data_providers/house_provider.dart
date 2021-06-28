@@ -9,11 +9,30 @@ import 'data_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class HouseFireStoreApi extends BaseApi {
+class HouseFireStoreApi {
   UserFireStoreApi userFireStoreApi = UserFireStoreApi();
 
+  // get methods
   Stream<List<House>> houses() {
-    return _collection.snapshots().map((snapshot) {
+    return _collection
+        .where('daGo', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((e) {
+        final map = e.data() as Map<String, dynamic>;
+        map['uid'] = e.reference.id;
+        return House.fromJson(map);
+      }).toList();
+    });
+  }
+
+  Stream<List<House>> newestHouses() {
+    return _collection
+        .where('daGo', isEqualTo: false)
+        .orderBy('ngayCapNhat', descending: true)
+        .limit(5)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((e) {
         final map = e.data() as Map<String, dynamic>;
         map['uid'] = e.reference.id;
@@ -26,11 +45,14 @@ class HouseFireStoreApi extends BaseApi {
     if (quanHuyen == null) return houses();
     Query<Object> query;
     if (phuongXa == null) {
-      query = _collection.where('quanHuyen', isEqualTo: quanHuyen);
+      query = _collection
+          .where('quanHuyen', isEqualTo: quanHuyen)
+          .where('daGo', isEqualTo: false);
     } else {
       query = _collection
           .where('quanHuyen', isEqualTo: quanHuyen)
-          .where('phuongXa', isEqualTo: phuongXa);
+          .where('phuongXa', isEqualTo: phuongXa)
+          .where('daGo', isEqualTo: false);
     }
     return query.snapshots().map((snapshot) {
       return snapshot.docs.map((e) {
@@ -40,6 +62,36 @@ class HouseFireStoreApi extends BaseApi {
         return House.fromJson(map);
       }).toList();
     });
+  }
+
+  Future<List<House>> getHousesByLocation(
+      String quanHuyen, String phuongXa) async {
+    Query query = _collection.where('daGo', isEqualTo: false);
+    QuerySnapshot<Object> querySnapshot;
+
+    if (quanHuyen != null) {
+      if (phuongXa == null) {
+        querySnapshot =
+            await query.where('quanHuyen', isEqualTo: quanHuyen).get();
+      } else {
+        querySnapshot = await query
+            .where('quanHuyen', isEqualTo: quanHuyen)
+            .where('phuongXa', isEqualTo: phuongXa)
+            .get();
+      }
+    } else
+      querySnapshot = await query.get();
+
+    final docs = querySnapshot.docs;
+    if (docs.isNotEmpty) {
+      return docs.map((e) {
+        final map = e.data() as Map<String, dynamic>;
+        map['uid'] = e.reference.id;
+
+        return House.fromJson(map);
+      }).toList();
+    }
+    return [];
   }
 
   Future<House> getHouseByUID(String uid) async {
@@ -95,6 +147,17 @@ class HouseFireStoreApi extends BaseApi {
     });
   }
 
+  // end region
+
+  // Create and Delete methods
+  String createHouseDocument() {
+    return _collection.doc().id;
+  }
+
+  Future<void> setHouseData(House house) async {
+    await _collection.doc(house.uid).set(house.toJson());
+  }
+
   Future<void> addHouseToUserSavedHouses(String userUid, House house) async {
     final map = house.toSnippetJson();
     map['userUid'] = userUid;
@@ -131,14 +194,9 @@ class HouseFireStoreApi extends BaseApi {
     }
   }
 
-  String createHouseDocument() {
-    return _collection.doc().id;
-  }
+  // end region
 
-  Future<void> setHouseData(House house) async {
-    await _collection.doc(house.uid).set(house.toJson());
-  }
-
+  // Update methods
   Future<void> updateHouse({@required House updatedHouse}) async {
     final updatedHouseMap = updatedHouse.toJson();
     updatedHouseMap['dangCapNhat'] = true;
@@ -167,6 +225,12 @@ class HouseFireStoreApi extends BaseApi {
     }
   }
 
+  Future<void> updateViewedHouseViewTime(String houseUid) async {
+    await _viewedHousesCollection
+        .doc(houseUid)
+        .update({'ngayCapNhat': DateTime.now()});
+  }
+
   Future<void> setHouseRemoved(String uid) async {
     await _collection.doc(uid).update({'daGo': true});
   }
@@ -175,6 +239,9 @@ class HouseFireStoreApi extends BaseApi {
     await _collection.doc(uid).update({'daGo': false});
   }
 
+  // end region
+
+  // Other methods
   Future<String> uploadHousePicAndGetDownloadUrl(
       {@required model.House house, @required File file}) async {
     final newPfpRef = _storageRoot
@@ -187,7 +254,13 @@ class HouseFireStoreApi extends BaseApi {
     return url;
   }
 
-  // private members
+  // Future<void> _deleteUnusedHousePictures(String houseUid, List<String> housePicUrls) async {
+
+  // }
+
+  // end region
+
+  // private references
   final CollectionReference _collection =
       FirebaseFirestore.instance.collection('houses');
 
