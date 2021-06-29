@@ -13,6 +13,10 @@ class UserRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   Future<void> signInWithCredentials(String email, String password) {
+    final credential =
+        EmailAuthProvider.credential(email: email, password: password);
+    _tryLinkAnonDataToAuthCredential(email, credential);
+
     return _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
   }
@@ -29,14 +33,18 @@ class UserRepository {
   Future<User> signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount =
         await _googleSignIn.signIn();
+
+    if (googleSignInAccount == null) return null;
+
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
-    final UserCredential userCredential =
-        await _firebaseAuth.signInWithCredential(credential);
+    _tryLinkAnonDataToAuthCredential(googleSignInAccount.email, credential);
+
+    final userCredential = await _firebaseAuth.signInWithCredential(credential);
     return userCredential.user;
   }
 
@@ -45,7 +53,7 @@ class UserRepository {
     await _firebaseAuth.signOut();
   }
 
-  Future<bool> isSignedIn() async {
+  bool isSignedIn() {
     return _firebaseAuth.currentUser != null;
   }
 
@@ -60,6 +68,7 @@ class UserRepository {
   Future<void> createUser() async {
     model.User user = model.User();
     User firebaseUser = _firebaseAuth.currentUser;
+    user.hoTen = firebaseUser.displayName;
     user.email = firebaseUser.email;
     user.uid = firebaseUser.uid;
     user.urlHinhDaiDien = firebaseUser.photoURL ?? "";
@@ -78,4 +87,26 @@ class UserRepository {
   }
 
   User get currentUser => _firebaseAuth.currentUser;
+
+  // private members
+  Future<model.User> _getUserByEmail(String email) async {
+    return await _userProvider.getUserByEmail(email);
+  }
+
+  /// Attempts linking **already signed in** anonymous account's data to the now-signing-in [authCredential].
+  ///
+  /// The [email] parameter is used to check for existing data already linked with [authCredential] before actually linking.
+  Future<void> _tryLinkAnonDataToAuthCredential(
+      //TODO: TEST _tryLinkAnonData method
+      String email,
+      AuthCredential authCredential) async {
+    if (isSignedIn() && _firebaseAuth.currentUser.isAnonymous) {
+      if (await _getUserByEmail(email) != null)
+        _firebaseAuth.currentUser.delete();
+      else
+        _firebaseAuth.currentUser.linkWithCredential(authCredential);
+    }
+  }
+
+  // endregion
 }

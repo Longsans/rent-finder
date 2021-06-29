@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'data_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 
 class HouseFireStoreApi {
   UserFireStoreApi userFireStoreApi = UserFireStoreApi();
@@ -197,6 +197,9 @@ class HouseFireStoreApi {
   // end region
 
   // Update methods
+
+  //TODO: TEST updateHouse method
+  /// Updates the house with UID of [updatedHouse] with the data in [updatedHouse]
   Future<void> updateHouse({@required House updatedHouse}) async {
     final updatedHouseMap = updatedHouse.toJson();
     updatedHouseMap['dangCapNhat'] = true;
@@ -222,6 +225,7 @@ class HouseFireStoreApi {
       rethrow;
     } finally {
       await _collection.doc(updatedHouse.uid).update({'dangCapNhat': false});
+      await _deleteUnusedHousePictures(updatedHouse);
     }
   }
 
@@ -249,14 +253,20 @@ class HouseFireStoreApi {
         .child(house.uid)
         .child(path.basename(file.path));
     var uploadTask = newPfpRef.putFile(file);
-    firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+    TaskSnapshot taskSnapshot = await uploadTask;
     String url = await taskSnapshot.ref.getDownloadURL();
     return url;
   }
 
-  // Future<void> _deleteUnusedHousePictures(String houseUid, List<String> housePicUrls) async {
+  Future<void> _deleteUnusedHousePictures(House house) async {
+    final ListResult housePicsRef =
+        await _storageRoot.child(house.uid).listAll();
 
-  // }
+    housePicsRef.items.forEach((element) async {
+      if (house.urlHinhAnh.contains(await element.getDownloadURL()))
+        await element.delete();
+    });
+  }
 
   // end region
 
@@ -270,6 +280,5 @@ class HouseFireStoreApi {
   final CollectionReference _viewedHousesCollection =
       FirebaseFirestore.instance.collection('viewedHouses');
 
-  final firebase_storage.Reference _storageRoot =
-      firebase_storage.FirebaseStorage.instance.ref();
+  final Reference _storageRoot = FirebaseStorage.instance.ref();
 }

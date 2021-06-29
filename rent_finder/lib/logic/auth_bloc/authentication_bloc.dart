@@ -18,8 +18,7 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent authenticationEvent) async* {
     if (authenticationEvent is AuthenticationEventStarted) {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
+      if (_userRepository.isSignedIn()) {
         final user = await _userRepository.getCurrentUserData();
         yield AuthenticationStateSuccess(user: user);
       } else {
