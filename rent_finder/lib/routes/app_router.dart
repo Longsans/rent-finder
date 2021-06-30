@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent_finder_hi/presentation/screens/edit_house_form.dart';
 import 'package:rent_finder_hi/presentation/screens/screens.dart';
 
 class AppRouter {
@@ -36,10 +37,15 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => SearchArea());
         break;
       case '/filter_enhance':
-        return MaterialPageRoute(builder: (_) => FilterEnhanceScreen(filter: args[0]));
+        return MaterialPageRoute(
+            builder: (_) => FilterEnhanceScreen(filter: args[0]));
         break;
       case '/result':
-        return MaterialPageRoute(builder: (_) => SearchResultScreen(quanHuyen: args[0], phuongXa: args[1],));
+        return MaterialPageRoute(
+            builder: (_) => SearchResultScreen(
+                  quanHuyen: args[0],
+                  phuongXa: args[1],
+                ));
         break;
       case '/my_houses':
         return MaterialPageRoute(builder: (_) => MyHousesScreen());
@@ -51,7 +57,13 @@ class AppRouter {
           ),
         );
         break;
-
+      case '/edit':
+        return MaterialPageRoute(
+          builder: (_) => EditHouseForm(
+            house: args[0],
+          )
+        );
+        break;
       default:
         return null;
     }

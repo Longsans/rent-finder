@@ -14,6 +14,9 @@ class HouseRepository {
   Future<List<String>> uploadHousePicsAndGetDownloadUrls(
       House house, List<File> files) async {
     List<String> urlHinhAnh = [];
+    if (house.urlHinhAnh != null) {
+      urlHinhAnh = house.urlHinhAnh;
+    }
     for (int i = 0; i < files.length; i++) {
       String url = await _houseFireStoreApi.uploadHousePicAndGetDownloadUrl(
           house: house, file: files[i]);
@@ -74,7 +77,10 @@ class HouseRepository {
     await _houseFireStoreApi.removeHouseFromUserViewHouses(userUid, houseUid);
   }
 
-  Future<void> updateHouse(House updatedHouse) async {
+  Future<void> updateHouse(House updatedHouse, List<File> housePictures) async {
+    updatedHouse.urlHinhAnh =
+        await uploadHousePicsAndGetDownloadUrls(updatedHouse, housePictures);
+
     await _houseFireStoreApi.updateHouse(updatedHouse: updatedHouse);
   }
 

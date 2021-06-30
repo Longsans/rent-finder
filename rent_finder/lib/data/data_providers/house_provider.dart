@@ -263,7 +263,7 @@ class HouseFireStoreApi {
         await _storageRoot.child(house.uid).listAll();
 
     housePicsRef.items.forEach((element) async {
-      if (house.urlHinhAnh.contains(await element.getDownloadURL()))
+      if (!house.urlHinhAnh.contains(await element.getDownloadURL()))
         await element.delete();
     });
   }
