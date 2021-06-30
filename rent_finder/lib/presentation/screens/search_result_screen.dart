@@ -234,7 +234,7 @@ class SearchResultScreen extends StatelessWidget {
                                                   ),
                                                   RadioListTile(
                                                     title: Text(
-                                                        'Ngày đăng mới nhất'),
+                                                        'Ngày cập nhật mới nhất'),
                                                     value: 0,
                                                     groupValue: state,
                                                     onChanged: (value) {

@@ -25,7 +25,7 @@ class HomeArea extends StatelessWidget {
             backgroundColor: primaryColor,
             child: Icon(Icons.add),
             onPressed: () {
-              if (state is AuthenticationStateSuccess)
+              if (state is AuthenticationStateAuthenticated)
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
@@ -141,7 +141,7 @@ class HomeArea extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Mới đăng gần đây',
+                      'Cập nhật gần đây',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),

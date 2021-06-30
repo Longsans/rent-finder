@@ -39,13 +39,13 @@ class UserArea extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(height: 20),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? buildHeaderSuccess(state, context)
                         : HeaderUserFailure(),
                     SizedBox(
                       height: 20.0,
                     ),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? TitleCard(
                             subtitle:
                                 'Quản lý các thông tin cá nhân dễ dàng hơn',
@@ -59,7 +59,7 @@ class UserArea extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? Container(
                             padding: EdgeInsets.all(defaultPadding / 2),
                             decoration: BoxDecoration(
@@ -89,7 +89,7 @@ class UserArea extends StatelessWidget {
                             ),
                           )
                         : Container(),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? Container()
                         : CustomButton(
                             title: 'Đăng nhập',
@@ -199,7 +199,7 @@ class UserArea extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    if (state is AuthenticationStateSuccess == true)
+                    if (state is AuthenticationStateAuthenticated)
                       CustomButton(
                         title: 'Đăng xuất',
                         icon: Icon(Icons.logout, color: Colors.white),
@@ -219,7 +219,7 @@ class UserArea extends StatelessWidget {
   }
 
   Container buildHeaderSuccess(
-      AuthenticationStateSuccess state, BuildContext context) {
+      AuthenticationStateAuthenticated state, BuildContext context) {
     return Container(
       alignment: Alignment.center,
       child: Column(

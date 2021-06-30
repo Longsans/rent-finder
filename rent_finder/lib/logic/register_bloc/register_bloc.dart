@@ -39,7 +39,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       {String email, String password}) async* {
     yield RegisterState.loading();
     try {
-      await _userRepository.signUp(email, password);
+      await _userRepository.signInWithCredentials(email, password);
       yield RegisterState.success();
     } catch (error) {
       if (error is FirebaseAuthException) {

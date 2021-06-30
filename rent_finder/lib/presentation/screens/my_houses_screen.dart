@@ -53,7 +53,8 @@ class MyHousesScreen extends StatelessWidget {
                           ),
                         ],
                         child: PostHouseScreen(
-                          user: (state as AuthenticationStateSuccess).user,
+                          user:
+                              (state as AuthenticationStateAuthenticated).user,
                         ),
                       );
                     },
@@ -66,7 +67,7 @@ class MyHousesScreen extends StatelessWidget {
             padding: EdgeInsets.all(defaultPadding),
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, authState) {
-              if (authState is AuthenticationStateSuccess) {
+              if (authState is AuthenticationStateAuthenticated) {
                 BlocProvider.of<MyHousesBloc>(context)
                     .add(LoadMyHouses(userUid: authState.user.uid));
                 return BlocBuilder<MyHousesBloc, MyHousesState>(

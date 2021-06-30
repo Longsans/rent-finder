@@ -227,6 +227,7 @@ class _EditHouseFormState extends State<EditHouseForm> {
                               res.coSoVatChat = coSoVatChat;
                               res.quanHuyen = quanHuyen;
                               res.phuongXa = phuongXa;
+                              res.ngayCapNhat = DateTime.now();
                               print(files.length);
                               BlocProvider.of<EditFormCubit>(context)
                                   .submitForm(res, files);
