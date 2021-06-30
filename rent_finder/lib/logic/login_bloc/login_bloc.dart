@@ -48,10 +48,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         print(error.code);
         switch (error.code) {
           case 'user-not-found':
-            e = 'Người dùng không tồn tịa';
-            break;
           case 'wrong-password':
-            e = 'Mật khẩu không chính xác';
+            e = 'Thông tin đăng nhập không chính xác';
             break;
           default:
             e = 'Đăng nhập thất bại';
@@ -65,12 +63,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginState> _mapLoginWithGooglePressedToState() async* {
+    yield LoginState.loading();
     try {
       await _userRepository.signInWithGoogle();
-      yield LoginState.loading();
-      if ((await _userRepository.getCurrentUserData()) == null) {
-        await _userRepository.createUser();
-      }
       yield LoginState.success();
     } catch (error) {
       String e = "";
@@ -84,7 +79,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             break;
         }
       } else
-        e = "Đăng nhập bằng google thất bại";
+        e = "Đăng nhập thất bại";
       yield LoginState.failure().copyWith(error: e);
     }
   }

@@ -48,7 +48,7 @@ class SavedArea extends StatelessWidget {
                                         context: context,
                                         builder: (_) => ConfirmDialog(
                                           title:
-                                              'Nhà này đã bị gỡ bạn có muốn xóa khỏi danh sách không ?',
+                                              'Bài đăng này đã bị gỡ, bạn có muốn xóa khỏi danh sách không?',
                                         ),
                                       );
                                       t.then(
@@ -63,7 +63,7 @@ class SavedArea extends StatelessWidget {
                                                           state.houses[index]));
                                               Fluttertoast.showToast(
                                                   msg:
-                                                      'Xóa khỏi danh sách yêu thích thành công');
+                                                      'Đã xóa khỏi danh sách yêu thích');
                                             }
                                           }
                                         },

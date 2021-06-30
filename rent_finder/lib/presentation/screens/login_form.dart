@@ -40,13 +40,14 @@ class _LoginFormState extends State<LoginForm> {
       listener: (context, state) {
         if (state.isFailure) {
           ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(state.error),
-                    Icon(Icons.error),
+                    Icon(Icons.error, color: Colors.red),
                   ],
                 ),
               ),
@@ -90,57 +91,61 @@ class _LoginFormState extends State<LoginForm> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(220.0, 0.0, 0.0, 0.0),
                       child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushReplacementNamed('/');
-                          },
-                          child: Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.grey[400],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  EvaIcons.arrowCircleRight,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(" Bỏ qua",
-                                    style: new TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                          )),
+                        onTap: () {
+                          Navigator.of(context).pushReplacementNamed('/');
+                        },
+                        child: Container(
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey[400],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                EvaIcons.arrowCircleRight,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                " Bỏ qua",
+                                style: new TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                     Container(
-                        height: 200.0,
-                        padding: EdgeInsets.only(bottom: 20.0, top: 40.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Rent Finder",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30.0),
-                            ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Text(
-                              "Ứng dụng tìm nhà trọ tiện lợi cho bạn",
-                              style: TextStyle(
-                                  fontSize: 12.0, color: Colors.black38),
-                            )
-                          ],
-                        )),
+                      height: 200.0,
+                      padding: EdgeInsets.only(bottom: 20.0, top: 40.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Rent Finder",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30.0),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            "Ứng dụng tìm nhà trọ tiện lợi cho bạn",
+                            style: TextStyle(
+                                fontSize: 12.0, color: Colors.black38),
+                          )
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 30.0,
                     ),
@@ -242,7 +247,8 @@ class _LoginFormState extends State<LoginForm> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ForgotPassword()),
+                              MaterialPageRoute(
+                                  builder: (context) => ForgotPassword()),
                             );
                           }),
                     ),
