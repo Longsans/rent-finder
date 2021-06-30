@@ -6,6 +6,7 @@ import 'package:rent_finder_hi/data/models/models.dart' as model;
 import 'package:rent_finder_hi/logic/bloc.dart';
 
 import '../../constants.dart';
+
 class SaveButton extends StatelessWidget {
   const SaveButton({
     Key key,
@@ -29,15 +30,14 @@ class SaveButton extends StatelessWidget {
                         .toList()
                         .contains(house.uid)) {
                       BlocProvider.of<SavedHouseBloc>(context).add(
-                          RemoveSavedHouse(
-                              user: authState.user, house: house));
+                          RemoveSavedHouse(user: authState.user, house: house));
                       Fluttertoast.showToast(
-                          msg: 'Xóa khỏi danh sách yêu thích thành công');
+                          msg: 'Đã xóa khỏi danh sách yêu thích');
                     } else {
-                      BlocProvider.of<SavedHouseBloc>(context).add(
-                          AddToSaved(user: authState.user, house: house));
+                      BlocProvider.of<SavedHouseBloc>(context)
+                          .add(AddToSaved(user: authState.user, house: house));
                       Fluttertoast.showToast(
-                          msg: 'Thêm vào danh sách yêu thích thành công');
+                          msg: 'Đã thêm vào danh sách yêu thích');
                     }
                   }
                 },

@@ -68,13 +68,16 @@ class UserFireStoreApi {
     String url = await taskSnapshot.ref.getDownloadURL();
 
     // And update the new download URL for user's new pfp
-    // (pending changes since i think the download URL doesn't depend on the file that's put there)
     await _collection.doc(user.uid).update({'urlHinhDaiDien': url});
   }
 
   Future<void> updateEmailUser({@required User updatedUser}) async {
     await Auth.instance.updateEmail(updatedUser.email);
     await _collection.doc(updatedUser.uid).update({'email': updatedUser.email});
+  }
+
+  Future<void> deleteUser({@required String userUid}) async {
+    await _collection.doc(userUid).delete();
   }
 
   final CollectionReference _collection =

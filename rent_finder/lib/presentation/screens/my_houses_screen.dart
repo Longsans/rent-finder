@@ -52,7 +52,8 @@ class MyHousesScreen extends StatelessWidget {
                           ),
                         ],
                         child: PostHouseScreen(
-                          user: (state as AuthenticationStateSuccess).user,
+                          user:
+                              (state as AuthenticationStateAuthenticated).user,
                         ),
                       );
                     },
@@ -65,7 +66,7 @@ class MyHousesScreen extends StatelessWidget {
             padding: EdgeInsets.all(defaultPadding),
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, authState) {
-              if (authState is AuthenticationStateSuccess) {
+              if (authState is AuthenticationStateAuthenticated) {
                 BlocProvider.of<MyHousesBloc>(context)
                     .add(LoadMyHouses(userUid: authState.user.uid));
                 return BlocBuilder<MyHousesBloc, MyHousesState>(
@@ -116,10 +117,10 @@ class MyHousesScreen extends StatelessWidget {
                                                   Future.delayed(
                                                       Duration(seconds: 3));
                                                   try {
-                                                   await HouseRepository()
+                                                    await HouseRepository()
                                                         .setHouseRemoved(state
                                                             .houses[index].uid);
-                                                             ScaffoldMessenger.of(
+                                                    ScaffoldMessenger.of(
                                                         context)
                                                       ..hideCurrentSnackBar()
                                                       ..showSnackBar(
@@ -133,8 +134,8 @@ class MyHousesScreen extends StatelessWidget {
                                                                   " Gỡ nhà thành công"),
                                                               Icon(
                                                                 Icons.verified,
-                                                                color:
-                                                                    Colors.green,
+                                                                color: Colors
+                                                                    .green,
                                                               )
                                                             ],
                                                           ),
