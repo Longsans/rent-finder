@@ -29,6 +29,7 @@ class HouseFireStoreApi {
   Stream<List<House>> newestHouses() {
     return _collection
         .where('daGo', isEqualTo: false)
+        .where('tinhTrang', isEqualTo: 'ConTrong')
         .orderBy('ngayCapNhat', descending: true)
         .limit(5)
         .snapshots()

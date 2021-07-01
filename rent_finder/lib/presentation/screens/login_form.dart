@@ -36,49 +36,65 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state.isFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(state.error),
-                    Icon(Icons.error, color: Colors.red),
-                  ],
-                ),
-              ),
-            );
-        }
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state.isFailure) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(state.error),
+                        Icon(Icons.error, color: Colors.red),
+                      ],
+                    ),
+                  ),
+                );
+            }
 
-        if (state.isSubmitting) {
-          print("isSubmitting");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(" Đang đăng nhập..."),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
-        }
+            if (state.isSubmitting) {
+              print("isSubmitting");
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(" Đang đăng nhập..."),
+                        CircularProgressIndicator(),
+                      ],
+                    ),
+                  ),
+                );
+            }
 
-        if (state.isSuccess) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Fluttertoast.showToast(msg: 'Đăng nhập thành công');
-          BlocProvider.of<AuthenticationBloc>(context)
-              .add(AuthenticationEventLoggedIn());
-          Navigator.of(context).pushReplacementNamed('/');
-        }
-      },
+            if (state.isSuccess) {
+              BlocProvider.of<AuthenticationBloc>(context)
+                  .add(AuthenticationEventLoggedIn());
+            }
+          },
+        ),
+        BlocListener<AuthenticationBloc, AuthenticationState>(
+            listener: (context, authState) {
+          if (authState is AuthenticationStateSuccess) {
+            if (authState.user.banned) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Fluttertoast.showToast(
+                  msg:
+                      'Tài khoản của bạn đã bị khóa! Vui lòng liên hệ với admin để được hỗ trợ!');
+            } else {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Fluttertoast.showToast(msg: 'Đăng nhập thành công');
+              Navigator.of(context).pushReplacementNamed('/');
+            }
+          }
+        }),
+      ],
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return SafeArea(

@@ -30,6 +30,8 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
   String phuongXa, quanHuyen;
   List<AssetEntity> images = <AssetEntity>[];
   TextEditingController _streetController = TextEditingController();
+  TextEditingController _bedController = TextEditingController();
+  TextEditingController _bathController = TextEditingController();
   TextEditingController _numController = TextEditingController();
   TextEditingController _moneyController = TextEditingController();
   TextEditingController _areaController = TextEditingController();
@@ -1015,13 +1017,97 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                 MaterialButton(
                   color: (state == 3) ? Color(0xFF0D4880) : Colors.white,
                   onPressed: () {
-                    bed = 4;
+                    if (state != 3) _bedController.text = '4';
                     var t = showDialog(
                         context: context,
                         builder: (context) => Dialog(
-                              child: Container(),
+                              child: Container(
+                                height: 100,
+                                padding: EdgeInsets.all(defaultPadding),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                        controller: _bedController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Số phòng ngủ',
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.red),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.black54),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: textColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 20.0, right: 10.0),
+                                            // errorText:
+                                            //     state.isNumValid ? '' : "Không được để trống",
+                                            hintText: '2'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: defaultPadding,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: MaterialButton(
+                                        child: Text('Đồng ý',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: Color(0xFF0D4880),
+                                        onPressed: () {
+                                          if (_bedController.text == "" ||
+                                              _bedController.text == null) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng ngủ');
+                                            return;
+                                          }
+                                          if (int.parse(_bedController.text) <
+                                              4) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng ngủ lớn hơn 3');
+                                            return;
+                                          }
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ));
-                    BlocProvider.of<RadioCubit>(context).click(3);
+                    t.then(
+                      (value) {
+                        if (value != null) {
+                          if (value) {
+                            bed = int.parse(_bedController.text);
+                            BlocProvider.of<RadioCubit>(context).click(3);
+                          }
+                        } else
+                          _bedController.text = bed.toString();
+                      },
+                    );
                   },
                   child: Text(
                     '4+',
@@ -1084,8 +1170,98 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                 MaterialButton(
                   color: (state == 3) ? Color(0xFF0D4880) : Colors.white,
                   onPressed: () {
-                    bath = 4;
-                    BlocProvider.of<RadioCubit>(context).click(3);
+                    if (state != 3) _bathController.text = '4';
+                    var t = showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                              child: Container(
+                                height: 100,
+                                padding: EdgeInsets.all(defaultPadding),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                        controller: _bathController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Số phòng tắm',
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.red),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.black54),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: textColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 20.0, right: 10.0),
+                                            // errorText:
+                                            //     state.isNumValid ? '' : "Không được để trống",
+                                            hintText: '2'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: defaultPadding,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: MaterialButton(
+                                        child: Text('Đồng ý',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: Color(0xFF0D4880),
+                                        onPressed: () {
+                                          if (_bathController.text == "" ||
+                                              _bathController.text == null) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng tắm');
+                                            return;
+                                          }
+                                          if (int.parse(_bathController.text) <
+                                              4) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng tắm lớn hơn 3');
+                                            return;
+                                          }
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ));
+                    t.then(
+                      (value) {
+                        if (value != null) {
+                          if (value) {
+                            bath = int.parse(_bathController.text);
+                            BlocProvider.of<RadioCubit>(context).click(3);
+                          }
+                        } else
+                          _bathController.text = bath.toString();
+                      },
+                    );
+                    print(bath);
                   },
                   child: Text(
                     '4+',
@@ -1235,6 +1411,8 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
     _moneyController.dispose();
     _numController.dispose();
     _streetController.dispose();
+    _bedController.dispose();
+    _bathController.dispose();
     super.dispose();
   }
 }

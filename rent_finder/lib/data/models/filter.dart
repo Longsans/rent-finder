@@ -5,8 +5,10 @@ class Filter {
   final LoaiChoThue loaiChoThue;
   final double tienThueMin, tienThueMax, areaMin, areaMax;
   final CoSoVatChat coSoVatChat;
+  final bool onlyEmpty;
   Filter(
       {this.coSoVatChat,
+      this.onlyEmpty,
       this.areaMin,
       this.areaMax,
       this.tienThueMin,
@@ -17,6 +19,7 @@ class Filter {
 
   Filter copyWith({
     CoSoVatChat coSoVatChat,
+    bool onlyEmpty,
     int soPhongNgu,
     int soPhongTam,
     LoaiChoThue loaiChoThue,
@@ -26,6 +29,7 @@ class Filter {
     double areaMax,
   }) {
     return Filter(
+      onlyEmpty: onlyEmpty ?? this.onlyEmpty,
       coSoVatChat: coSoVatChat ?? this.coSoVatChat,
       areaMax: areaMax ?? this.areaMax,
       areaMin: areaMin ?? this.areaMin,

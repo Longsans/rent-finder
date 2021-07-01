@@ -34,32 +34,55 @@ class MyHousesScreen extends StatelessWidget {
             ),
             backgroundColor: Colors.white,
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            backgroundColor: primaryColor,
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                    builder: (context, state) {
-                      return MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                            create: (context) => PostFormBloc(),
-                          ),
-                          BlocProvider(
-                            create: (context) => PickMultiImageCubit(),
-                          ),
-                        ],
-                        child: PostHouseScreen(
-                          user:
-                              (state as AuthenticationStateAuthenticated).user,
-                        ),
+          floatingActionButton:
+              BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              return FloatingActionButton(
+                child: Icon(Icons.add),
+                backgroundColor: primaryColor,
+                onPressed: () {
+                  if (state is AuthenticationStateAuthenticated) {
+                    if (state.user.hoTen == null ||
+                        state.user.sdt == null ||
+                        state.user.hoTen == "" ||
+                        state.user.sdt == "") {
+                      var t = showDialog<bool>(
+                        context: context,
+                        builder: (context) => ConfirmDialog(
+                            title:
+                                'Bạn chưa cập nhật thông tin, chuyển đến phần cập nhật?'),
                       );
-                    },
-                  ),
-                ),
+                      t.then(
+                        (value) {
+                          if (value != null) {
+                            if (value) {
+                              Navigator.of(context).pushNamed('/profile',
+                                  arguments: [state.user]);
+                            }
+                          }
+                        },
+                      );
+                      return;
+                    }
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => MultiBlocProvider(
+                                providers: [
+                                  BlocProvider(
+                                    create: (context) => PostFormBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => PickMultiImageCubit(),
+                                  ),
+                                ],
+                                child: PostHouseScreen(
+                                  user: state.user,
+                                ),
+                              )),
+                    );
+                  }
+                },
               );
             },
           ),
@@ -104,7 +127,8 @@ class MyHousesScreen extends StatelessWidget {
                                                 ..hideCurrentSnackBar()
                                                 ..showSnackBar(
                                                   SnackBar(
-                                                    duration: Duration(minutes: 5),
+                                                    duration:
+                                                        Duration(minutes: 5),
                                                     content: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment

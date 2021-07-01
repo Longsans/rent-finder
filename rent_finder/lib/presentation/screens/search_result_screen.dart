@@ -14,7 +14,7 @@ class SearchResultScreen extends StatelessWidget {
   SearchResultScreen({Key key, this.phuongXa, this.quanHuyen})
       : super(key: key);
   final String phuongXa, quanHuyen;
-  Filter filter = Filter();
+  Filter filter = Filter(onlyEmpty: true);
   int type = 0;
   @override
   Widget build(BuildContext context) {
@@ -139,7 +139,7 @@ class SearchResultScreen extends StatelessWidget {
                                             BlocProvider.of<CategoryCubit>(
                                                     context)
                                                 .click(null);
-                                            filter = Filter();
+                                            filter = Filter(onlyEmpty: true);
                                             BlocProvider.of<FilteredHousesBloc>(
                                                     context)
                                                 .add(UpdateFilter(
@@ -347,11 +347,18 @@ class SearchResultScreen extends StatelessWidget {
                                       listener: (context, detailState) {
                                         if (detailState.status ==
                                             DetailStatus.success) {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
                                           if (detailState.house.daGO == true)
                                             Fluttertoast.showToast(
                                                 msg:
                                                     'Nhà đã bị gỡ vui lòng tải lại trang');
-                                          else {
+                                          else if (detailState
+                                              .house.dangCapNhat) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Nhà đang được cập nhật, hãy thử lại sau một lát!');
+                                          } else {
                                             if (recentState
                                                     is RecentViewLoaded &&
                                                 authState

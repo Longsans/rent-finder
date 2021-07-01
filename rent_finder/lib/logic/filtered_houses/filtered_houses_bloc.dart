@@ -44,7 +44,7 @@ class FilteredHousesBloc
     final currentState = housesBloc.state;
     if (currentState is HouseLoadSuccess) {
       yield FilteredHousesLoaded(
-        type: event.type,
+          type: event.type,
           filter: event.filter,
           filteredHouses: _mapHousesToFilteredTodos(
               currentState.houses, event.filter, event.type));
@@ -117,6 +117,11 @@ class FilteredHousesBloc
         return res;
       }
     }).toList();
+    if (filter != null) {
+      if (filter.onlyEmpty)
+      res = res.where(
+          (element) => element.tinhTrang == model.TinhTrangChoThue.ConTrong).toList();
+    }
     if (type == 0)
       res.sort((a, b) => b.ngayCapNhat.compareTo(a.ngayCapNhat));
     else if (type == 1)

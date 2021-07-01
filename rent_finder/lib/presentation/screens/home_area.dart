@@ -25,7 +25,29 @@ class HomeArea extends StatelessWidget {
             backgroundColor: primaryColor,
             child: Icon(Icons.add),
             onPressed: () {
-              if (state is AuthenticationStateAuthenticated)
+              if (state is AuthenticationStateAuthenticated) {
+                if (state.user.hoTen == null ||
+                    state.user.sdt == null ||
+                    state.user.hoTen == "" ||
+                    state.user.sdt == "") {
+                  var t = showDialog<bool>(
+                    context: context,
+                    builder: (context) => ConfirmDialog(
+                        title:
+                            'Bạn chưa cập nhật thông tin, chuyển đến phần cập nhật?'),
+                  );
+                  t.then(
+                    (value) {
+                      if (value != null) {
+                        if (value) {
+                          Navigator.of(context)
+                              .pushNamed('/profile', arguments: [state.user]);
+                        }
+                      }
+                    },
+                  );
+                  return;
+                }
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
@@ -43,7 +65,7 @@ class HomeArea extends StatelessWidget {
                     ),
                   ),
                 );
-              else
+              } else
                 Fluttertoast.showToast(
                     msg: 'Cần đăng nhập để thực hiện chức năng này');
             },
@@ -174,6 +196,7 @@ class HomeArea extends StatelessWidget {
                 height: defaultPadding / 2,
               ),
               Container(
+                color: Colors.white54,
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 height: 250,
                 child: BlocBuilder<NewestHouseCubit, NewestHouseState>(
@@ -331,6 +354,10 @@ class HouseMediumCard extends StatelessWidget {
                   if (detailState.house.daGO == true) {
                     Fluttertoast.showToast(
                         msg: 'Nhà đã bị gỡ xin vui lòng xem nhà khác');
+                  } else if (detailState.house.dangCapNhat) {
+                    Fluttertoast.showToast(
+                        msg:
+                            'Nhà đang được cập nhật, hãy thử lại sau một lát!');
                   } else {
                     if (state is RecentViewLoaded &&
                         authState is AuthenticationStateSuccess) {
@@ -374,7 +401,7 @@ class HouseMediumCard extends StatelessWidget {
                   margin: EdgeInsets.only(right: defaultPadding),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.black26),
+                    // border: Border.all(color: Colors.black26),
                   ),
                   child: Stack(
                     children: [
@@ -418,7 +445,7 @@ class HouseMediumCard extends StatelessWidget {
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18,
-                                        color: textColor),
+                                        color: Colors.blue),
                                     maxLines: 1,
                                   ),
                                   Spacer(),
@@ -429,8 +456,8 @@ class HouseMediumCard extends StatelessWidget {
                                         width: 24,
                                         height: 24,
                                         child: SvgPicture.asset(
-                                            'assets/icons/bed.svg',
-                                            color: primaryColor),
+                                          'assets/icons/bed.svg',
+                                        ),
                                       ),
                                       Text(house.soPhongNgu.toString()),
                                     ],
@@ -445,8 +472,8 @@ class HouseMediumCard extends StatelessWidget {
                                         width: 24,
                                         height: 24,
                                         child: SvgPicture.asset(
-                                            'assets/icons/bathtub.svg',
-                                            color: primaryColor),
+                                          'assets/icons/bathtub.svg',
+                                        ),
                                       ),
                                       Text(house.soPhongTam.toString()),
                                     ],
@@ -461,8 +488,8 @@ class HouseMediumCard extends StatelessWidget {
                                         width: 20,
                                         height: 20,
                                         child: SvgPicture.asset(
-                                            'assets/icons/area.svg',
-                                            color: primaryColor),
+                                          'assets/icons/area.svg',
+                                        ),
                                       ),
                                       Text(house.dienTich.toStringAsFixed(0)),
                                     ],
@@ -481,9 +508,10 @@ class HouseMediumCard extends StatelessWidget {
                                 child: Text(
                                   house.diaChi,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15,
-                                      color: textColor),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xffB3B3B3),
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                 ),

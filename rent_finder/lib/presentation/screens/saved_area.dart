@@ -68,6 +68,10 @@ class SavedArea extends StatelessWidget {
                                           }
                                         },
                                       );
+                                    } else if (detailState.house.dangCapNhat) {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              'Nhà đang được cập nhật, hãy thử lại sau một lát!');
                                     } else {
                                       if (recentState is RecentViewLoaded &&
                                           authState

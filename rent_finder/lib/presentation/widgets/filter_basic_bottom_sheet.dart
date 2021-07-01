@@ -56,8 +56,11 @@ class FilterBasicBottomSheet extends StatelessWidget {
             height: defaultPadding / 2,
           ),
           BlocProvider(
-            create: (context) =>
-                SliderCubit()..setValues(RangeValues( filter.tienThueMin ?? _lowerPrice,filter.tienThueMax ?? _upperPrice,)),
+            create: (context) => SliderCubit()
+              ..setValues(RangeValues(
+                filter.tienThueMin ?? _lowerPrice,
+                filter.tienThueMax ?? _upperPrice,
+              )),
             child: Builder(
               builder: (context) => BlocBuilder<SliderCubit, RangeValues>(
                 builder: (context, state) {
@@ -73,7 +76,8 @@ class FilterBasicBottomSheet extends StatelessWidget {
                     values: state,
                     onChanged: (val) {
                       BlocProvider.of<SliderCubit>(context).setValues(val);
-                     filter = filter.copyWith(tienThueMin: val.start, tienThueMax: val.end);
+                      filter = filter.copyWith(
+                          tienThueMin: val.start, tienThueMax: val.end);
                     },
                   );
                 },
@@ -96,6 +100,28 @@ class FilterBasicBottomSheet extends StatelessWidget {
             style: Theme.of(context).textTheme.subtitle1,
           ),
           _buildBathNumSelector(),
+          Row(
+            children: [
+              BlocProvider(
+                create: (context) =>
+                    filter.onlyEmpty ? (EnableCubit()..click()) : EnableCubit(),
+                child: Builder(
+                  builder: (context) => BlocBuilder<EnableCubit, bool>(
+                    builder: (context, state) {
+                      return Checkbox(
+                        value: state,
+                        onChanged: (val) {
+                          filter = filter.copyWith(onlyEmpty: !state);
+                          BlocProvider.of<EnableCubit>(context).click();
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Text('Chỉ hiển thị nhà còn trống'),
+            ],
+          ),
           Spacer(),
           Align(
               alignment: Alignment.bottomCenter,

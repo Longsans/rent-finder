@@ -57,6 +57,10 @@ class HouseInfoSmallCard extends StatelessWidget {
                           }
                         },
                       );
+                    } else if (detailState.house.dangCapNhat) {
+                      Fluttertoast.showToast(
+                          msg:
+                              'Nhà đang được cập nhật, hãy thử lại sau một lát!');
                     } else {
                       if (state is RecentViewLoaded &&
                           authState is AuthenticationStateSuccess) {

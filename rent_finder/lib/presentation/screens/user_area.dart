@@ -248,8 +248,10 @@ class UserArea extends StatelessWidget {
             height: defaultPadding / 2,
           ),
           Text(
-            (state.user != null)
-                ? state.user.hoTen ?? "Chưa đặt tên"
+            (state.user.hoTen != null)
+                ? state.user.hoTen.isEmpty
+                    ? "Chưa đặt tên"
+                    : state.user.hoTen
                 : "Chưa đặt tên",
             style: Theme.of(context).textTheme.headline5,
           ),
