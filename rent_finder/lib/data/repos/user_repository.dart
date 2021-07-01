@@ -119,7 +119,6 @@ class UserRepository {
     return await _userProvider.getUserByEmail(email);
   }
 
-  //TODO: TEST _tryLinkAnonData method by updating the login functions
   /// Attempts linking **already signed in** anonymous account's data to the now-signing-in [authCredential].
   ///
   /// The [email] parameter is used to check for existing data already linked with [authCredential] before actually linking.
