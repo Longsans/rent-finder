@@ -574,7 +574,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       return;
                                     } else {
                                       var query =
-                                          '${_numController.text} ${_streetController.text}, ${phuongXa}, ${quanHuyen} Thành phố Hồ Chí Minh';
+                                          '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                                       try {
                                         var address = await Geocoder.local
                                             .findAddressesFromQuery(query);
@@ -1016,7 +1016,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                   color: (state == 3) ? Color(0xFF0D4880) : Colors.white,
                   onPressed: () {
                     bed = 4;
-                    var t = showDialog(
+                    showDialog(
                         context: context,
                         builder: (context) => Dialog(
                               child: Container(),
