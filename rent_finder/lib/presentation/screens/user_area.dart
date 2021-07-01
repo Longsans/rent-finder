@@ -9,8 +9,6 @@ import 'package:rent_finder_hi/presentation/screens/faq_screen.dart';
 import 'package:rent_finder_hi/presentation/widgets/Contact_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
 
-import 'package:rent_finder_hi/data/models/models.dart' as models;
-
 import '../../constants.dart';
 import '../../logic/bloc.dart';
 

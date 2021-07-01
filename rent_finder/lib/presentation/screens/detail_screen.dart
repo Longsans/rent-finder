@@ -213,7 +213,7 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/interior.svg',
           title: 'Nội thất',
         ),
-        if (house.coSoVatChat.mayGiat)
+      if (house.coSoVatChat.mayGiat)
         UtilityCard(
           svgSrc: 'assets/icons/washer.svg',
           title: 'Máy giặt',
@@ -223,7 +223,6 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/mezzanine.svg',
           title: 'Gác lửng',
         ),
- 
       if (house.coSoVatChat.baoVe)
         UtilityCard(
           svgSrc: 'assets/icons/guard.svg',
@@ -234,7 +233,7 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/pool.svg',
           title: 'Hồ bơi',
         ),
-        if (house.coSoVatChat.baiDauXe)
+      if (house.coSoVatChat.baiDauXe)
         UtilityCard(
           svgSrc: 'assets/icons/parking.svg',
           title: 'Bãi đậu xe',
@@ -470,22 +469,10 @@ class InfoOwner extends StatelessWidget {
   }
 
   void _makeCall(String number) async {
-    // if (await canLaunch('tel:$number')) {
-
-    // } else {
-    //   throw 'Không thể gọi $number';
-    // }
-    //TODO: Assess call launch
     await launch('tel:$number');
   }
 
   void _makeSms(String number) async {
-    // if (await canLaunch('sms:$number')) {
-
-    // } else {
-    //   throw 'Không thể nhắn tin cho số $number';
-    // }
-    //TODO: Assess SMS launch
     await launch('sms:$number');
   }
 }

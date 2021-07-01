@@ -169,7 +169,7 @@ class _EditHouseFormState extends State<EditHouseForm> {
                       }
 
                       var query =
-                          '${_numController.text} ${_streetController.text}, ${phuongXa}, ${quanHuyen} Thành phố Hồ Chí Minh';
+                          '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                       print(query);
                       try {
                         var address =
