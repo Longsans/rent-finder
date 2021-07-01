@@ -15,7 +15,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     Size size = MediaQuery.of(context).size;
     return Scaffold(

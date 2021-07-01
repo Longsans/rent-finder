@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as ggMap;
-import 'package:intl/intl.dart';
 import 'package:rent_finder_hi/data/models/models.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
@@ -169,7 +168,7 @@ class _EditHouseFormState extends State<EditHouseForm> {
                       }
 
                       var query =
-                          '${_numController.text} ${_streetController.text}, ${phuongXa}, ${quanHuyen} Thành phố Hồ Chí Minh';
+                          '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                       print(query);
                       try {
                         var address =

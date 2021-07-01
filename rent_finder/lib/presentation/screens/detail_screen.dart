@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -623,22 +622,10 @@ class InfoOwner extends StatelessWidget {
   }
 
   void _makeCall(String number) async {
-    // if (await canLaunch('tel:$number')) {
-
-    // } else {
-    //   throw 'Không thể gọi $number';
-    // }
-    //TODO: Assess call launch
     await launch('tel:$number');
   }
 
   void _makeSms(String number) async {
-    // if (await canLaunch('sms:$number')) {
-
-    // } else {
-    //   throw 'Không thể nhắn tin cho số $number';
-    // }
-    //TODO: Assess SMS launch
     await launch('sms:$number');
   }
 }

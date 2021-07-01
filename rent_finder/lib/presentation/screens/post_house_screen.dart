@@ -576,7 +576,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       return;
                                     } else {
                                       var query =
-                                          '${_numController.text} ${_streetController.text}, ${phuongXa}, ${quanHuyen} Thành phố Hồ Chí Minh';
+                                          '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                                       try {
                                         var address = await Geocoder.local
                                             .findAddressesFromQuery(query);
