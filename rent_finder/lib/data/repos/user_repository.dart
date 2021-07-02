@@ -36,7 +36,8 @@ class UserRepository {
     final GoogleSignInAccount googleSignInAccount =
         await _googleSignIn.signIn();
 
-    if (googleSignInAccount == null) return null;
+    if (googleSignInAccount == null)
+      throw Exception('Sign in process aborted.');
 
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;

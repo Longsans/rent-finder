@@ -328,7 +328,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                   if (state is ReportIssueSending) {
                     return SendReportIssueButton(
                       onPressed: null,
-                      color: textColor,
+                      color: Color(0xFF0D4880),
                       secondaryWidget: CircularProgressIndicator.adaptive(
                         value: null,
                         backgroundColor: Colors.white,
@@ -364,7 +364,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                             ReportIssueEvent(
                                 issueDescription: widget.controller.text));
                       },
-                      color: textColor,
+                      color: Color(0xFF0D4880),
                     );
                 },
               ),
