@@ -2,11 +2,15 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/logic/bloc.dart';
+import 'package:rent_finder_hi/presentation/widgets/report_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/save_button.dart';
 import 'package:rent_finder_hi/utils/format.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,7 +31,11 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          print('Báo cáo');
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ReportSheet(house1: house,);
+              });
         },
         child: Container(
           width: double.infinity,
@@ -263,8 +271,12 @@ class DetailScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
+<<<<<<< HEAD
                       child: Icon(Icons.king_bed_outlined,
                           size: 30, color: textColor),
+=======
+                      child: Icon(Icons.king_bed_outlined, size: 30, color: textColor),
+>>>>>>> b239d456d269db663b7d06f9a78cd3f2ee288189
                     ),
                     SizedBox(height: 5),
                     Text(
@@ -689,4 +701,5 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
     return true;
   }
+
 }
