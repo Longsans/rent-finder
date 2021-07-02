@@ -62,6 +62,7 @@ class _LoginFormState extends State<LoginForm> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
+                    duration: Duration(minutes: 1),
                     content: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[

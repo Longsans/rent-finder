@@ -8,7 +8,6 @@ import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/screens/faq_screen.dart';
 import 'package:rent_finder_hi/presentation/widgets/Contact_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
-import 'package:rent_finder_hi/constants.dart';
 
 import '../../constants.dart';
 import '../../logic/bloc.dart';
@@ -32,210 +31,237 @@ class UserArea extends StatelessWidget {
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-              builder: (context, state) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 20),
-                    (state is AuthenticationStateAuthenticated)
-                        ? buildHeaderSuccess(state, context)
-                        : HeaderUserFailure(),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    (state is AuthenticationStateAuthenticated)
-                        ? TitleCard(
-                            subtitle:
-                                'Quản lý các thông tin cá nhân dễ dàng hơn',
-                            title: 'Cá nhân',
-                            icon: Icon(
-                              Icons.account_circle_rounded,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    (state is AuthenticationStateAuthenticated)
-                        ? Container(
-                            padding: EdgeInsets.all(defaultPadding / 2),
-                            decoration: BoxDecoration(
-                              color: Color(0xffF2F5FA),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              children: [
-                                IconTextButton(
+            child: BlocListener<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                if (state is AuthenticationLoading) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(" Đang đăng xuất..."),
+                            CircularProgressIndicator(),
+                          ],
+                        ),
+                      ),
+                    );
+                } else {
+                  ScaffoldMessenger.of(context)..hideCurrentSnackBar();
+                }
+              },
+              child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                buildWhen: (cur, next) {
+                  return !(next is AuthenticationLoading);
+                },
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 20),
+                      (state is AuthenticationStateAuthenticated)
+                          ? buildHeaderSuccess(state, context)
+                          : HeaderUserFailure(),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      (state is AuthenticationStateAuthenticated)
+                          ? TitleCard(
+                              subtitle:
+                                  'Quản lý các thông tin cá nhân dễ dàng hơn',
+                              title: 'Cá nhân',
+                              icon: Icon(
+                                Icons.account_circle_rounded,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      (state is AuthenticationStateAuthenticated)
+                          ? Container(
+                              padding: EdgeInsets.all(defaultPadding / 2),
+                              decoration: BoxDecoration(
+                                color: Color(0xffF2F5FA),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: [
+                                  IconTextButton(
+                                      press: () {
+                                        Navigator.of(context)
+                                            .pushNamed('/my_houses');
+                                      },
+                                      title: 'Danh sách nhà đã đăng'),
+                                  Divider(
+                                    thickness: 1,
+                                  ),
+                                  IconTextButton(
                                     press: () {
-                                      Navigator.of(context)
-                                          .pushNamed('/my_houses');
+                                      BlocProvider.of<NavigationBarBloc>(
+                                              context)
+                                          .add(NavigationBarItemSelected(
+                                              index: 2));
                                     },
-                                    title: 'Danh sách nhà đã đăng'),
-                                Divider(
-                                  thickness: 1,
-                                ),
-                                IconTextButton(
-                                  press: () {
-                                    BlocProvider.of<NavigationBarBloc>(context)
-                                        .add(NavigationBarItemSelected(
-                                            index: 2));
-                                  },
-                                  title: 'Danh sách nhà đã lưu',
-                                )
-                              ],
-                            ),
-                          )
-                        : Container(),
-                    (state is AuthenticationStateAuthenticated)
-                        ? Container()
-                        : CustomButton(
-                            title: 'Đăng nhập',
-                            icon: Icon(
-                              Icons.login,
-                              color: Colors.white,
-                            ),
-                            press: () {
-                              Navigator.of(context)
-                                  .pushReplacementNamed('/login');
-                            },
-                          ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    TitleCard(
-                      subtitle: 'Gửi câu hỏi và phản hồi của bạn',
-                      title: 'Trợ giúp và Phản hồi',
-                      icon: Icon(
-                        Icons.mail_outline,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(defaultPadding / 2),
-                      decoration: BoxDecoration(
-                        color: Color(0xffF2F5FA),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          IconTextButton(
-                            title: 'FAQ ',
-                            press: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FAQPage()),
-                              );
-                            },
-                          ),
-                          Divider(
-                            thickness: 1,
-                          ),
-                          IconTextButton(
-                              title: 'Liên hệ',
+                                    title: 'Danh sách nhà đã lưu',
+                                  )
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      (state is AuthenticationStateAuthenticated)
+                          ? Container()
+                          : CustomButton(
+                              title: 'Đăng nhập',
+                              icon: Icon(
+                                Icons.login,
+                                color: Colors.white,
+                              ),
                               press: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AdvanceCustomAlert();
-                                    });
-                              }),
-                          Divider(
-                            thickness: 1,
-                          ),
-                          IconTextButton(
-                            title: 'Báo cáo lỗi ứng dụng',
-                            press: () async {
-                              final controller = TextEditingController();
-                              final result = await showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (buildContext) {
-                                  return ReportIssueBottomSheet(
-                                    controller: controller,
-                                  );
-                                },
-                              );
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/login');
+                              },
+                            ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      TitleCard(
+                        subtitle: 'Gửi câu hỏi và phản hồi của bạn',
+                        title: 'Trợ giúp và Phản hồi',
+                        icon: Icon(
+                          Icons.mail_outline,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(defaultPadding / 2),
+                        decoration: BoxDecoration(
+                          color: Color(0xffF2F5FA),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            IconTextButton(
+                              title: 'FAQ ',
+                              press: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FAQPage()),
+                                );
+                              },
+                            ),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            IconTextButton(
+                                title: 'Liên hệ',
+                                press: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AdvanceCustomAlert();
+                                      });
+                                }),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            IconTextButton(
+                              title: 'Báo cáo lỗi ứng dụng',
+                              press: () async {
+                                final controller = TextEditingController();
+                                final result = await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (buildContext) {
+                                    return ReportIssueBottomSheet(
+                                      controller: controller,
+                                    );
+                                  },
+                                );
 
-                              if (result is ReportIssueSuccess) {
-                                ScaffoldMessenger.of(context)
-                                  ..showSnackBar(
-                                    SnackBar(
-                                      content: Container(
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 8,
-                                              child: SizedBox(
-                                                child: Text(
-                                                  'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
+                                if (result is ReportIssueSuccess) {
+                                  ScaffoldMessenger.of(context)
+                                    ..showSnackBar(
+                                      SnackBar(
+                                        content: Container(
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 8,
+                                                child: SizedBox(
+                                                  child: Text(
+                                                    'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                              Spacer(),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Icon(Icons.check_circle,
+                                                    color: Colors.green),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                } else if (result is ReportIssueFail) {
+                                  ScaffoldMessenger.of(context)
+                                    ..showSnackBar(
+                                      SnackBar(
+                                        content: Row(
+                                          children: <Widget>[
+                                            Text(
+                                                'Đã có lỗi xảy ra: \'${result.errorDescription}\''),
                                             Spacer(),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Icon(Icons.check_circle,
-                                                  color: Colors.green),
-                                            ),
+                                            Icon(Icons.error,
+                                                color: Colors.red),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  );
-                              } else if (result is ReportIssueFail) {
-                                ScaffoldMessenger.of(context)
-                                  ..showSnackBar(
-                                    SnackBar(
-                                      content: Row(
-                                        children: <Widget>[
-                                          Text(
-                                              'Đã có lỗi xảy ra: \'${result.errorDescription}\''),
-                                          Spacer(),
-                                          Icon(Icons.error, color: Colors.red),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                              }
-                            },
-                          ),
-                        ],
+                                    );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    if (state is AuthenticationStateAuthenticated)
-                      CustomButton(
-                        title: 'Đăng xuất',
-                        icon: Icon(Icons.logout, color: Colors.white),
-                        press: () {
-                          showDialog<bool>(
-                            context: context,
-                            builder: (buildContext) {
-                              return ConfirmDialog(
-                                title:
-                                    'Bạn có muốn đăng xuất ra khỏi tài khoản?',
-                                confirmText: 'Đăng xuất',
-                              );
-                            },
-                          ).then((value) => {
-                                if (value != null && value)
-                                  BlocProvider.of<AuthenticationBloc>(context)
-                                      .add(AuthenticationEventLoggedOut())
-                              });
-                        },
-                      )
-                  ],
-                );
-              },
+                      SizedBox(height: 20),
+                      if (state is AuthenticationStateAuthenticated)
+                        CustomButton(
+                          title: 'Đăng xuất',
+                          icon: Icon(Icons.logout, color: Colors.white),
+                          press: () {
+                            showDialog<bool>(
+                              context: context,
+                              builder: (buildContext) {
+                                return ConfirmDialog(
+                                  title:
+                                      'Bạn có muốn đăng xuất ra khỏi tài khoản?',
+                                  confirmText: 'Đăng xuất',
+                                );
+                              },
+                            ).then((value) => {
+                                  if (value != null && value)
+                                    BlocProvider.of<AuthenticationBloc>(context)
+                                        .add(AuthenticationEventLoggedOut())
+                                });
+                          },
+                        )
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -318,24 +344,23 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 5,
-            color: Colors.black12,
-            spreadRadius: 5,
-          )
-        ],
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Padding(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 5,
+              color: Colors.black12,
+              spreadRadius: 5,
+            )
+          ],
+        ),
+        child: Wrap(
           children: <Widget>[
             DecoratedTextField(
               controller: widget.controller,
