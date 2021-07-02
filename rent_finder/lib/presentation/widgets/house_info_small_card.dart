@@ -37,7 +37,7 @@ class HouseInfoSmallCard extends StatelessWidget {
                         context: context,
                         builder: (_) => ConfirmDialog(
                           title:
-                              'Nhà này đã bị gỡ bạn có muốn xóa khỏi danh sách không ?',
+                              'Bài đăng này đã bị gỡ, bạn có muốn xóa khỏi danh sách không?',
                         ),
                       );
                       t.then(
@@ -52,11 +52,15 @@ class HouseInfoSmallCard extends StatelessWidget {
                                       house: house));
                               Fluttertoast.showToast(
                                   msg:
-                                      'Xóa khỏi danh sách đã xem gần đây thành công');
+                                      'Đã xóa khỏi danh sách xem gần đây');
                             }
                           }
                         },
                       );
+                    } else if (detailState.house.dangCapNhat) {
+                      Fluttertoast.showToast(
+                          msg:
+                              'Nhà đang được cập nhật, hãy thử lại sau một lát!');
                     } else {
                       if (state is RecentViewLoaded &&
                           authState is AuthenticationStateSuccess) {

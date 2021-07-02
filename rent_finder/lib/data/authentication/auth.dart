@@ -87,10 +87,4 @@ class Auth {
   Future<void> setLanguageVN() async {
     FirebaseAuth.instance.setLanguageCode('vi');
   }
-
-  StreamSubscription litenToAuthStateChanged(Function(Object) f) {
-    return FirebaseAuth.instance.authStateChanges().listen((event) {
-      f(event.uid);
-    });
-  }
 }

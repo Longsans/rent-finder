@@ -18,19 +18,25 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent authenticationEvent) async* {
     if (authenticationEvent is AuthenticationEventStarted) {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
+      if (_userRepository.isSignedIn()) {
         final user = await _userRepository.getCurrentUserData();
-        yield AuthenticationStateSuccess(user: user);
-      } else {
-        yield AuthenticationStateFailure();
+        if (user.banned) await _userRepository.signOut();
       }
+      if (!_userRepository.isSignedIn())
+        await _userRepository.signInAnonymously();
+      final user = await _userRepository.getCurrentUserData();
+
+      if (_userRepository.isAuthenticated())
+        yield AuthenticationStateAuthenticated(user: user);
+      else
+        yield AuthenticationStateSuccess(user: user);
     } else if (authenticationEvent is AuthenticationEventLoggedIn) {
-      yield AuthenticationStateSuccess(
+      yield AuthenticationStateAuthenticated(
           user: await _userRepository.getCurrentUserData());
     } else if (authenticationEvent is AuthenticationEventLoggedOut) {
-      _userRepository.signOut();
-      yield AuthenticationStateFailure();
+      await _userRepository.signOut();
+      yield AuthenticationStateSuccess(
+          user: await _userRepository.getCurrentUserData());
     }
   }
 }

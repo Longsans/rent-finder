@@ -14,6 +14,7 @@ void main() async {
       UserRepository(firebaseAuth: FirebaseAuth.instance);
   HouseRepository houseRepository = HouseRepository();
   AppRouter appRouter = new AppRouter();
+
   runApp(
     MultiBlocProvider(
       providers: [

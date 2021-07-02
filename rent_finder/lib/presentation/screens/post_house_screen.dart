@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as ggMap;
 import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
@@ -29,6 +31,8 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
   String phuongXa, quanHuyen;
   List<AssetEntity> images = <AssetEntity>[];
   TextEditingController _streetController = TextEditingController();
+  TextEditingController _bedController = TextEditingController();
+  TextEditingController _bathController = TextEditingController();
   TextEditingController _numController = TextEditingController();
   TextEditingController _moneyController = TextEditingController();
   TextEditingController _areaController = TextEditingController();
@@ -79,41 +83,50 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
               if (state.isFailure) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Đăng tin thất bại'),
-                        Icon(Icons.error),
-                      ],
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Đăng tin thất bại'),
+                          Icon(Icons.error),
+                        ],
+                      ),
                     ),
-                  ));
+                  );
               } else if (state.isSuccess) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Tin của bạn đã được đăng thành công'),
-                        Icon(Icons.verified),
-                      ],
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Tin của bạn đã được đăng thành công'),
+                          Icon(
+                            Icons.verified,
+                            color: Colors.green,
+                          )
+                        ],
+                      ),
                     ),
-                  ));
+                  );
                 Navigator.of(context).pop();
               } else if (state.isSubmitting) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    duration: Duration(seconds: 10),
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Đang đăng tải...'),
-                        CircularProgressIndicator(),
-                      ],
+                  ..showSnackBar(
+                    SnackBar(
+                      duration: Duration(minutes: 10),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Đang đăng tải...'),
+                          CircularProgressIndicator(),
+                        ],
+                      ),
                     ),
-                  ));
+                  );
               }
             },
             child: SafeArea(
@@ -179,55 +192,174 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('Loại cho thuê'),
-                                      _buildCategorySelector(),
-                                      Text('Số phòng ngủ'),
-                                      _buildBedNumSelector(),
-                                      Text('Số phòng tắm'),
-                                      _buildBathNumSelector(),
-                                      BlocBuilder<PostFormBloc, PostFormState>(
-                                        builder: (context, state) {
-                                          return TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: _moneyController,
-                                            onChanged: (value) {
-                                              BlocProvider.of<PostFormBloc>(
-                                                      context)
-                                                  .add(MoneyChanged(
-                                                      money: value));
-                                            },
-                                            decoration: InputDecoration(
-                                                errorText: state.isMoneyValid
-                                                    ? null
-                                                    : 'Số tiền không hợp lệ',
-                                                labelText:
-                                                    'Số tiền thuê tháng(VNĐ)',
-                                                hintText: '100000'),
-                                          );
-                                        },
+                                      Text(
+                                        'Loại cho thuê',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
                                       ),
+                                      _buildCategorySelector(),
                                       SizedBox(
                                         height: defaultPadding,
                                       ),
-                                      BlocBuilder<PostFormBloc, PostFormState>(
-                                        builder: (context, state) {
-                                          return TextFormField(
-                                            controller: _areaController,
-                                            onChanged: (value) {
-                                              BlocProvider.of<PostFormBloc>(
-                                                      context)
-                                                  .add(
-                                                      AreaChanged(area: value));
-                                            },
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                                labelText: 'Diện tích (m2)',
-                                                errorText: state.isAreaValid
-                                                    ? null
-                                                    : 'Diện tích không hợp lệ',
-                                                hintText: '100'),
-                                          );
-                                        },
+                                      Text(
+                                        'Số phòng ngủ',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      _buildBedNumSelector(),
+                                      SizedBox(
+                                        height: defaultPadding,
+                                      ),
+                                      Text(
+                                        'Số phòng tắm',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      _buildBathNumSelector(),
+                                      SizedBox(
+                                        height: defaultPadding,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 2,
+                                            child: BlocBuilder<PostFormBloc,
+                                                PostFormState>(
+                                              builder: (context, state) {
+                                                return TextFormField(
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  controller: _areaController,
+                                                  onChanged: (value) {
+                                                    BlocProvider.of<
+                                                                PostFormBloc>(
+                                                            context)
+                                                        .add(AreaChanged(
+                                                            area: value));
+                                                  },
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  decoration: InputDecoration(
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color:
+                                                                    Colors.red),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color: Colors
+                                                                    .black54),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color:
+                                                                    textColor),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              left: 20.0,
+                                                              right: 10.0),
+                                                      labelText:
+                                                          'Diện tích (m2)',
+                                                      errorText:
+                                                          state.isAreaValid
+                                                              ? null
+                                                              : 'Không hợp lệ',
+                                                      hintText: '100'),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: defaultPadding,
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: BlocBuilder<PostFormBloc,
+                                                PostFormState>(
+                                              builder: (context, state) {
+                                                return TextFormField(
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller: _moneyController,
+                                                  onChanged: (value) {
+                                                    BlocProvider.of<
+                                                                PostFormBloc>(
+                                                            context)
+                                                        .add(MoneyChanged(
+                                                            money: value));
+                                                  },
+                                                  decoration: InputDecoration(
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color:
+                                                                    Colors.red),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color: Colors
+                                                                    .black54),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color:
+                                                                    textColor),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              left: 20.0,
+                                                              right: 10.0),
+                                                      errorText:
+                                                          state.isMoneyValid
+                                                              ? null
+                                                              : 'Không hợp lệ',
+                                                      labelText:
+                                                          'Tiền thuê tháng(VNĐ)',
+                                                      hintText: '100000'),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -335,7 +467,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       SizedBox(
                                         height: 30,
                                       ),
-                                      Text('Cơ sở vật chất'),
+                                      Text('Cơ sở vật chất', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,),),
                                       SizedBox(
                                         height: defaultPadding,
                                       ),
@@ -444,21 +576,30 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       }
                                       return;
                                     } else {
+                                      try {
+                                        var location = await locationFromAddress(
+                                            '${_numController.text} ${_streetController.text}');
+                                      } catch (e) {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
+                                        return;
+                                      }
                                       var query =
-                                          '${_numController.text} ${_streetController.text}, ${phuongXa}, ${quanHuyen} Thành phố Hồ Chí Minh';
+                                          '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                                       try {
                                         var address = await Geocoder.local
                                             .findAddressesFromQuery(query);
-                                        // print(address.first.addressLine
-                                        //     .split(',')
-                                        //     .length);
-                                        // print(address.first.addressLine);
-                                        // print(address.first.adminArea);
-                                        // print(address.first.subAdminArea);
-                                        // print(address.first.thoroughfare);
-                                        // print(address.first.subThoroughfare);
-                                        // print(address.first.locality);
-                                        // print(address.first.subLocality);
+                                        print(address.first.addressLine
+                                            .split(',')
+                                            .length);
+                                        print(address.first.addressLine);
+                                        print(address.first.adminArea);
+                                        print(address.first.subAdminArea);
+                                        print(address.first.thoroughfare);
+                                        print(address.first.subThoroughfare);
+                                        print(address.first.locality);
+                                        print(address.first.subLocality);
                                         var splitAddress = address
                                             .first.addressLine
                                             .split(',');
@@ -527,9 +668,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       );
                                       t.then(
                                         (value) {
-                                          print(value);
                                           if (value != null) {
-                                            print(value);
                                             if (value) {
                                               model.House house = model.House();
                                               house.toaDo = toaDo;
@@ -586,10 +725,10 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
 
   GridView _buildUtilitiesList() {
     return GridView.count(
-      crossAxisSpacing: defaultPadding,
+      crossAxisSpacing: defaultPadding / 2,
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
-      mainAxisSpacing: defaultPadding,
+      mainAxisSpacing: defaultPadding / 2,
       childAspectRatio: 1,
       shrinkWrap: true,
       children: [
@@ -693,85 +832,147 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
             Builder(
               builder: (context) => BlocBuilder<DistrictCubit, String>(
                 builder: (context, district) {
-                  return DropdownButton(
-                    value: district,
-                    onChanged: (value) {
-                      BlocProvider.of<DistrictCubit>(context)
-                          .selectedChange(value);
-                      quanHuyen = value;
-                      BlocProvider.of<CommuneCubit>(context)
-                          .selectedChange(null);
-                      phuongXa = null;
-                    },
-                    items: districts
-                        .map((e) => DropdownMenuItem(
-                            value: e.name, child: Text(e.name)))
-                        .toList(),
-                    hint: Text('Chọn quận/huyện'),
-                    isExpanded: true,
+                  return Container(
+                    padding: EdgeInsets.only(left: 20.0, right: 10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black54),
+                    ),
+                    child: DropdownButton(
+                      underline: Container(),
+                      value: district,
+                      onChanged: (value) {
+                        BlocProvider.of<DistrictCubit>(context)
+                            .selectedChange(value);
+                        quanHuyen = value;
+                        BlocProvider.of<CommuneCubit>(context)
+                            .selectedChange(null);
+                        phuongXa = null;
+                      },
+                      items: districts
+                          .map((e) => DropdownMenuItem(
+                              value: e.name, child: Text(e.name)))
+                          .toList(),
+                      hint: Text('Chọn quận/huyện'),
+                      isExpanded: true,
+                    ),
                   );
                 },
               ),
+            ),
+            SizedBox(
+              height: defaultPadding,
             ),
             Builder(
               builder: (context) => BlocBuilder<CommuneCubit, String>(
                 builder: (context, state) {
                   return BlocBuilder<DistrictCubit, String>(
                     builder: (context, district) {
-                      return DropdownButton(
-                        value: state,
-                        onChanged: (value) {
-                          phuongXa = value;
-                          BlocProvider.of<CommuneCubit>(context)
-                              .selectedChange(value);
-                        },
-                        items: district != null
-                            ? districts
-                                .where((e) => e.name == district)
-                                .first
-                                .commune
-                                .map((e) =>
-                                    DropdownMenuItem(value: e, child: Text(e)))
-                                .toList()
-                            : [],
-                        hint: Text('Chọn xã/phường'),
-                        isExpanded: true,
+                      return Container(
+                        padding: EdgeInsets.only(left: 20.0, right: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black54),
+                        ),
+                        child: DropdownButton(
+                          underline: Container(),
+                          value: state,
+                          onChanged: (value) {
+                            phuongXa = value;
+                            BlocProvider.of<CommuneCubit>(context)
+                                .selectedChange(value);
+                          },
+                          items: district != null
+                              ? districts
+                                  .where((e) => e.name == district)
+                                  .first
+                                  .commune
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e)))
+                                  .toList()
+                              : [],
+                          hint: Text('Chọn xã/phường'),
+                          isExpanded: true,
+                        ),
                       );
                     },
                   );
                 },
               ),
             ),
-            BlocBuilder<PostFormBloc, PostFormState>(
-              builder: (context, state) {
-                return TextFormField(
-                  controller: _streetController,
-                  onChanged: (value) {
-                    BlocProvider.of<PostFormBloc>(context)
-                        .add(StreetChanged(street: value));
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Tên đường',
-                      errorText:
-                          state.isStreetValid ? '' : "Không được để trống",
-                      hintText: 'Nguyễn Bỉnh Khiêm'),
-                );
-              },
+            SizedBox(
+              height: defaultPadding,
             ),
-            BlocBuilder<PostFormBloc, PostFormState>(
-              builder: (context, state) {
-                return TextFormField(
-                  controller: _numController,
-                  onChanged: (value) {
-                    BlocProvider.of<PostFormBloc>(context)
-                        .add(NumChanged(num: value));
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Số nhà',
-                      errorText: state.isNumValid ? '' : "Không được để trống",
-                      hintText: '5'),
-                );
-              },
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: BlocBuilder<PostFormBloc, PostFormState>(
+                    builder: (context, state) {
+                      return TextFormField(
+                        controller: _numController,
+                        onChanged: (value) {
+                          BlocProvider.of<PostFormBloc>(context)
+                              .add(NumChanged(num: value));
+                        },
+                        decoration: InputDecoration(
+                            errorBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: textColor),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            contentPadding:
+                                EdgeInsets.only(left: 20.0, right: 10.0),
+                            labelText: 'Số nhà',
+                            errorText: state.isNumValid ? '' : "Nhập đầy đủ",
+                            hintText: '5'),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: defaultPadding,
+                ),
+                Expanded(
+                  flex: 3,
+                  child: BlocBuilder<PostFormBloc, PostFormState>(
+                    builder: (context, state) {
+                      return TextFormField(
+                        controller: _streetController,
+                        onChanged: (value) {
+                          BlocProvider.of<PostFormBloc>(context)
+                              .add(StreetChanged(street: value));
+                        },
+                        decoration: InputDecoration(
+                            errorBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: textColor),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            contentPadding:
+                                EdgeInsets.only(left: 20.0, right: 10.0),
+                            labelText: 'Tên đường',
+                            errorText: state.isStreetValid ? '' : "Nhập đầy đủ",
+                            hintText: 'Nguyễn Bỉnh Khiêm'),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -785,7 +986,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
@@ -826,8 +1027,97 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                 MaterialButton(
                   color: (state == 3) ? Color(0xFF0D4880) : Colors.white,
                   onPressed: () {
-                    bed = 4;
-                    BlocProvider.of<RadioCubit>(context).click(3);
+                    if (state != 3) _bedController.text = '4';
+                    var t = showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                              child: Container(
+                                height: 100,
+                                padding: EdgeInsets.all(defaultPadding),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                        controller: _bedController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Số phòng ngủ',
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.red),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.black54),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: textColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 20.0, right: 10.0),
+                                            // errorText:
+                                            //     state.isNumValid ? '' : "Không được để trống",
+                                            hintText: '2'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: defaultPadding,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: MaterialButton(
+                                        child: Text('Đồng ý',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: Color(0xFF0D4880),
+                                        onPressed: () {
+                                          if (_bedController.text == "" ||
+                                              _bedController.text == null) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng ngủ');
+                                            return;
+                                          }
+                                          if (int.parse(_bedController.text) <
+                                              4) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng ngủ lớn hơn 3');
+                                            return;
+                                          }
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ));
+                    t.then(
+                      (value) {
+                        if (value != null) {
+                          if (value) {
+                            bed = int.parse(_bedController.text);
+                            BlocProvider.of<RadioCubit>(context).click(3);
+                          }
+                        } else
+                          _bedController.text = bed.toString();
+                      },
+                    );
                   },
                   child: Text(
                     '4+',
@@ -849,7 +1139,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
@@ -890,8 +1180,98 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                 MaterialButton(
                   color: (state == 3) ? Color(0xFF0D4880) : Colors.white,
                   onPressed: () {
-                    bath = 4;
-                    BlocProvider.of<RadioCubit>(context).click(3);
+                    if (state != 3) _bathController.text = '4';
+                    var t = showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                              child: Container(
+                                height: 100,
+                                padding: EdgeInsets.all(defaultPadding),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                        controller: _bathController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Số phòng tắm',
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.red),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.black54),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: textColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 20.0, right: 10.0),
+                                            // errorText:
+                                            //     state.isNumValid ? '' : "Không được để trống",
+                                            hintText: '2'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: defaultPadding,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: MaterialButton(
+                                        child: Text('Đồng ý',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: Color(0xFF0D4880),
+                                        onPressed: () {
+                                          if (_bathController.text == "" ||
+                                              _bathController.text == null) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng tắm');
+                                            return;
+                                          }
+                                          if (int.parse(_bathController.text) <
+                                              4) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Vui lòng nhập số phòng tắm lớn hơn 3');
+                                            return;
+                                          }
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ));
+                    t.then(
+                      (value) {
+                        if (value != null) {
+                          if (value) {
+                            bath = int.parse(_bathController.text);
+                            BlocProvider.of<RadioCubit>(context).click(3);
+                          }
+                        } else
+                          _bathController.text = bath.toString();
+                      },
+                    );
+                    print(bath);
                   },
                   child: Text(
                     '4+',
@@ -1004,7 +1384,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
             BlocProvider.of<EnableCubit>(context).click();
           },
           child: Container(
-            padding: EdgeInsets.all(defaultPadding / 2),
+            
             decoration: BoxDecoration(
                 color: state ? Colors.white : Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
@@ -1032,6 +1412,18 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _areaController.dispose();
+    _describeController.dispose();
+    _moneyController.dispose();
+    _numController.dispose();
+    _streetController.dispose();
+    _bedController.dispose();
+    _bathController.dispose();
+    super.dispose();
   }
 }
 

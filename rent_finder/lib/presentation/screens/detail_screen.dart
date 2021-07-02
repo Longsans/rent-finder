@@ -2,11 +2,15 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/logic/bloc.dart';
+import 'package:rent_finder_hi/presentation/widgets/report_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/save_button.dart';
 import 'package:rent_finder_hi/utils/format.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,6 +29,42 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ReportSheet(
+                  house1: house,
+                );
+              });
+        },
+        child: Container(
+          color: Colors.white,
+          width: double.infinity,
+          padding: EdgeInsets.all(defaultPadding),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.flag,
+                size: 30,
+                color: textColor,
+              ),
+              SizedBox(
+                width: defaultPadding,
+              ),
+              Text(
+                'Báo cáo vi phạm',
+                style: TextStyle(
+                    color: textColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
           child: Stack(
         children: [
@@ -89,6 +129,37 @@ class DetailScreen extends StatelessWidget {
           SizedBox(
             height: defaultPadding * 1.5,
           ),
+          Container(
+            child: Row(
+              children: [
+                Icon(
+                    house.tinhTrang == model.TinhTrangChoThue.ConTrong
+                        ? Icons.verified
+                        : house.tinhTrang == model.TinhTrangChoThue.DaThue
+                            ? Icons.info
+                            : Icons.build_circle_rounded,
+                    color: primaryColor,
+                    size: 30),
+                SizedBox(
+                  width: defaultPadding,
+                ),
+                Text(
+                  house.tinhTrang == model.TinhTrangChoThue.ConTrong
+                      ? 'Còn trống'
+                      : house.tinhTrang == model.TinhTrangChoThue.DaThue
+                          ? 'Đã thuê'
+                          : 'Bảo trì',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: textColor),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: defaultPadding * 0.5,
+          ),
           Row(
             children: [
               Icon(Icons.location_on, color: Color(0xFF0D4880), size: 30),
@@ -140,6 +211,100 @@ class DetailScreen extends StatelessWidget {
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
+            ),
+          ),
+          SizedBox(
+            height: defaultPadding * 1.5,
+          ),
+          Container(
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey[100],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child:
+                          Icon(Icons.house_siding, size: 30, color: textColor),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '${house.dienTich.toStringAsFixed(0)} m2',
+                      style: TextStyle(
+                          color: textColor, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child: Icon(Icons.category, size: 30, color: textColor),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      house.loaiChoThue == model.LoaiChoThue.CanHo
+                          ? 'Căn hộ'
+                          : house.loaiChoThue == model.LoaiChoThue.Nha
+                              ? 'Nhà'
+                              : 'Phòng',
+                      style: TextStyle(
+                          color: textColor, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child: Icon(Icons.king_bed_outlined,
+                          size: 30, color: textColor),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '${house.soPhongNgu}',
+                      style: TextStyle(
+                          color: textColor, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(defaultPadding * 0.5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      child: Icon(Icons.bathtub_outlined,
+                          size: 30, color: textColor),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '${house.soPhongTam}',
+                      style: TextStyle(
+                          color: textColor, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           SizedBox(
@@ -213,7 +378,7 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/interior.svg',
           title: 'Nội thất',
         ),
-        if (house.coSoVatChat.mayGiat)
+      if (house.coSoVatChat.mayGiat)
         UtilityCard(
           svgSrc: 'assets/icons/washer.svg',
           title: 'Máy giặt',
@@ -223,7 +388,6 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/mezzanine.svg',
           title: 'Gác lửng',
         ),
- 
       if (house.coSoVatChat.baoVe)
         UtilityCard(
           svgSrc: 'assets/icons/guard.svg',
@@ -234,7 +398,7 @@ class DetailScreen extends StatelessWidget {
           svgSrc: 'assets/icons/pool.svg',
           title: 'Hồ bơi',
         ),
-        if (house.coSoVatChat.baiDauXe)
+      if (house.coSoVatChat.baiDauXe)
         UtilityCard(
           svgSrc: 'assets/icons/parking.svg',
           title: 'Bãi đậu xe',
@@ -375,7 +539,7 @@ class InfoOwner extends StatelessWidget {
           width: defaultPadding,
         ),
         Container(
-          width: 150,
+          width: 130,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -431,7 +595,7 @@ class InfoOwner extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: defaultPadding,
+          width: defaultPadding / 2,
         ),
         CircleAvatar(
           backgroundColor: Color(0xffEEEEEE),
@@ -470,22 +634,10 @@ class InfoOwner extends StatelessWidget {
   }
 
   void _makeCall(String number) async {
-    // if (await canLaunch('tel:$number')) {
-
-    // } else {
-    //   throw 'Không thể gọi $number';
-    // }
-    //TODO: Assess call launch
     await launch('tel:$number');
   }
 
   void _makeSms(String number) async {
-    // if (await canLaunch('sms:$number')) {
-
-    // } else {
-    //   throw 'Không thể nhắn tin cho số $number';
-    // }
-    //TODO: Assess SMS launch
     await launch('sms:$number');
   }
 }

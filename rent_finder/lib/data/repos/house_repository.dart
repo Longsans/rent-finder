@@ -1,85 +1,93 @@
 import 'dart:io';
 
 import 'package:rent_finder_hi/data/data_providers/data_providers.dart';
-import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/data/models/models.dart';
 
 class HouseRepository {
-  final HouseFireStoreApi houseFireStoreApi = HouseFireStoreApi();
-  final UserFireStoreApi userFireStoreApi = UserFireStoreApi();
-  Future<void> createHouse(model.House house, List<File> housePictures) async {
-    house.setUid(houseFireStoreApi.createHouseDocument());
+  Future<void> createHouse(House house, List<File> housePictures) async {
+    house.setUid(_houseFireStoreApi.createHouseDocument());
     house.urlHinhAnh =
         await uploadHousePicsAndGetDownloadUrls(house, housePictures);
-    await houseFireStoreApi.setHouseData(house);
+    await _houseFireStoreApi.setHouseData(house);
   }
 
   Future<List<String>> uploadHousePicsAndGetDownloadUrls(
-      model.House house, List<File> files) async {
+      House house, List<File> files) async {
     List<String> urlHinhAnh = [];
+    if (house.urlHinhAnh != null) {
+      urlHinhAnh = house.urlHinhAnh;
+    }
     for (int i = 0; i < files.length; i++) {
-      String url = await houseFireStoreApi.uploadHousePicAndGetDownloadUrl(
+      String url = await _houseFireStoreApi.uploadHousePicAndGetDownloadUrl(
           house: house, file: files[i]);
       urlHinhAnh.add(url);
     }
     return urlHinhAnh;
   }
 
-  Future<model.House> getHouseByUid(String uid) async {
-    final house = await houseFireStoreApi.getHouseByUID(uid);
+  Future<House> getHouseByUid(String uid) async {
+    final house = await _houseFireStoreApi.getHouseByUID(uid);
     if (house != null) {
-      final chuNha = await userFireStoreApi.getUserByUID(house.chuNha.uid);
+      final chuNha = await _userFireStoreApi.getUserByUID(house.chuNha.uid);
       house.setSensitiveInfo(house.daGO, chuNha);
     }
     return house;
   }
 
-  Stream<List<model.House>> housesByLocation(
-      String quanHuyen, String phuongXa) {
-    return houseFireStoreApi.housesByLocation(quanHuyen, phuongXa);
+  Stream<List<House>> housesByLocation(String quanHuyen, String phuongXa) {
+    return _houseFireStoreApi.housesByLocation(quanHuyen, phuongXa);
   }
 
-  Future<List<model.House>> getHousesByLocation(
+  Future<List<House>> getHousesByLocation(
       String quanHuyen, String phuongXa) async {
-    return await houseFireStoreApi.getHousesByLocation(quanHuyen, phuongXa);
+    return await _houseFireStoreApi.getHousesByLocation(quanHuyen, phuongXa);
   }
 
-  Stream<List<model.House>> myHouses(String uuid) {
-    return houseFireStoreApi.myHouses(uuid);
+  Stream<List<House>> myHouses(String uuid) {
+    return _houseFireStoreApi.myHouses(uuid);
   }
 
-  Stream<List<model.House>> newestHouses() {
-    return houseFireStoreApi.newestHouses();
+  Stream<List<House>> newestHouses() {
+    return _houseFireStoreApi.newestHouses();
   }
 
-  Stream<List<model.House>> savedHouses(String userUid) {
-    return houseFireStoreApi.savedHouses(userUid);
+  Stream<List<House>> savedHouses(String userUid) {
+    return _houseFireStoreApi.savedHouses(userUid);
   }
 
-  Stream<List<model.House>> viewedHouses(String userUid) {
-    return houseFireStoreApi.lastViewedHouses(userUid);
+  Stream<List<House>> viewedHouses(String userUid) {
+    return _houseFireStoreApi.lastViewedHouses(userUid);
   }
 
-  Future<void> addHouseToUserSavedHouses(
-      String userUid, model.House house) async {
-    await houseFireStoreApi.addHouseToUserSavedHouses(userUid, house);
+  Future<void> addHouseToUserSavedHouses(String userUid, House house) async {
+    await _houseFireStoreApi.addHouseToUserSavedHouses(userUid, house);
   }
 
   Future<void> removeHouseFromUserSavedHouses(
       String userUid, String houseUid) async {
-    await houseFireStoreApi.removeHouseFromUserSavedHouses(userUid, houseUid);
+    await _houseFireStoreApi.removeHouseFromUserSavedHouses(userUid, houseUid);
   }
 
-  Future<void> addHouseToUserViewedHouses(
-      String userUid, model.House house) async {
-    await houseFireStoreApi.addHouseToUserViewedHouses(userUid, house);
+  Future<void> addHouseToUserViewedHouses(String userUid, House house) async {
+    await _houseFireStoreApi.addHouseToUserViewedHouses(userUid, house);
   }
 
   Future<void> removeHouseFromUserViewHouses(
       String userUid, String houseUid) async {
-    await houseFireStoreApi.removeHouseFromUserViewHouses(userUid, houseUid);
+    await _houseFireStoreApi.removeHouseFromUserViewHouses(userUid, houseUid);
+  }
+
+  Future<void> updateHouse(House updatedHouse, List<File> housePictures) async {
+    updatedHouse.urlHinhAnh =
+        await uploadHousePicsAndGetDownloadUrls(updatedHouse, housePictures);
+
+    await _houseFireStoreApi.updateHouse(updatedHouse: updatedHouse);
   }
 
   Future<void> setHouseRemoved(String uid) async {
-    await houseFireStoreApi.setHouseRemoved(uid);
+    await _houseFireStoreApi.setHouseRemoved(uid);
   }
+
+  final HouseFireStoreApi _houseFireStoreApi = HouseFireStoreApi();
+  final UserFireStoreApi _userFireStoreApi = UserFireStoreApi();
 }

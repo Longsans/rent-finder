@@ -167,9 +167,29 @@ class FilterEnhanceScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle1,
             ),
             _buildBathNumSelector(),
-            SizedBox(
-              height: defaultPadding,
-            ),
+
+            Row(
+            children: [
+              BlocProvider(
+                create: (context) =>
+                    filter.onlyEmpty ? (EnableCubit()..click()) : EnableCubit(),
+                child: Builder(
+                  builder: (context) => BlocBuilder<EnableCubit, bool>(
+                    builder: (context, state) {
+                      return Checkbox(
+                        value: state,
+                        onChanged: (val) {
+                          filter = filter.copyWith(onlyEmpty: !state);
+                          BlocProvider.of<EnableCubit>(context).click();
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Text('Chỉ hiển thị nhà còn trống'),
+            ],
+          ),
             Text(
               'Cơ sở vật chất',
               style: Theme.of(context).textTheme.headline5,
@@ -198,7 +218,7 @@ class FilterEnhanceScreen extends StatelessWidget {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
@@ -268,7 +288,7 @@ class FilterEnhanceScreen extends StatelessWidget {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,

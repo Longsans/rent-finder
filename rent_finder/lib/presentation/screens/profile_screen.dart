@@ -161,7 +161,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       context)
                                                   .removeImage();
                                             },
-                                            child: CircleAvatar(backgroundColor: Colors.black12, child: Icon(Icons.close, color: Colors.white))),
+                                            child: CircleAvatar(
+                                                backgroundColor: Colors.black12,
+                                                child: Icon(Icons.close,
+                                                    color: Colors.white))),
                                       )
                                     ],
                                   );
@@ -260,6 +263,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 }
 

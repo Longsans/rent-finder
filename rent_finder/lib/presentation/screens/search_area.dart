@@ -27,7 +27,7 @@ class SearchArea extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SearchBar(
-                      hintText: "Tìm theo khu vực hoặc địa chỉ",
+                      hintText: "Tìm theo khu vực",
                       press: () {
                         var t = showModalBottomSheet<List<String>>(
                             context: context,

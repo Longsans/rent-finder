@@ -8,8 +8,7 @@ import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/screens/faq_screen.dart';
 import 'package:rent_finder_hi/presentation/widgets/Contact_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
-
-import 'package:rent_finder_hi/data/models/models.dart' as models;
+import 'package:rent_finder_hi/constants.dart';
 
 import '../../constants.dart';
 import '../../logic/bloc.dart';
@@ -39,13 +38,13 @@ class UserArea extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(height: 20),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? buildHeaderSuccess(state, context)
                         : HeaderUserFailure(),
                     SizedBox(
                       height: 20.0,
                     ),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? TitleCard(
                             subtitle:
                                 'Quản lý các thông tin cá nhân dễ dàng hơn',
@@ -59,7 +58,7 @@ class UserArea extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? Container(
                             padding: EdgeInsets.all(defaultPadding / 2),
                             decoration: BoxDecoration(
@@ -89,7 +88,7 @@ class UserArea extends StatelessWidget {
                             ),
                           )
                         : Container(),
-                    (state is AuthenticationStateSuccess)
+                    (state is AuthenticationStateAuthenticated)
                         ? Container()
                         : CustomButton(
                             title: 'Đăng nhập',
@@ -167,14 +166,28 @@ class UserArea extends StatelessWidget {
                                 ScaffoldMessenger.of(context)
                                   ..showSnackBar(
                                     SnackBar(
-                                      content: Row(
-                                        children: [
-                                          Text(
-                                              'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!'),
-                                          Spacer(),
-                                          Icon(Icons.check_circle,
-                                              color: Colors.green),
-                                        ],
+                                      content: Container(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: SizedBox(
+                                                child: Text(
+                                                  'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Icon(Icons.check_circle,
+                                                  color: Colors.green),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
@@ -199,13 +212,25 @@ class UserArea extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    if (state is AuthenticationStateSuccess == true)
+                    if (state is AuthenticationStateAuthenticated)
                       CustomButton(
                         title: 'Đăng xuất',
                         icon: Icon(Icons.logout, color: Colors.white),
                         press: () {
-                          BlocProvider.of<AuthenticationBloc>(context)
-                              .add(AuthenticationEventLoggedOut());
+                          showDialog<bool>(
+                            context: context,
+                            builder: (buildContext) {
+                              return ConfirmDialog(
+                                title:
+                                    'Bạn có muốn đăng xuất ra khỏi tài khoản?',
+                                confirmText: 'Đăng xuất',
+                              );
+                            },
+                          ).then((value) => {
+                                if (value != null && value)
+                                  BlocProvider.of<AuthenticationBloc>(context)
+                                      .add(AuthenticationEventLoggedOut())
+                              });
                         },
                       )
                   ],
@@ -219,7 +244,7 @@ class UserArea extends StatelessWidget {
   }
 
   Container buildHeaderSuccess(
-      AuthenticationStateSuccess state, BuildContext context) {
+      AuthenticationStateAuthenticated state, BuildContext context) {
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -248,8 +273,10 @@ class UserArea extends StatelessWidget {
             height: defaultPadding / 2,
           ),
           Text(
-            (state.user != null)
-                ? state.user.hoTen ?? "Chưa đặt tên"
+            (state.user.hoTen != null)
+                ? state.user.hoTen.isEmpty
+                    ? "Chưa đặt tên"
+                    : state.user.hoTen
                 : "Chưa đặt tên",
             style: Theme.of(context).textTheme.headline5,
           ),
@@ -327,7 +354,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                   if (state is ReportIssueSending) {
                     return SendReportIssueButton(
                       onPressed: null,
-                      color: Colors.blue[600],
+                      color: Color(0xFF0D4880),
                       secondaryWidget: CircularProgressIndicator.adaptive(
                         value: null,
                         backgroundColor: Colors.white,
@@ -363,7 +390,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                             ReportIssueEvent(
                                 issueDescription: widget.controller.text));
                       },
-                      color: Colors.blue,
+                      color: Color(0xFF0D4880),
                     );
                 },
               ),
