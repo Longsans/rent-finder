@@ -34,7 +34,9 @@ class DetailScreen extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return ReportSheet(house1: house,);
+                return ReportSheet(
+                  house1: house,
+                );
               });
         },
         child: Container(
@@ -271,12 +273,8 @@ class DetailScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
-<<<<<<< HEAD
                       child: Icon(Icons.king_bed_outlined,
                           size: 30, color: textColor),
-=======
-                      child: Icon(Icons.king_bed_outlined, size: 30, color: textColor),
->>>>>>> b239d456d269db663b7d06f9a78cd3f2ee288189
                     ),
                     SizedBox(height: 5),
                     Text(
@@ -701,5 +699,4 @@ class DetailSliverDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
     return true;
   }
-
 }
