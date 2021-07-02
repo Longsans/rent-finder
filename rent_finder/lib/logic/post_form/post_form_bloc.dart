@@ -69,8 +69,6 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       model.House house, List<File> files) async* {
     yield PostFormState.loading();
     try {
-      //TODO: implement geolocation validation on address
-      // house.toaDo = LatLng(10.7853985, 106.7066477);
       await houseRepository.createHouse(house, files);
 
       yield PostFormState.success();

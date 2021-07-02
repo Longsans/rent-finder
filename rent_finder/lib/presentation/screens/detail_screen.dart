@@ -263,7 +263,8 @@ class DetailScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
-                      child: Icon(Icons.bed, size: 30, color: textColor),
+                      child: Icon(Icons.king_bed_outlined,
+                          size: 30, color: textColor),
                     ),
                     SizedBox(height: 5),
                     Text(

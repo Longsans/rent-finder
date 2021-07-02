@@ -199,7 +199,6 @@ class HouseFireStoreApi {
 
   // Update methods
 
-  //TODO: TEST updateHouse method
   /// Updates the house with UID of [updatedHouse] with the data in [updatedHouse]
   Future<void> updateHouse({@required House updatedHouse}) async {
     final updatedHouseMap = updatedHouse.toJson();
