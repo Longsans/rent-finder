@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as ggMap;
 import 'package:rent_finder_hi/constants.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
@@ -466,7 +467,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       SizedBox(
                                         height: 30,
                                       ),
-                                      Text('Cơ sở vật chất'),
+                                      Text('Cơ sở vật chất', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,),),
                                       SizedBox(
                                         height: defaultPadding,
                                       ),
@@ -575,21 +576,30 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       }
                                       return;
                                     } else {
+                                      try {
+                                        var location = await locationFromAddress(
+                                            '${_numController.text} ${_streetController.text}');
+                                      } catch (e) {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
+                                        return;
+                                      }
                                       var query =
                                           '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                                       try {
                                         var address = await Geocoder.local
                                             .findAddressesFromQuery(query);
-                                        // print(address.first.addressLine
-                                        //     .split(',')
-                                        //     .length);
-                                        // print(address.first.addressLine);
-                                        // print(address.first.adminArea);
-                                        // print(address.first.subAdminArea);
-                                        // print(address.first.thoroughfare);
-                                        // print(address.first.subThoroughfare);
-                                        // print(address.first.locality);
-                                        // print(address.first.subLocality);
+                                        print(address.first.addressLine
+                                            .split(',')
+                                            .length);
+                                        print(address.first.addressLine);
+                                        print(address.first.adminArea);
+                                        print(address.first.subAdminArea);
+                                        print(address.first.thoroughfare);
+                                        print(address.first.subThoroughfare);
+                                        print(address.first.locality);
+                                        print(address.first.subLocality);
                                         var splitAddress = address
                                             .first.addressLine
                                             .split(',');
@@ -715,10 +725,10 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
 
   GridView _buildUtilitiesList() {
     return GridView.count(
-      crossAxisSpacing: defaultPadding,
+      crossAxisSpacing: defaultPadding / 2,
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
-      mainAxisSpacing: defaultPadding,
+      mainAxisSpacing: defaultPadding / 2,
       childAspectRatio: 1,
       shrinkWrap: true,
       children: [
@@ -976,7 +986,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
@@ -1129,7 +1139,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
@@ -1374,7 +1384,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
             BlocProvider.of<EnableCubit>(context).click();
           },
           child: Container(
-            padding: EdgeInsets.all(defaultPadding / 2),
+            
             decoration: BoxDecoration(
                 color: state ? Colors.white : Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),

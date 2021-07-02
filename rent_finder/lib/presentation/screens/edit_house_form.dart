@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as ggMap;
 import 'package:rent_finder_hi/data/models/models.dart';
 import 'package:rent_finder_hi/logic/bloc.dart';
@@ -166,7 +167,15 @@ class _EditHouseFormState extends State<EditHouseForm> {
                             msg: 'Bạn cần thêm tối thiểu 2 ảnh');
                         return;
                       }
-
+                      try {
+                        var location = await locationFromAddress(
+                            '${_numController.text} ${_streetController.text}');
+                      } catch (e) {
+                        Fluttertoast.showToast(
+                            msg:
+                                'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
+                        return;
+                      }
                       var query =
                           '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                       print(query);

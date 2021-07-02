@@ -218,7 +218,7 @@ class FilterEnhanceScreen extends StatelessWidget {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,
@@ -288,7 +288,7 @@ class FilterEnhanceScreen extends StatelessWidget {
       child: Builder(
         builder: (context) => BlocBuilder<RadioCubit, int>(
           builder: (context, state) {
-            return Row(
+            return Wrap(
               children: [
                 MaterialButton(
                   color: (state == 0) ? Color(0xFF0D4880) : Colors.white,

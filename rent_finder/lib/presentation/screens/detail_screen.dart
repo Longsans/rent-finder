@@ -40,6 +40,7 @@ class DetailScreen extends StatelessWidget {
               });
         },
         child: Container(
+          color: Colors.white,
           width: double.infinity,
           padding: EdgeInsets.all(defaultPadding),
           child: Row(
@@ -538,7 +539,7 @@ class InfoOwner extends StatelessWidget {
           width: defaultPadding,
         ),
         Container(
-          width: 150,
+          width: 130,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -594,7 +595,7 @@ class InfoOwner extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: defaultPadding,
+          width: defaultPadding / 2,
         ),
         CircleAvatar(
           backgroundColor: Color(0xffEEEEEE),

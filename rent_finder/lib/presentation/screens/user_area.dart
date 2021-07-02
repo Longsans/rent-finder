@@ -166,14 +166,28 @@ class UserArea extends StatelessWidget {
                                 ScaffoldMessenger.of(context)
                                   ..showSnackBar(
                                     SnackBar(
-                                      content: Row(
-                                        children: [
-                                          Text(
-                                              'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!'),
-                                          Spacer(),
-                                          Icon(Icons.check_circle,
-                                              color: Colors.green),
-                                        ],
+                                      content: Container(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: SizedBox(
+                                                child: Text(
+                                                  'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Icon(Icons.check_circle,
+                                                  color: Colors.green),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
