@@ -8,6 +8,7 @@ import 'package:rent_finder_hi/logic/bloc.dart';
 import 'package:rent_finder_hi/presentation/screens/faq_screen.dart';
 import 'package:rent_finder_hi/presentation/widgets/Contact_sheet.dart';
 import 'package:rent_finder_hi/presentation/widgets/widgets.dart';
+import 'package:rent_finder_hi/constants.dart';
 
 import '../../constants.dart';
 import '../../logic/bloc.dart';
@@ -327,7 +328,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                   if (state is ReportIssueSending) {
                     return SendReportIssueButton(
                       onPressed: null,
-                      color: Colors.blue[600],
+                      color: textColor,
                       secondaryWidget: CircularProgressIndicator.adaptive(
                         value: null,
                         backgroundColor: Colors.white,
@@ -363,7 +364,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                             ReportIssueEvent(
                                 issueDescription: widget.controller.text));
                       },
-                      color: Colors.blue,
+                      color: textColor,
                     );
                 },
               ),

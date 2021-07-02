@@ -5,12 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rent_finder_hi/logic/report_house_bloc/report_house_bloc.dart';
 import 'package:rent_finder_hi/data/models/models.dart' as model;
+import 'package:rent_finder_hi/constants.dart';
 
 class MyChoice {
   String choice;
   int index;
-  MyChoice({this.index,this.choice});
+  MyChoice({this.index, this.choice});
 }
+
 class ReportSheet extends StatefulWidget {
   ReportSheet({Key key, this.house1}) : super(key: key);
   model.House house1;
@@ -21,24 +23,22 @@ class ReportSheet extends StatefulWidget {
 
 class _ReportSheetState extends State<ReportSheet> {
   final TextEditingController _errorController = TextEditingController();
-  bool _enable=false;
-  String default_choice="COD";
+  bool _enable = false;
+  String default_choice = "COD";
   int default_index = 0;
-  List<MyChoice> choices=[
-    MyChoice(index: 0,choice: "Tài khoản giả mạo"),
-    MyChoice(index: 1,choice: "Đăng thông tin sai sự thật"),
-    MyChoice(index: 2,choice: "Lừa đảo"),
-    MyChoice(index: 3,choice: "Hình ảnh phản cảm"),
-    MyChoice(index: 4,choice: "Khác..."),
+  List<MyChoice> choices = [
+    MyChoice(index: 0, choice: "Tài khoản giả mạo"),
+    MyChoice(index: 1, choice: "Đăng thông tin sai sự thật"),
+    MyChoice(index: 2, choice: "Lừa đảo"),
+    MyChoice(index: 3, choice: "Hình ảnh phản cảm"),
+    MyChoice(index: 4, choice: "Khác..."),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       child: Stack(
         overflow: Overflow.visible,
         alignment: Alignment.bottomCenter,
@@ -46,35 +46,37 @@ class _ReportSheetState extends State<ReportSheet> {
           Container(
             height: 410,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0 , 10, 40),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: choices.map((data) => RadioListTile(
-                  activeColor: Colors.blue,
-                  selectedTileColor: Colors.red,
-                  dense: true,
-                  title: Text('${data.choice}',style: TextStyle(color: Colors.grey),),
-                  groupValue: default_index,
-                  value: data.index,
-                  onChanged: (value){
-                    setState(() {
-                      default_choice=data.choice;
-                      default_index=data.index;
-                      if(default_index==4){
-                        _enable=true;
-                        default_choice="";
-                      }
-                      else{
-                        _enable=false;
-                        _errorController.text="";
-                      }
-                    });
-                  },
-                )).toList(),
-
+                children: choices
+                    .map((data) => RadioListTile(
+                          activeColor: textColor,
+                          selectedTileColor: Colors.red,
+                          dense: true,
+                          title: Text(
+                            '${data.choice}',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          groupValue: default_index,
+                          value: data.index,
+                          onChanged: (value) {
+                            setState(() {
+                              default_choice = data.choice;
+                              default_index = data.index;
+                              if (default_index == 4) {
+                                _enable = true;
+                                default_choice = "";
+                              } else {
+                                _enable = false;
+                                _errorController.text = "";
+                              }
+                            });
+                          },
+                        ))
+                    .toList(),
               ),
             ),
-
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
             ),
@@ -82,7 +84,7 @@ class _ReportSheetState extends State<ReportSheet> {
           Padding(
             padding: EdgeInsets.fromLTRB(50, 0, 30, 55),
             child: TextFormField(
-              enabled: _enable ,
+              enabled: _enable,
               style: TextStyle(fontSize: 13),
               controller: _errorController,
               decoration: InputDecoration(
@@ -91,20 +93,28 @@ class _ReportSheetState extends State<ReportSheet> {
               ),
               keyboardType: TextInputType.emailAddress,
               autovalidate: true,
-              autocorrect: false,),
+              autocorrect: false,
+            ),
           ),
           Positioned(
-              bottom: 0,
-              child:
-              RaisedButton(
-                  color: Colors.blue,
-                  child: Text('Gửi vi phạm', style: TextStyle(color: Colors.white),),
-                  onPressed: () async {
+            bottom: 0,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  elevation: 0.1,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6))),
+              child: Text(
+                'Báo cáo',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              onPressed: () async {
                 final result = await showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
                   context: context,
                   builder: (buildContext) {
-                    if(default_choice==""){
-                      default_choice=_errorController.text;
+                    if (default_choice == "") {
+                      default_choice = _errorController.text;
                     }
 
                     return ReportIssueBottomSheet(
@@ -123,8 +133,7 @@ class _ReportSheetState extends State<ReportSheet> {
                             Text(
                                 'Báo cáo đã được gửi, cảm ơn đóng góp của bạn!'),
                             Spacer(),
-                            Icon(Icons.check_circle,
-                                color: Colors.green),
+                            Icon(Icons.check_circle, color: Colors.green),
                           ],
                         ),
                       ),
@@ -135,8 +144,7 @@ class _ReportSheetState extends State<ReportSheet> {
                       SnackBar(
                         content: Row(
                           children: <Widget>[
-                            Text(
-                                'Đã có lỗi xảy ra'),
+                            Text('Đã có lỗi xảy ra'),
                             Spacer(),
                             Icon(Icons.error, color: Colors.red),
                           ],
@@ -144,12 +152,18 @@ class _ReportSheetState extends State<ReportSheet> {
                       ),
                     );
                 }
-              }
-              )
+              },
+            ),
           ),
           Positioned(
             top: 30,
-            child:  Text("Báo cáo vi phạm",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),),
+            child: Text(
+              "Báo cáo vi phạm",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
           ),
           Positioned(
               top: -100,
@@ -157,25 +171,26 @@ class _ReportSheetState extends State<ReportSheet> {
                 backgroundColor: Colors.red,
                 radius: 60,
                 backgroundImage: AssetImage('assets/images/giphy.gif'),
-              )
-          ),
+              )),
         ],
       ),
     );
   }
 }
+
 class ReportIssueBottomSheet extends StatefulWidget {
   final String controller1;
-  model.House house2;
+  final model.House house2;
 
-  ReportIssueBottomSheet({Key key, this.controller1,this.house2}) : super(key: key);
+  ReportIssueBottomSheet({Key key, this.controller1, this.house2})
+      : super(key: key);
 
   @override
   _ReportIssueBottomSheetState createState() => _ReportIssueBottomSheetState();
 }
+
 class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
   bool invalid;
-
 
   @override
   void initState() {
@@ -224,20 +239,15 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                     );
                   }
                   if (state is ReportHouseSuccess) {
-                    Fluttertoast.showToast(
-                        msg:
-                        'Đã được gửi thành công');
+                    Fluttertoast.showToast(msg: 'Đã được gửi thành công');
                     return SendReportIssueButton(
                       onPressed: null,
                       color: Colors.green,
                       secondaryWidget: Icon(Icons.check, color: Colors.white),
                     );
-
                   }
                   if (state is ReportHouseFail) {
-                    Fluttertoast.showToast(
-                        msg:
-                        'Gửi vi phạm thất bại');
+                    Fluttertoast.showToast(msg: 'Gửi vi phạm thất bại');
                     return SendReportIssueButton(
                       onPressed: null,
                       color: Colors.red,
@@ -249,7 +259,7 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                         if (widget.controller1.length == 0) {
                           Fluttertoast.showToast(
                               msg:
-                              'Thất bại, vui lòng điền đủ thông tin vào vi phạm khác');
+                                  'Thất bại, vui lòng điền đủ thông tin vào vi phạm khác');
 
                           setState(() {
                             invalid = true;
@@ -257,7 +267,8 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
                           return SendReportIssueButton(
                             onPressed: null,
                             color: Colors.red,
-                            secondaryWidget: Icon(Icons.error, color: Colors.white),
+                            secondaryWidget:
+                                Icon(Icons.error, color: Colors.white),
                           );
                         }
                         setState(() {
@@ -320,10 +331,9 @@ class SendReportIssueButton extends StatelessWidget {
         style: TextButton.styleFrom(
           backgroundColor: color,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );
   }
 }
-
