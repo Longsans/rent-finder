@@ -217,8 +217,20 @@ class UserArea extends StatelessWidget {
                         title: 'Đăng xuất',
                         icon: Icon(Icons.logout, color: Colors.white),
                         press: () {
-                          BlocProvider.of<AuthenticationBloc>(context)
-                              .add(AuthenticationEventLoggedOut());
+                          showDialog<bool>(
+                            context: context,
+                            builder: (buildContext) {
+                              return ConfirmDialog(
+                                title:
+                                    'Bạn có muốn đăng xuất ra khỏi tài khoản?',
+                                confirmText: 'Đăng xuất',
+                              );
+                            },
+                          ).then((value) => {
+                                if (value != null && value)
+                                  BlocProvider.of<AuthenticationBloc>(context)
+                                      .add(AuthenticationEventLoggedOut())
+                              });
                         },
                       )
                   ],

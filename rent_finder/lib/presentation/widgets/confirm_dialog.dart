@@ -8,8 +8,12 @@ class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog({
     Key key,
     this.title,
+    this.confirmText,
+    this.abortText,
   }) : super(key: key);
   final String title;
+  final String confirmText;
+  final String abortText;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +82,7 @@ class ConfirmDialog extends StatelessWidget {
                           Navigator.of(context).pop(true);
                         },
                         child: Text(
-                          'Đồng ý',
+                          confirmText ?? 'Đồng ý',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -96,7 +100,7 @@ class ConfirmDialog extends StatelessWidget {
                           Navigator.of(context).pop(false);
                         },
                         child: Text(
-                          'Hủy',
+                          abortText ?? 'Hủy',
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
                       ),
