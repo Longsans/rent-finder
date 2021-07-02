@@ -176,6 +176,8 @@ class ReportIssueBottomSheet extends StatefulWidget {
 class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
   bool invalid;
 
+  var count=0;
+
 
   @override
   void initState() {
@@ -210,7 +212,8 @@ class _ReportIssueBottomSheetState extends State<ReportIssueBottomSheet> {
               child: BlocConsumer<ReportHouseBloc, ReportHouseState>(
                 listener: (context, state) {
                   if (state is ReportHouseSuccess || state is ReportHouseFail)
-                    Navigator.of(context).pop(state);
+                   // Navigator.of(context).pop(state);
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
                 },
                 builder: (context, state) {
                   if (state is ReportHouseSending) {
