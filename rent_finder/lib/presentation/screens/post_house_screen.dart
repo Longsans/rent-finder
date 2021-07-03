@@ -375,6 +375,8 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                               final List<AssetEntity> results =
                                                   await AssetPicker.pickAssets(
                                                       context,
+                                                      textDelegate:
+                                                          EnglishTextDelegate(),
                                                       maxAssets: 8,
                                                       selectedAssets: images);
                                               if (results == null) return;
@@ -467,7 +469,13 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       SizedBox(
                                         height: 30,
                                       ),
-                                      Text('Cơ sở vật chất', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,),),
+                                      Text(
+                                        'Cơ sở vật chất',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
                                       SizedBox(
                                         height: defaultPadding,
                                       ),
@@ -1384,7 +1392,6 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
             BlocProvider.of<EnableCubit>(context).click();
           },
           child: Container(
-            
             decoration: BoxDecoration(
                 color: state ? Colors.white : Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),

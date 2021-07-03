@@ -652,6 +652,8 @@ class _EditHouseFormState extends State<EditHouseForm> {
                                     try {
                                       final List<AssetEntity> results =
                                           await AssetPicker.pickAssets(context,
+                                              textDelegate:
+                                                  EnglishTextDelegate(),
                                               maxAssets: 8 - urlState.length,
                                               selectedAssets: images);
                                       if (results == null) return;
