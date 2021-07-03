@@ -167,15 +167,7 @@ class _EditHouseFormState extends State<EditHouseForm> {
                             msg: 'Bạn cần thêm tối thiểu 2 ảnh');
                         return;
                       }
-                      try {
-                        var location = await locationFromAddress(
-                            '${_numController.text} ${_streetController.text}');
-                      } catch (e) {
-                        Fluttertoast.showToast(
-                            msg:
-                                'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
-                        return;
-                      }
+                   
                       var query =
                           '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                       print(query);
