@@ -39,26 +39,26 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       {String email, String password}) async* {
     yield RegisterState.loading();
     try {
-      await _userRepository.signInWithCredentials(email, password);
+      await _userRepository.signUpWithEmailAndPassword(email, password);
       yield RegisterState.success();
-    } catch (error) {
-      if (error is FirebaseAuthException) {
-        String e = "";
-        print(error.code);
-        switch (error.code) {
-          case 'network-request-failed':
-            e = 'Đã có lỗi mạng xảy ra';
-            break;
-          case 'email-already-in-use':
-            e = 'Email của bạn đã tồn tại';
-            break;
-          default:
-            e = 'Đăng ký thất bại';
-            break;
-        }
-        yield RegisterState.failure().copyWith(error: e);
-      } else
-        yield RegisterState.failure().copyWith(error: 'Đăng ký thất bại');
+    } on FirebaseException catch (error) {
+      String e = "";
+      print(error.code);
+      switch (error.code) {
+        case 'network-request-failed':
+          e = 'Đã có lỗi mạng xảy ra';
+          break;
+        case 'email-already-in-use':
+          e = 'Email của bạn đã tồn tại';
+          break;
+        default:
+          e = 'Đăng ký thất bại';
+          break;
+      }
+      yield RegisterState.failure().copyWith(error: e);
+    } on Exception catch (error) {
+      yield RegisterState.failure()
+          .copyWith(error: 'Đăng ký thất bại: ${error.toString()}');
     }
   }
 }

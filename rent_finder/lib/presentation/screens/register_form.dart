@@ -57,7 +57,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     Text(state.error),
                     Icon(
                       Icons.error,
-                      color: Colors.white,
+                      color: Colors.red,
                     ),
                   ],
                 ),
@@ -69,6 +69,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
+                duration: Duration(minutes: 2),
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -81,10 +82,9 @@ class _RegisterFormState extends State<RegisterForm> {
         }
         if (state.isSuccess) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Fluttertoast.showToast(msg: 'Đăng ký thành công!');
-          BlocProvider.of<AuthenticationBloc>(context)
-              .add(AuthenticationEventLoggedIn());
-          Navigator.of(context).pushReplacementNamed('/');
+          Fluttertoast.showToast(
+              msg: 'Đăng ký thành công! Hãy kiểm tra email của bạn.');
+          Navigator.of(context).pop();
         }
       },
       child: BlocBuilder<RegisterBloc, RegisterState>(
