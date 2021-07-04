@@ -22,43 +22,36 @@
 
 ### Đăng nhập, Đăng ký, Đặt lại mật khẩu
 
-  <img src="screenshots/login.jpg" width="200" height="400"/>
-
-  <img src="screenshots/signup.jpg" width="200" height="400"/>
-
-  <img src="screenshots/reset-password.jpg" width="200" height="400"/>
+<img src="screenshots/login.jpg" width="275" height="500"/> <img src="screenshots/signup.jpg" width="275" height="500"/> <img src="screenshots/reset-password.jpg" width="275" height="500"/>
 
 ### Xem nhà được cập nhật gần đây
 
-  <img src="screenshots/recently-updated.jpg" width="200" height="400"/>
+  <img src="screenshots/recently-updated.jpg" width="275" height="500"/>
 
 ### Tìm kiếm nhà
 
-  <img src="screenshots/find-houses.jpg" width="200" height="400"/>
+  <img src="screenshots/find-houses.jpg" width="275" height="500"/>
 
 ### Quản lý danh sách nhà đã lưu
 
-  <img src="screenshots/saved-houses.jpg" width="200" height="400"/>
+  <img src="screenshots/saved-houses.jpg" width="275" height="500"/>
 
 ### Quản lý danh sách nhà đã xem
 
-  <img src="screenshots/viewed-houses.jpg" width="200" height="400"/>
+  <img src="screenshots/viewed-houses.jpg" width="275" height="500"/>
 
 ### Đăng tin cho thuê nhà
 
-  <img src="screenshots/post-house1.jpg" width="200" height="400"/>
-  <img src="screenshots/post-house2.jpg" width="200" height="400"/>
-  <img src="screenshots/post-house3.jpg" width="200" height="400"/>
-  <img src="screenshots/post-house4.jpg" width="200" height="400"/>
+<img src="screenshots/post-house1.jpg" width="275" height="500"/> <img src="screenshots/post-house2.jpg" width="275" height="500"/>
+<img src="screenshots/post-house3.jpg" width="275" height="500"/> <img src="screenshots/post-house4.jpg" width="275" height="500"/>
 
 ### Quản lý danh sách nhà đã đăng
 
-  <img src="screenshots/.jpg" width="200" height="400"/>
+  <img src="screenshots/.jpg" width="275" height="500"/>
 
 ### Báo cáo lỗi ứng dụng/Báo cáo vi phạm
 
-  <img src="screenshots/bug-report.jpg" width="200" height="400"/>
-  <img src="screenshots/content-report.jpg" width="200" height="400"/>
+<img src="screenshots/bug-report.jpg" width="275" height="500"/> <img src="screenshots/content-report.jpg" width="275" height="500"/>
 
 ## Yêu cầu thiết bị
 
