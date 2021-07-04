@@ -62,6 +62,7 @@ class _LoginFormState extends State<LoginForm> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
+                    duration: Duration(minutes: 1),
                     content: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -86,7 +87,7 @@ class _LoginFormState extends State<LoginForm> {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               Fluttertoast.showToast(
                   msg:
-                      'Tài khoản của bạn đã bị khóa! Vui lòng liên hệ với admin để được hỗ trợ!');
+                      'Tài khoản của bạn đã bị khóa! Vui lòng liên hệ với chúng tôi để được hỗ trợ!');
             } else {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               Fluttertoast.showToast(msg: 'Đăng nhập thành công');

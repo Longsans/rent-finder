@@ -17,19 +17,36 @@ class UserRepository {
     await _createUserForCurrentFirebaseUser();
   }
 
-  Future<void> signInWithCredentials(String email, String password) async {
+  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+    final signInMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email);
+
+    if (signInMethods.isNotEmpty)
+      throw FirebaseAuthException(code: 'email-already-in-use');
+
     final credential =
         EmailAuthProvider.credential(email: email, password: password);
     final linkResult =
         await _tryLinkAnonDataToAuthCredential(email, credential);
-
-    await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+    await signInWithCredentials(email, password);
 
     if (linkResult)
       await updateUser(currentUser.phoneNumber, currentUser.displayName,
           currentUser.photoURL,
           email: currentUser.email);
+
+    await currentUser.sendEmailVerification();
+    await signOut();
+  }
+
+  Future<void> signInWithCredentials(String email, String password) async {
+    final signInMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email);
+
+    if (signInMethods.isEmpty)
+      throw FirebaseAuthException(code: 'user-not-found');
+
+    await _deleteCurrentAnonUser();
+    await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
   }
 
   Future<User> signInWithGoogle() async {
@@ -54,8 +71,6 @@ class UserRepository {
       await updateUser(currentUser.phoneNumber, currentUser.displayName,
           currentUser.photoURL,
           email: currentUser.email);
-    if (await getCurrentUserData() == null)
-      await _createUserForCurrentFirebaseUser(); // TODO: Opt for removal of _createUser in signInWithGoogle
 
     return userCredential.user;
   }
@@ -67,13 +82,22 @@ class UserRepository {
   }
 
   bool isSignedIn() {
-    return _firebaseAuth.currentUser != null;
+    return currentUser != null;
   }
 
   bool isAuthenticated() {
     return isSignedIn() &&
-        _firebaseAuth.currentUser.email != null &&
-        _firebaseAuth.currentUser.email.isNotEmpty;
+        currentUser.email != null &&
+        currentUser.email.isNotEmpty;
+  }
+
+  Future<bool> isEmailVerified() async {
+    if (currentUser != null)
+      await currentUser.reload();
+    else
+      throw Exception();
+
+    return currentUser.emailVerified;
   }
 
   Future<model.User> getCurrentUserData() async {
@@ -86,11 +110,10 @@ class UserRepository {
 
   Future<void> _createUserForCurrentFirebaseUser() async {
     model.User user = model.User();
-    User firebaseUser = _firebaseAuth.currentUser;
-    user.hoTen = firebaseUser.displayName;
-    user.email = firebaseUser.email;
-    user.uid = firebaseUser.uid;
-    user.urlHinhDaiDien = firebaseUser.photoURL ?? "";
+    user.hoTen = currentUser.displayName;
+    user.email = currentUser.email;
+    user.uid = currentUser.uid;
+    user.urlHinhDaiDien = currentUser.photoURL ?? "";
     user.banned = false;
     await _userProvider.createUser(user);
   }
@@ -116,26 +139,31 @@ class UserRepository {
   User get currentUser => _firebaseAuth.currentUser;
 
   // private members
-  Future<model.User> _getUserByEmail(String email) async {
-    return await _userProvider.getUserByEmail(email);
-  }
 
   /// Attempts linking **already signed in** anonymous account's data to the now-signing-in [authCredential].
   ///
   /// The [email] parameter is used to check for existing data already linked with [authCredential] before actually linking.
   Future<bool> _tryLinkAnonDataToAuthCredential(
       String email, AuthCredential authCredential) async {
-    if (isSignedIn() && _firebaseAuth.currentUser.isAnonymous) {
-      if (await _getUserByEmail(email) != null) {
-        await _userProvider.deleteUser(userUid: _firebaseAuth.currentUser.uid);
-        await _firebaseAuth.currentUser.delete();
-        return false;
-      } else {
-        await _firebaseAuth.currentUser.linkWithCredential(authCredential);
+    if (currentUser != null && currentUser.isAnonymous) {
+      final signInMethods =
+          await _firebaseAuth.fetchSignInMethodsForEmail(email);
+      if (signInMethods.isEmpty) {
+        await currentUser.linkWithCredential(authCredential);
         return true;
+      } else {
+        await _deleteCurrentAnonUser();
+        return false;
       }
     } else
       return false;
+  }
+
+  Future<void> _deleteCurrentAnonUser() async {
+    if (currentUser != null && currentUser.isAnonymous) {
+      await _userProvider.deleteUser(userUid: currentUser.uid);
+      await currentUser.delete();
+    }
   }
 
   // endregion

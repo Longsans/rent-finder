@@ -41,7 +41,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginState.loading();
     try {
       await _userRepository.signInWithCredentials(email, password);
-      yield LoginState.success();
+      if (await _userRepository.isEmailVerified())
+        yield LoginState.success();
+      else {
+        await _userRepository.signOut();
+        yield LoginState.failure().copyWith(
+            error: 'Bạn cần xác nhận email trước khi đăng nhập');
+      }
     } catch (error) {
       if (error is FirebaseAuthException) {
         String e = "";

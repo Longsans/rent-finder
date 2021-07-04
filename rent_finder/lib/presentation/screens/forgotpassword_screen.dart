@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../constants.dart';
 import 'background.dart';
@@ -24,7 +25,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -46,20 +47,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: textColor,
-                    fontSize: 36
-                ),
+                    fontSize: 36),
                 textAlign: TextAlign.left,
               ),
             ),
-
             SizedBox(height: size.height * 0.05),
-
             Container(
               margin: EdgeInsets.symmetric(horizontal: width * 0.05),
               child: TextFormField(
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.text,
-
                 decoration: InputDecoration(
                   hintText: "Vui lòng nhập email * ",
                   hintStyle: TextStyle(
@@ -67,9 +64,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                        width: 1,
-                        style: BorderStyle.solid,
-                        color: Colors.blue),
+                        width: 1, style: BorderStyle.solid, color: Colors.blue),
                   ),
                   filled: true,
                   fillColor: Colors.white,
@@ -77,49 +72,46 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                        width: 1,
-                        style: BorderStyle.solid,
-                        color: Colors.grey),
+                        width: 1, style: BorderStyle.solid, color: Colors.grey),
                   ),
                 ),
                 validator: (_) {
-                  return  _email.isEmpty ? "Vui lòng nhập email" : null;
+                  return _email.isEmpty ? "Vui lòng nhập email" : null;
                 },
                 onChanged: (value) {
                   setState(() {
                     _email = value.trim();
                   });
                 },
-
               ),
             ),
             SizedBox(height: size.height * 0.03),
-
             Container(
               alignment: Alignment.center,
               margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: RaisedButton(
                 onPressed: () async {
-                  try{
+                  try {
                     await auth.sendPasswordResetEmail(email: _email);
-                    print('thành công');
                     ScaffoldMessenger.of(context)
                       ..showSnackBar(
                         SnackBar(
                           content: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text("Yêu cầu đã được gửi tới email của bạn"),
-                              Icon(Icons.assignment_turned_in_outlined,
-                                color: Colors.white,),
+                              Text('Yêu cầu đã được gửi tới email của bạn'),
+                              Icon(
+                                Icons.assignment_turned_in_outlined,
+                                color: Colors.green[400],
+                              ),
                             ],
                           ),
                         ),
                       );
-                  }on FirebaseAuthException
-                  catch(e){
+                    Navigator.of(context).pop();
+                  } on FirebaseAuthException catch (e) {
                     if (e.code == 'user-not-found') {
-                      print( 'Địa chỉ email không tồn tại');
+                      print('Địa chỉ email không tồn tại');
                       ScaffoldMessenger.of(context)
                         ..showSnackBar(
                           SnackBar(
@@ -127,16 +119,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text("Địa chỉ email không tồn tại",style: TextStyle(color: Colors.black),),
-                                Icon(Icons.error,
-                                  color: Colors.white,),
+                                Text(
+                                  "Địa chỉ email không tồn tại",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                           ),
                         );
                     }
                     if (e.code == 'invalid-email') {
-                      print( 'Địa chỉ email không hợp lệ');
+                      print('Địa chỉ email không hợp lệ');
                       ScaffoldMessenger.of(context)
                         ..showSnackBar(
                           SnackBar(
@@ -144,18 +141,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text("Địa chỉ email không hợp lệ",style: TextStyle(color: Colors.black),),
-                                Icon(Icons.error, color: Colors.white,),
+                                Text(
+                                  "Địa chỉ email không hợp lệ",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                           ),
                         );
                     }
-
                   }
                   // Navigator.of(context).pop();
                 },
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(80.0)),
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0),
                 child: Container(
@@ -164,20 +167,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   width: size.width * 0.5,
                   decoration: new BoxDecoration(
                       borderRadius: BorderRadius.circular(80.0),
-                      gradient: new LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 255, 136, 34),
-                            Color.fromARGB(255, 255, 177, 41)
-                          ]
-                      )
-                  ),
+                      gradient: new LinearGradient(colors: [
+                        Color.fromARGB(255, 255, 136, 34),
+                        Color.fromARGB(255, 255, 177, 41)
+                      ])),
                   padding: const EdgeInsets.all(0),
                   child: Text(
                     "Gửi yêu cầu",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

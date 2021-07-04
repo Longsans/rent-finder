@@ -34,6 +34,7 @@ class AuthenticationBloc
       yield AuthenticationStateAuthenticated(
           user: await _userRepository.getCurrentUserData());
     } else if (authenticationEvent is AuthenticationEventLoggedOut) {
+      yield AuthenticationLoading();
       await _userRepository.signOut();
       yield AuthenticationStateSuccess(
           user: await _userRepository.getCurrentUserData());
