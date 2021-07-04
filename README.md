@@ -47,7 +47,7 @@
 
 ### Quản lý danh sách nhà đã đăng
 
-  <img src="screenshots/.jpg" width="275" height="500"/>
+  <img src="screenshots/posted-houses.jpg" width="275" height="500"/>
 
 ### Báo cáo lỗi ứng dụng/Báo cáo vi phạm
 
