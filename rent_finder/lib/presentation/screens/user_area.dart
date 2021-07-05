@@ -288,7 +288,10 @@ class UserArea extends StatelessWidget {
                 ),
               ),
             ),
-            placeholder: (context, url) => CircularProgressIndicator(),
+            placeholder: (context, url) => Container(
+                height: 200,
+                width: 200,
+                child: Center(child: CircularProgressIndicator())),
             errorWidget: (context, url, error) => Icon(
               Icons.account_circle_outlined,
               size: 200,

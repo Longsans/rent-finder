@@ -51,7 +51,9 @@ class _EditHouseFormState extends State<EditHouseForm> {
       phuongXa != null &&
       phuongXa.isNotEmpty &&
       quanHuyen != null;
+  bool firstPress;
   void initState() {
+    firstPress = true;
     res = widget.house;
     _streetController.text = widget.house.tenDuong;
     _bedController.text = widget.house.soPhongNgu.toString();
@@ -102,6 +104,7 @@ class _EditHouseFormState extends State<EditHouseForm> {
         builder: (context) => BlocListener<EditFormCubit, EditFormState>(
           listener: (context, state) {
             if (state.status == EditStatus.failure) {
+              firstPress = true;
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
@@ -167,7 +170,7 @@ class _EditHouseFormState extends State<EditHouseForm> {
                             msg: 'Bạn cần thêm tối thiểu 2 ảnh');
                         return;
                       }
-                   
+
                       var query =
                           '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
                       print(query);
@@ -200,41 +203,44 @@ class _EditHouseFormState extends State<EditHouseForm> {
                                 'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
                         return;
                       }
-                      var t = showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ConfirmDialog(
-                            title: 'Bạn có chắc chắn cập nhật nhà này không?',
-                          );
-                        },
-                      );
-                      t.then(
-                        (value) {
-                          if (value != null) {
-                            if (value) {
-                              res.toaDo = toaDo;
-                              res.moTa = _describeController.text;
-                              res.soNha = _numController.text;
-                              res.tenDuong = _streetController.text;
-                              res.soPhongNgu =
-                                  int.tryParse(_bedController.text) ?? 0;
-                              res.soPhongTam =
-                                  int.tryParse(_bathController.text) ?? 0;
-                              res.dienTich =
-                                  double.tryParse(_areaController.text) ?? 0;
-                              res.tienThueThang =
-                                  double.tryParse(_moneyController.text) ?? 0;
-                              res.coSoVatChat = coSoVatChat;
-                              res.quanHuyen = quanHuyen;
-                              res.phuongXa = phuongXa;
-                              res.ngayCapNhat = DateTime.now();
-                              print(files.length);
-                              BlocProvider.of<EditFormCubit>(context)
-                                  .submitForm(res, files);
+                      if (firstPress) {
+                        var t = showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ConfirmDialog(
+                              title: 'Bạn có chắc chắn cập nhật nhà này không?',
+                            );
+                          },
+                        );
+                        t.then(
+                          (value) {
+                            if (value != null) {
+                              if (value) {
+                                firstPress = false;
+                                res.toaDo = toaDo;
+                                res.moTa = _describeController.text;
+                                res.soNha = _numController.text;
+                                res.tenDuong = _streetController.text;
+                                res.soPhongNgu =
+                                    int.tryParse(_bedController.text) ?? 0;
+                                res.soPhongTam =
+                                    int.tryParse(_bathController.text) ?? 0;
+                                res.dienTich =
+                                    double.tryParse(_areaController.text) ?? 0;
+                                res.tienThueThang =
+                                    double.tryParse(_moneyController.text) ?? 0;
+                                res.coSoVatChat = coSoVatChat;
+                                res.quanHuyen = quanHuyen;
+                                res.phuongXa = phuongXa;
+                                res.ngayCapNhat = DateTime.now();
+                                print(files.length);
+                                BlocProvider.of<EditFormCubit>(context)
+                                    .submitForm(res, files);
+                              }
                             }
-                          }
-                        },
-                      );
+                          },
+                        );
+                      }
                     }
                   },
                 ),

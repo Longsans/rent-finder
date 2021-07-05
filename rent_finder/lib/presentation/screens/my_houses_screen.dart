@@ -177,8 +177,9 @@ class MyHousesScreen extends StatelessWidget {
                                                               ),
                                                             ),
                                                           );
-                                                        Future.delayed(Duration(
-                                                            seconds: 3));
+                                                        await Future.delayed(
+                                                            Duration(
+                                                                seconds: 3));
                                                         try {
                                                           await HouseRepository()
                                                               .setHouseRemoved(
