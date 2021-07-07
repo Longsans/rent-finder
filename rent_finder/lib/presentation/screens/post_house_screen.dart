@@ -42,10 +42,22 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
   List<String> urlHinhAnh;
   model.LoaiChoThue loaiChoThue;
   model.TinhTrangChoThue thue;
+  bool firstPress1, firstPress2, firstPress3;
 
   _PostHouseScreenState({this.user});
   @override
   void initState() {
+    firstPress1 = true;
+    firstPress2 = true;
+    firstPress3 = true;
+
+    _areaController.text = "";
+    _bathController.text = "";
+    _bedController.text = "";
+    _describeController.text = "";
+    _moneyController.text = "";
+    _numController.text = "";
+    _streetController.text = "";
     coSoVatChat.banCong = false;
     coSoVatChat.baoVe = false;
     coSoVatChat.cctv = false;
@@ -136,9 +148,14 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                     builder: (context, state) {
                       return GestureDetector(
                         onTap: () async {
-                          if (state > 0)
+                          if (state > 0) {
+                            if (state == 1)
+                              firstPress1 = true;
+                            else if (state == 2)
+                              firstPress2 = true;
+                            else if (state == 3) firstPress3 = true;
                             BlocProvider.of<StepperCubit>(context).cancel();
-                          else {
+                          } else {
                             var t = showDialog<bool>(
                               context: context,
                               builder: (context) {
@@ -405,7 +422,7 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                       BlocBuilder<PickMultiImageCubit,
                                           List<File>>(
                                         builder: (context, state) {
-                                          print(state.length);
+                                          print('state.length');
                                           return GridView.count(
                                             crossAxisSpacing: defaultPadding,
                                             physics:
@@ -559,95 +576,121 @@ class _PostHouseScreenState extends State<PostHouseScreen> {
                                 return CustomButton(
                                   title: state <= 2 ? 'Tiếp theo' : "Đăng tin",
                                   press: () async {
-                                    if (state == 0 &&
-                                        (_streetController.text == "" ||
-                                            _numController.text == "" ||
-                                            quanHuyen == null ||
-                                            phuongXa == null)) {
-                                      if (quanHuyen == null) {
-                                        Fluttertoast.cancel();
-                                        Fluttertoast.showToast(
-                                            msg: 'Vui lòng chọn quận huyện');
-                                      } else {
-                                        if (phuongXa == null)
+                                    if (stateForm.isSubmitting) return;
+
+                                    if (state == 0) {
+                                      if (_streetController.text == "" ||
+                                          _numController.text == "" ||
+                                          quanHuyen == null ||
+                                          phuongXa == null) {
+                                        if (quanHuyen == null) {
                                           Fluttertoast.cancel();
-                                        Fluttertoast.showToast(
-                                            msg: 'Vui lòng chọn xã phường');
-                                      }
-                                      if (_numController.text == "") {
-                                        BlocProvider.of<PostFormBloc>(context)
-                                            .add(NumChanged(num: ""));
-                                      }
-                                      if (_streetController.text == "") {
-                                        BlocProvider.of<PostFormBloc>(context)
-                                            .add(StreetChanged(street: ""));
-                                      }
-                                      return;
-                                    } else {
-                                      var query =
-                                          '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
-                                      try {
-                                        var address = await Geocoder.local
-                                            .findAddressesFromQuery(query);
-                                        print(address.first.addressLine
-                                            .split(',')
-                                            .length);
-                                        print(address.first.addressLine);
-                                        print(address.first.adminArea);
-                                        print(address.first.subAdminArea);
-                                        print(address.first.thoroughfare);
-                                        print(address.first.subThoroughfare);
-                                        print(address.first.locality);
-                                        print(address.first.subLocality);
-                                        var splitAddress = address
-                                            .first.addressLine
-                                            .split(',');
-                                        if (splitAddress.length < 4 ||
-                                            !quanHuyen.contains(
-                                                address.first.subAdminArea)) {
+                                          Fluttertoast.showToast(
+                                              msg: 'Vui lòng chọn quận huyện');
+                                        } else {
+                                          if (phuongXa == null) {
+                                            Fluttertoast.cancel();
+                                            Fluttertoast.showToast(
+                                                msg: 'Vui lòng chọn xã phường');
+                                          }
+                                        }
+                                        if (_numController.text == "") {
+                                          BlocProvider.of<PostFormBloc>(context)
+                                              .add(NumChanged(num: ""));
+                                        }
+                                        if (_streetController.text == "") {
+                                          BlocProvider.of<PostFormBloc>(context)
+                                              .add(StreetChanged(street: ""));
+                                        }
+                                        return;
+                                      } else {
+                                        var query =
+                                            '${_numController.text} ${_streetController.text}, $phuongXa, $quanHuyen Thành phố Hồ Chí Minh';
+                                        try {
+                                          var address = await Geocoder.local
+                                              .findAddressesFromQuery(query);
+                                          // print(address.first.addressLine
+                                          //     .split(',')
+                                          //     .length);
+                                          // print(address.first.addressLine);
+                                          // print(address.first.adminArea);
+                                          // print(address.first.subAdminArea);
+                                          // print(address.first.thoroughfare);
+                                          // print(address.first.subThoroughfare);
+                                          // print(address.first.locality);
+                                          // print(address.first.subLocality);
+                                          var splitAddress = address
+                                              .first.addressLine
+                                              .split(',');
+                                          if (splitAddress.length < 4 ||
+                                              !quanHuyen.contains(
+                                                  address.first.subAdminArea)) {
+                                            Fluttertoast.cancel();
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
+                                            return;
+                                          } else {
+                                            if (firstPress1) {
+                                              firstPress1 = false;
+                                              toaDo = ggMap.LatLng(
+                                                  address.first.coordinates
+                                                      .latitude,
+                                                  address.first.coordinates
+                                                      .longitude);
+
+                                              BlocProvider.of<StepperCubit>(
+                                                      context)
+                                                  .next();
+                                              print('cc gif vayaj');
+                                            }
+                                          }
+                                        } catch (e) {
+                                          print(e.toString());
+                                          print('Địa chỉ không hợp lệ');
+                                          Fluttertoast.cancel();
                                           Fluttertoast.showToast(
                                               msg:
                                                   'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
                                           return;
                                         }
-                                        toaDo = ggMap.LatLng(
-                                            address.first.coordinates.latitude,
-                                            address
-                                                .first.coordinates.longitude);
-                                      } catch (e) {
-                                        print(e.toString());
-                                        print('Địa chỉ không hợp lệ');
-                                        Fluttertoast.showToast(
-                                            msg:
-                                                'Địa chỉ không hợp lệ. Nếu có lỗi hãy báo cáo với chúng tôi tại phần Người dùng');
-                                        return;
                                       }
-                                    }
-
-                                    if (state == 1 &&
-                                        (_moneyController.text == "" ||
-                                            _areaController.text == "" ||
-                                            !stateForm.isForm2Valid)) {
-                                      if (_moneyController.text == "") {
-                                        BlocProvider.of<PostFormBloc>(context)
-                                            .add(MoneyChanged(money: ""));
-                                        if (_areaController.text == "") {
+                                    } else if (state == 1) {
+                                      print('1');
+                                      if (_moneyController.text == "" ||
+                                          _areaController.text == "") {
+                                        if (_moneyController.text == "") {
                                           BlocProvider.of<PostFormBloc>(context)
-                                              .add(AreaChanged(area: ""));
+                                              .add(MoneyChanged(money: ""));
+                                          if (_areaController.text == "") {
+                                            BlocProvider.of<PostFormBloc>(
+                                                    context)
+                                                .add(AreaChanged(area: ""));
+                                          }
+                                        }
+                                        return;
+                                      } else {
+                                        if (firstPress2) {
+                                          firstPress2 = false;
+                                          BlocProvider.of<StepperCubit>(context)
+                                              .next();
                                         }
                                       }
-                                      return;
-                                    }
-                                    if (state == 2 && images.length < 2) {
-                                      Fluttertoast.cancel();
-                                      Fluttertoast.showToast(
-                                          msg: 'Bạn cần chọn tối thiểu 2 ảnh');
-                                      return;
-                                    }
-                                    if (state <= 2)
-                                      BlocProvider.of<StepperCubit>(context)
-                                          .next();
-                                    else {
+                                    } else if (state == 2) {
+                                      if (images.length < 2) {
+                                        Fluttertoast.cancel();
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                'Bạn cần chọn tối thiểu 2 ảnh');
+                                        return;
+                                      } else {
+                                        if (firstPress3) {
+                                          firstPress3 = false;
+                                          BlocProvider.of<StepperCubit>(context)
+                                              .next();
+                                        }
+                                      }
+                                    } else {
                                       if (_describeController.text == "" ||
                                           _describeController.text == null) {
                                         Fluttertoast.cancel();
