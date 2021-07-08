@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text("Cập nhật thành công"),
-                      Icon(Icons.verified),
+                      Icon(Icons.verified, color: Colors.green),
                     ],
                   ),
                 ));
@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text("Cập nhật thất bại"),
-                      Icon(Icons.error),
+                      Icon(Icons.error, color: Colors.red),
                     ],
                   ),
                 ));
@@ -203,16 +203,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context, stateImage) {
             return CustomButton(
               title: 'Lưu',
-              press: state.isFormValid
-                  ? () {
-                      BlocProvider.of<UpdateProfileBloc>(context)
-                          .add(FormSubmitted(
-                        phone: _phoneController.text,
-                        name: _nameController.text,
-                        url: stateImage,
-                      ));
-                    }
-                  : null,
+              press: () {
+                if (state.isFormValid) {
+                  if (_nameController.text.trim().isEmpty ||
+                      _phoneController.text.trim().isEmpty) {
+                    Fluttertoast.showToast(
+                        msg:
+                            'Hãy chắc chắn rằng bạn đã nhập đầy đủ thông tin');
+                    return;
+                  }
+
+                  BlocProvider.of<UpdateProfileBloc>(context).add(FormSubmitted(
+                    phone: _phoneController.text,
+                    name: _nameController.text,
+                    url: stateImage,
+                  ));
+                } else {
+                  Fluttertoast.showToast(
+                      msg: 'Hãy nhập thông tin của bạn chính xác');
+                }
+              },
               icon: Icon(
                 Icons.save,
                 color: Colors.white,
